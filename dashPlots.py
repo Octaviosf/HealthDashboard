@@ -65,11 +65,10 @@ df = sheet_to_df(sheet_obj)
 with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     pprint(df)
 
+#plot df using matplotlib
 df.plot(style='o')
 plt.grid()
 plt.show()
-
-#plot new_df using matplotlib
 
 #embed plot into tkinter gui
 
