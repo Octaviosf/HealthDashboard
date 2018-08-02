@@ -1,6 +1,7 @@
 from httplib2 import Http
 from oauth2client import file as oauth_file, client, tools
 from pprint import pprint
+import pandas as pd
 from googleapiclient import discovery
 
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
@@ -21,4 +22,11 @@ request = service.spreadsheets().values().get(
     dateTimeRenderOption=date_time_render_option)
 response = request.execute()
 
-pprint(response)
+rows = response['values']
+labels = rows[0]
+data = rows[1:]
+df = pd.DataFrame.from_records(data, columns=labels)
+
+with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+    pprint(df)
+
