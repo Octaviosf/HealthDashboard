@@ -1,5 +1,6 @@
 from pprint import pprint
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def access_sheet(spreadsheet_id, range_):
     """
@@ -64,6 +65,9 @@ df = sheet_to_df(sheet_obj)
 with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     pprint(df)
 
+df.plot(style='o')
+plt.grid()
+plt.show()
 
 #plot new_df using matplotlib
 
