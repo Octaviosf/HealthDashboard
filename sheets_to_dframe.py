@@ -30,3 +30,10 @@ df = pd.DataFrame.from_records(data, columns=labels)
 with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     pprint(df)
 
+#create new_df using only lb measurements
+
+#plot new_df using matplotlib
+
+#embed plot into tkinter gui
+
+#show gui
