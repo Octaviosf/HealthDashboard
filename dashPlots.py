@@ -90,16 +90,14 @@ def format_plot(df):
 #    ax1.legend(art, ['fat mass', 'fat %'])
     ax1.set_xlabel('date', fontsize=24)
     ax1.set_ylabel('weight (lb)', fontsize=24)
-    print(type(df[['fat_mass_lb']]))
-    ax1.plot(x, df[['fat_mass_lb']], '--go')
+    ax1.plot(x, df[['fat_mass_lb']], '--go', alpha=1.0)
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('fat (%)', fontsize=24)
-    ax2.tick_params(axis='y')
     ax2.set_xticks(xticks)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
-    ax2.plot(x, df[['fat_%']], '--ro')
+    ax2.plot(x, df[['fat_%']], '--ro', alpha=0.5)
 
 #    fig.tight_layout()
 
