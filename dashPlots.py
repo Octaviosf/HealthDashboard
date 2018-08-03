@@ -58,7 +58,9 @@ def sheet_to_df(sheet_obj):
 
 def format_plot(df):
     import matplotlib.dates as mdates
+#    import matplotlib.artist as m_art
 
+#    art = m_art.Artist.set_label()
     x = df.index
     y_lg = df[['weight_lb', 'lean_body_mass_lb']]
     xmin = df.index.tolist()[0]-1
@@ -72,6 +74,7 @@ def format_plot(df):
     plt.figure(1)
     ax0 = plt.subplot(211)
     ax0.grid()
+#    ax0.legend(art, ['total mass', 'lean mass'])
     ax0.set_title('Body Composition', fontsize=30)
     ax0.set_ylabel('weight (lb)', fontsize=24)
     ax0.set_xticks(xticks)
@@ -81,12 +84,13 @@ def format_plot(df):
 
     ax1 = plt.subplot(212)
     ax1.grid()
+#    ax1.legend(art, ['fat mass', 'fat %'])
     ax1.set_xlabel('date', fontsize=24)
     ax1.set_ylabel('weight (lb)', fontsize=24)
     ax1.plot(x, df[['fat_mass_lb']], color = 'tab:green')
 
     ax2 = ax1.twinx()
-    ax2.set_ylabel('fat (%)', fontsize=24)
+    ax2.set_ylabel('percent', fontsize=24)
     ax2.tick_params(axis='y')
     ax2.set_xticks(xticks)
     ax2.set_xlim(xmin, xmax)
