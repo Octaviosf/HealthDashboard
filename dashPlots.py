@@ -1,6 +1,9 @@
 from pprint import pprint
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import date
+
+import numpy as np
 
 def access_sheet(spreadsheet_id, range_):
     """
@@ -61,26 +64,44 @@ def format_plot(df):
 
     x = df.index
     y_lg = df[['weight_lb', 'lean_body_mass_lb']]
-
+    xmin = df.index.tolist()[0]-1
+    xmin = xmin.to_pydatetime()
+    print(type(xmin))
+    xmax = df.index.tolist()[-1]+10
+    xmax = xmax.to_pydatetime()
+    xticks = []
+#    delta = xmin-xmax
+#    days = int(delta.days)
+    d = xmin
+    while d <= xmax:
+        xticks.append(d)
+        d += 1
     plt.figure(1)
 
-    plt.subplot(211)
-    plt.grid()
-    plt.legend(prop={'size': 20})
-    plt.title('Body Composition', fontsize=30)
-    plt.ylabel('weight (lb)', fontsize=24)
-    xaxis_range = (df.index.tolist()[0]-1, df.index.tolist()[-1]+1)
-    plt.xlim(xaxis_range)
-    plt.plot(x, y_lg)
+    ax0 = plt.subplot(211)
+    ax0.grid()
+    ax0.set_title('Body Composition', fontsize=30)
+    ax0.set_ylabel('weight (lb)', fontsize=24)
+    ax0.set_xticks(xticks)
+#    ax0.set_xlim(xmin, xmax)
+#    ax0.xaxis.set_major_locator(mdates.DayLocator)
+#    ax0.locator_params(axis='x', nbins=days)
+    ax0.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
+    ax0.plot(x, y_lg)
 
     ax1 = plt.subplot(212)
+    ax1.grid()
+#    ax1.set_xticks(xticks)
+#    ax1.set_xlim(xmin, xmax)
     ax1.set_xlabel('date', fontsize=24)
     ax1.set_ylabel('weight (lb)', fontsize=24)
-    ax1.plot(x, df[['fat_mass_lb']])
+    ax1.plot(x, df[['fat_mass_lb']], color = 'tab:green')
+
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('fat (%)', fontsize=24, color='tab:red')
     ax2.tick_params(axis='y', labelcolor='tab:red')
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
     ax2.plot(x, df[['fat_%']], color='tab:red')
 
 #    fig.tight_layout()
@@ -91,12 +112,6 @@ def format_plot(df):
     plt.tick_params(axis='x',which='minor', labelsize=16)
     plt.tick_params(axis='x',which='major', labelsize=16)
     """
-
-
-
-
-#    dates_fmt = mdates.DateFormatter('%m-%d-%Y')
-#    ax.xaxis.set_major_formatter(dates_fmt)
 
     return None
 
