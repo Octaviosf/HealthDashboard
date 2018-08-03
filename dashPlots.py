@@ -56,6 +56,27 @@ def sheet_to_df(sheet_obj):
 
     return df
 
+def format_plot(df):
+    import matplotlib.dates as mdates
+
+    df.plot(style='o')
+    plt.grid()
+    plt.legend(prop={'size': 20})
+
+    plt.title('Body Composition', fontsize=30)
+    plt.xlabel('Date', fontsize=24)
+
+    xaxis_range = (df.index.tolist()[0], df.index.tolist()[-1])
+    plt.xlim(xaxis_range)
+    plt.tick_params(axis='x',which='minor', labelsize=16)
+    plt.tick_params(axis='x',which='major', labelsize=16)
+
+#    ax = plt.gca()
+#    dates_fmt = mdates.DateFormatter('%m-%d-%Y')
+#    ax.xaxis.set_major_formatter(dates_fmt)
+
+    return None
+
 spreadsheet_id = '10pFtYAvmRedAWNU1vB-JDZRGKiRD4EZDH6zGzkghpZ0'
 range_ = 'Sheet1'
 
@@ -65,16 +86,8 @@ df = sheet_to_df(sheet_obj)
 with pd.option_context('display.max_rows', None, 'display.max_columns', None):
     pprint(df)
 
-#plot df using matplotlib
-df.plot(style='o')
-plt.grid()
+format_plot(df)
 
-pprint(df.index.tolist()[0])
-
-xaxis_range = (df.index.tolist()[0], df.index.tolist()[-1])
-
-plt.xlim(xaxis_range)
-plt.xlabel('Date', fontsize=20)
 plt.show()
 
 #embed plot into tkinter gui
