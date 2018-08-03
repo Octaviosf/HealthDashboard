@@ -61,7 +61,6 @@ def format_plot(df):
 
     x = df.index
     y_lg = df[['weight_lb', 'lean_body_mass_lb']]
-    y_sm = df[['fat_%', 'fat_mass_lb']]
 
     plt.figure(1)
 
@@ -69,31 +68,21 @@ def format_plot(df):
     plt.grid()
     plt.legend(prop={'size': 20})
     plt.title('Body Composition', fontsize=30)
-    plt.xlabel('date', fontsize=24)
     plt.ylabel('weight (lb)', fontsize=24)
     xaxis_range = (df.index.tolist()[0]-1, df.index.tolist()[-1]+1)
     plt.xlim(xaxis_range)
     plt.plot(x, y_lg)
 
     ax1 = plt.subplot(212)
+    ax1.set_xlabel('date', fontsize=24)
+    ax1.set_ylabel('weight (lb)', fontsize=24)
+    ax1.plot(x, df[['fat_mass_lb']])
 
-    plt.grid()
-    plt.legend(prop={'size': 20})
-    plt.xlabel('date', fontsize=24)
-    plt.ylabel('weight (lb)', fontsize=24)
-    xaxis_range = (df.index.tolist()[0]-1, df.index.tolist()[-1]+1)
-    plt.xlim(xaxis_range)
-    plt.plot(x, y_sm)
-
-
-    color = 'tab:red'
-    ax1
-    """
     ax2 = ax1.twinx()
     ax2.set_ylabel('fat (%)', fontsize=24, color='tab:red')
     ax2.tick_params(axis='y', labelcolor='tab:red')
-    ax2.plot(x, y_sm)
-    """
+    ax2.plot(x, df[['fat_%']], color='tab:red')
+
 #    fig.tight_layout()
 
 #    df.plot()
