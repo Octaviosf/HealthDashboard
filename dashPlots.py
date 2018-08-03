@@ -68,6 +68,13 @@ with pd.option_context('display.max_rows', None, 'display.max_columns', None):
 #plot df using matplotlib
 df.plot(style='o')
 plt.grid()
+
+pprint(df.index.tolist()[0])
+
+xaxis_range = (df.index.tolist()[0], df.index.tolist()[-1])
+
+plt.xlim(xaxis_range)
+plt.xlabel('Date', fontsize=20)
 plt.show()
 
 #embed plot into tkinter gui
