@@ -63,36 +63,43 @@ def format_plot(df):
 
 #    art = m_art.Artist.set_label()
     x = df.index
-    y_lg = df[['weight_lb', 'lean_body_mass_lb']]
     xmin = df.index.tolist()[0]-1
     xmax = df.index.tolist()[-1]+4
+    plt.rc('xtick', labelsize=16)
+    plt.rc('ytick', labelsize=16)
+    labelpad = 25
+    labelfontsize = 18
+    """
     xticks = []
     d = xmin
     while d <= xmax:
         xticks.append(d)
         d += 1
-
+    """
     plt.figure(1)
     ax0 = plt.subplot(211)
     ax0.grid()
 #    ax0.legend(art, ['total mass', 'lean mass'])
-    ax0.set_title('Body Composition', fontsize=30)
-    ax0.set_ylabel('weight (lb)', fontsize=24)
+    ax0.set_title('Body Composition', fontsize=30, pad=30)
+    ax0.set_ylabel('Total / Lean Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
 #    ax0.set_xticks(xticks)
     ax0.set_xlim(xmin, xmax)
+#    ax0.set_xticklabels({'fontsize': 24})
+    ax0.tick_params(axis='x', rotation=45)
     ax0.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
     ax0.plot(x, df[['weight_lb']], '--bo', x, df[['lean_body_mass_lb']], '--ro')
 
     ax1 = plt.subplot(212)
     ax1.grid()
 #    ax1.legend(art, ['fat mass', 'fat %'])
-    ax1.set_xlabel('date', fontsize=24)
-    ax1.set_ylabel('weight (lb)', fontsize=24)
+    ax1.set_xlabel('Date', fontsize=labelfontsize, labelpad=labelpad)
+    ax1.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax1.tick_params(axis='x', rotation=45)
     ax1.plot(x, df[['fat_mass_lb']], '--go', alpha=0.3)
 
     ax2 = ax1.twinx()
-    ax2.set_ylabel('fat (%)', fontsize=24)
-    ax2.set_xticks(xticks)
+    ax2.set_ylabel('Fat (%)', fontsize=labelfontsize, labelpad=labelpad)
+#    ax2.set_xticks(xticks)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
     ax2.plot(x, df[['fat_%']], '--yo', alpha=1.0)
