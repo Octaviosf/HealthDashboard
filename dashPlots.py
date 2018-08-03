@@ -50,6 +50,7 @@ def sheet_to_df(sheet_obj):
     df = df.set_index('date_time')
 
     # down-sample data by day
+    df = df.apply(pd.to_numeric, errors='coerce')
     cols = df.columns.difference(['date_time'])
     df[cols] = df[cols].astype(float)
     df = df.resample('d').mean().dropna(how='all')
@@ -64,7 +65,7 @@ def format_plot(df):
     x = df.index
     y_lg = df[['weight_lb', 'lean_body_mass_lb']]
     xmin = df.index.tolist()[0]-1
-    xmax = df.index.tolist()[-1]+10
+    xmax = df.index.tolist()[-1]+4
     xticks = []
     d = xmin
     while d <= xmax:
@@ -90,7 +91,7 @@ def format_plot(df):
     ax1.plot(x, df[['fat_mass_lb']], color = 'tab:green')
 
     ax2 = ax1.twinx()
-    ax2.set_ylabel('percent', fontsize=24)
+    ax2.set_ylabel('fat (%)', fontsize=24)
     ax2.tick_params(axis='y')
     ax2.set_xticks(xticks)
     ax2.set_xlim(xmin, xmax)
