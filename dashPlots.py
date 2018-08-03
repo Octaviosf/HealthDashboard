@@ -45,7 +45,7 @@ def sheet_to_df(sheet_obj):
     df = pd.DataFrame.from_records(data, columns=labels)
 
     # format df
-    df = df[['date_time', 'weight_lb', 'lean_body_mass_lb', 'fat_mass_lb', 'body_fat_%']]
+    df = df[['date_time', 'weight_lb', 'lean_body_mass_lb', 'fat_mass_lb', 'fat_%']]
     df['date_time'] = df['date_time'].astype('datetime64[ns]')
     df = df.set_index('date_time')
 
@@ -59,19 +59,38 @@ def sheet_to_df(sheet_obj):
 def format_plot(df):
     import matplotlib.dates as mdates
 
-    df.plot(style='o')
+    x = df.index
+    y_lb = df[['weight_lb', 'lean_body_mass_lb', 'fat_mass_lb']]
+    y_percent = df[['fat_%']]
+
+    fig, ax1 = plt.subplots()
+    ax1.set_ylabel('weight (lb)', fontsize=24)
+    ax1.plot(x, y_lb)
+
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('fat (%)', fontsize=24, color='tab:red')
+    ax2.plot(x, y_percent, color='tab:red')
+    ax2.tick_params(axis='y', labelcolor='tab:red')
+
+#    fig.tight_layout()
+
+#    df.plot()
     plt.grid()
     plt.legend(prop={'size': 20})
 
     plt.title('Body Composition', fontsize=30)
-    plt.xlabel('Date', fontsize=24)
+    plt.xlabel('date', fontsize=24)
 
-    xaxis_range = (df.index.tolist()[0], df.index.tolist()[-1])
+    xaxis_range = (df.index.tolist()[0]-1, df.index.tolist()[-1]+1)
     plt.xlim(xaxis_range)
+    """
     plt.tick_params(axis='x',which='minor', labelsize=16)
     plt.tick_params(axis='x',which='major', labelsize=16)
+    """
 
-#    ax = plt.gca()
+
+
+
 #    dates_fmt = mdates.DateFormatter('%m-%d-%Y')
 #    ax.xaxis.set_major_formatter(dates_fmt)
 
