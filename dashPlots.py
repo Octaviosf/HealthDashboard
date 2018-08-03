@@ -60,29 +60,40 @@ def format_plot(df):
     import matplotlib.dates as mdates
 
     x = df.index
-    y_lb = df[['weight_lb', 'lean_body_mass_lb', 'fat_mass_lb']]
-    y_percent = df[['fat_%']]
+    y_lb = df[['weight_lb', 'lean_body_mass_lb']]
+    y_percent = df[['fat_%', 'fat_mass_lb']]
 
-    fig, ax1 = plt.subplots()
-    ax1.set_ylabel('weight (lb)', fontsize=24)
-    ax1.plot(x, y_lb)
+    plt.figure(1)
 
+    plt.subplot(211)
+    plt.grid()
+    plt.legend(prop={'size': 20})
+    plt.title('Body Composition', fontsize=30)
+    plt.xlabel('date', fontsize=24)
+    plt.ylabel('weight (lb)', fontsize=24)
+    xaxis_range = (df.index.tolist()[0]-1, df.index.tolist()[-1]+1)
+    plt.xlim(xaxis_range)
+    plt.plot(x, y_lb)
+
+    plt.subplot(212)
+    plt.grid()
+    plt.legend(prop={'size': 20})
+    plt.xlabel('date', fontsize=24)
+    plt.ylabel('weight (lb)', fontsize=24)
+    xaxis_range = (df.index.tolist()[0]-1, df.index.tolist()[-1]+1)
+    plt.xlim(xaxis_range)
+    plt.plot(x, y_percent)
+
+    """
     ax2 = ax1.twinx()
     ax2.set_ylabel('fat (%)', fontsize=24, color='tab:red')
-    ax2.plot(x, y_percent, color='tab:red')
     ax2.tick_params(axis='y', labelcolor='tab:red')
-
+    ax2.plot(x, y_percent)
+    """
 #    fig.tight_layout()
 
 #    df.plot()
-    plt.grid()
-    plt.legend(prop={'size': 20})
 
-    plt.title('Body Composition', fontsize=30)
-    plt.xlabel('date', fontsize=24)
-
-    xaxis_range = (df.index.tolist()[0]-1, df.index.tolist()[-1]+1)
-    plt.xlim(xaxis_range)
     """
     plt.tick_params(axis='x',which='minor', labelsize=16)
     plt.tick_params(axis='x',which='major', labelsize=16)
