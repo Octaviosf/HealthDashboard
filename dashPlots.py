@@ -53,9 +53,7 @@ def sheet_to_df(sheet_obj):
     df = df.apply(pd.to_numeric, errors='coerce')
     cols = df.columns.difference(['date_time'])
     df[cols] = df[cols].astype(float)
-    pprint(df)
     df = df.resample('d').mean().dropna(how='all')
-    pprint(df)
 
     return df
 
@@ -80,24 +78,24 @@ def format_plot(df):
 #    ax0.legend(art, ['total mass', 'lean mass'])
     ax0.set_title('Body Composition', fontsize=30)
     ax0.set_ylabel('weight (lb)', fontsize=24)
-    ax0.set_xticks(xticks)
+#    ax0.set_xticks(xticks)
     ax0.set_xlim(xmin, xmax)
     ax0.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
-    ax0.plot(x, y_lg)
+    ax0.plot(x, df[['weight_lb']], '--bo', x, df[['lean_body_mass_lb']], '--ro')
 
     ax1 = plt.subplot(212)
     ax1.grid()
 #    ax1.legend(art, ['fat mass', 'fat %'])
     ax1.set_xlabel('date', fontsize=24)
     ax1.set_ylabel('weight (lb)', fontsize=24)
-    ax1.plot(x, df[['fat_mass_lb']], '--go', alpha=1.0)
+    ax1.plot(x, df[['fat_mass_lb']], '--go', alpha=0.3)
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('fat (%)', fontsize=24)
     ax2.set_xticks(xticks)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
-    ax2.plot(x, df[['fat_%']], '--ro', alpha=0.5)
+    ax2.plot(x, df[['fat_%']], '--yo', alpha=1.0)
 
 #    fig.tight_layout()
 
