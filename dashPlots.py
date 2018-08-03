@@ -53,7 +53,9 @@ def sheet_to_df(sheet_obj):
     df = df.apply(pd.to_numeric, errors='coerce')
     cols = df.columns.difference(['date_time'])
     df[cols] = df[cols].astype(float)
+    pprint(df)
     df = df.resample('d').mean().dropna(how='all')
+    pprint(df)
 
     return df
 
@@ -88,7 +90,8 @@ def format_plot(df):
 #    ax1.legend(art, ['fat mass', 'fat %'])
     ax1.set_xlabel('date', fontsize=24)
     ax1.set_ylabel('weight (lb)', fontsize=24)
-    ax1.plot(x, df[['fat_mass_lb']], color = 'tab:green')
+    print(type(df[['fat_mass_lb']]))
+    ax1.plot(x, df[['fat_mass_lb']], '--go')
 
     ax2 = ax1.twinx()
     ax2.set_ylabel('fat (%)', fontsize=24)
@@ -96,7 +99,7 @@ def format_plot(df):
     ax2.set_xticks(xticks)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
-    ax2.plot(x, df[['fat_%']], color='tab:red')
+    ax2.plot(x, df[['fat_%']], '--ro')
 
 #    fig.tight_layout()
 
