@@ -1,9 +1,6 @@
 from pprint import pprint
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import timedelta
-
-import numpy as np
 
 def access_sheet(spreadsheet_id, range_):
     """
@@ -65,14 +62,12 @@ def format_plot(df):
     x = df.index
     y_lg = df[['weight_lb', 'lean_body_mass_lb']]
     xmin = df.index.tolist()[0]-1
-    xmin = xmin.to_pydatetime()
     xmax = df.index.tolist()[-1]+10
-    xmax = xmax.to_pydatetime()
     xticks = []
     d = xmin
     while d <= xmax:
         xticks.append(d)
-        d = d + timedelta(days=1)
+        d += 1
 
     plt.figure(1)
     ax0 = plt.subplot(211)
