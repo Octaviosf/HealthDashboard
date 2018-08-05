@@ -138,8 +138,9 @@ class SmartMirror(tk.Tk):
     def __init__(self, *args, **kwargs):
 
         tk.Tk.__init__(self, *args, **kwargs)
-        container = tk.Frame(self)
 
+        self.attributes("-fullscreen", True)
+        container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
 
         container.grid_rowconfigure(0, weight=1)
@@ -195,7 +196,7 @@ class HealthDashboard(tk.Frame):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
-#show gui
+#draw gui
 app = SmartMirror()
 app.mainloop()
 
