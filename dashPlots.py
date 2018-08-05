@@ -119,13 +119,15 @@ def create_plot(df):
 
 spreadsheet_id = '10pFtYAvmRedAWNU1vB-JDZRGKiRD4EZDH6zGzkghpZ0'
 range_ = 'Sheet1'
-
 sheet_obj = access_sheet(spreadsheet_id, range_)
+
 df = sheet_to_df(sheet_obj)
 pprint(df)
+
 create_plot(df)
 plt.show()
 
 #embed plot into tkinter gui
+
 
 #show gui
