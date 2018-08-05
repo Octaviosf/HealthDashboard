@@ -66,7 +66,8 @@ def create_plot(df):
     import matplotlib.dates as mdates
 
     # global plot format
-    plt.figure(1)
+    plt.figure(figsize=(17, 14), dpi=100)
+#    f.tight_layout()
     x = df.index
     xmin = df.index.tolist()[0]-1
     xmax = df.index.tolist()[-1]+4
@@ -75,14 +76,15 @@ def create_plot(df):
     labelpad = 25
     labelfontsize = 18
     linewidth=2
+    rotation=30
 
     # Total Mass plot
-    ax0 = plt.subplot(211)
+    ax0 = plt.subplot2grid((3,1), (0,0), rowspan=2)
     ax0.grid()
     ax0.set_title('Body Composition', fontsize=30, pad=30)
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
-    ax0.tick_params(axis='x', rotation=45)
+    ax0.tick_params(axis='x', rotation=rotation)
     lin1 = ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
 
     # Lean Mass plot
@@ -97,10 +99,10 @@ def create_plot(df):
     ax1.legend(lns0, labels0, prop={'size': 20})
 
     # Fat Mass plot
-    ax2 = plt.subplot(212)
+    ax2 = plt.subplot2grid((3,1), (2,0), rowspan=1)
     ax2.grid()
     ax2.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-    ax2.tick_params(axis='x', rotation=45)
+    ax2.tick_params(axis='x', rotation=rotation)
     lin2 = ax2.plot(x, df[['fat_mass_lb']], '--co', alpha=1.0, label='Fat Mass', linewidth=linewidth)
 
     # Fat % plot
