@@ -25,7 +25,6 @@ def access_sheet(spreadsheet_id, range_):
     # call to access sheet data
     value_render_option = 'FORMATTED_VALUE'
     date_time_render_option = 'FORMATTED_STRING'
-
     request = service.spreadsheets().values().get(
         spreadsheetId=spreadsheet_id, range=range_, valueRenderOption=value_render_option,
         dateTimeRenderOption=date_time_render_option)
@@ -54,64 +53,67 @@ def sheet_to_df(sheet_obj):
     cols = df.columns.difference(['date_time'])
     df[cols] = df[cols].astype(float)
     df = df.resample('d').mean().dropna(how='all')
+    df[cols] = df[cols].round(decimals=2)
 
     return df
 
-def format_plot(df):
+def create_plot(df):
+    """
+    creates and  formats  a plot using data from df
+    :param df: dataframe
+    :return: None
+    """
     import matplotlib.dates as mdates
-#    import matplotlib.artist as m_art
 
-#    art = m_art.Artist.set_label()
+    # global plot format
+    plt.figure(1)
     x = df.index
     xmin = df.index.tolist()[0]-1
     xmax = df.index.tolist()[-1]+4
-    plt.rc('xtick', labelsize=16)
-    plt.rc('ytick', labelsize=16)
+    plt.rc('xtick', labelsize=18)
+    plt.rc('ytick', labelsize=18)
     labelpad = 25
     labelfontsize = 18
     linewidth=2
-    """
-    xticks = []
-    d = xmin
-    while d <= xmax:
-        xticks.append(d)
-        d += 1
-    """
-    plt.figure(1)
+
+    # Total Mass plot
     ax0 = plt.subplot(211)
     ax0.grid()
     ax0.set_title('Body Composition', fontsize=30, pad=30)
-    ax0.set_ylabel('Total / Lean Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-#    ax0.set_xticks(xticks)
+    ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
-#    ax0.set_xticklabels({'fontsize': 24})
     ax0.tick_params(axis='x', rotation=45)
-    ax0.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
-    ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
-    ax0.plot(x, df[['lean_body_mass_lb']], '--ro', label='Lean Mass', linewidth=linewidth)
-    ax0.legend(prop={'size': 20})
+    lin1 = ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
 
-    ax1 = plt.subplot(212)
-    ax1.grid()
-#    ax1.legend(art, ['fat mass', 'fat %'])
-    ax1.set_xlabel('Date', fontsize=labelfontsize, labelpad=labelpad)
-    ax1.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-    ax1.tick_params(axis='x', rotation=45)
-    lin1 = ax1.plot(x, df[['fat_mass_lb']], '--co', alpha=1.0, label='Fat Mass', linewidth=linewidth)
+    # Lean Mass plot
+    ax1 = ax0.twinx()
+    ax1.set_ylabel('Lean Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
+    lin2 = ax1.plot(x, df[['lean_body_mass_lb']], '--ro', label='Lean Mass', linewidth=linewidth)
 
-    ax2 = ax1.twinx()
-    ax2.set_ylabel('Fat (%)', fontsize=labelfontsize, labelpad=labelpad)
-#    ax2.set_xticks(xticks)
-    ax2.set_xlim(xmin, xmax)
-    ax2.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
-    lin2 = ax2.plot(x, df[['fat_%']], '--ko', alpha=1.0, label='Fat %', linewidth=linewidth)
+    # Total / Lean Mass legend
+    lns0 = lin1+lin2
+    labels0 = [l.get_label() for l in lns0]
+    ax1.legend(lns0, labels0, prop={'size': 20})
 
-    lns = lin1+lin2
-    labels = [l.get_label() for l in lns]
-    ax2.legend(lns, labels, prop={'size': 20})
-#    fig.tight_layout()
+    # Fat Mass plot
+    ax2 = plt.subplot(212)
+    ax2.grid()
+    ax2.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax2.tick_params(axis='x', rotation=45)
+    lin2 = ax2.plot(x, df[['fat_mass_lb']], '--co', alpha=1.0, label='Fat Mass', linewidth=linewidth)
 
-#    df.plot()
+    # Fat % plot
+    ax3 = ax2.twinx()
+    ax3.set_ylabel('Fat %', fontsize=labelfontsize, labelpad=labelpad)
+    ax3.set_xlim(xmin, xmax)
+    ax3.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
+    lin3 = ax3.plot(x, df[['fat_%']], '--ko', alpha=1.0, label='Fat %', linewidth=linewidth)
+
+    # Fat Mass / Percentage legend
+    lns1 = lin2+lin3
+    labels1 = [l.get_label() for l in lns1]
+    ax3.legend(lns1, labels1, prop={'size': 20})
 
     return None
 
@@ -120,12 +122,8 @@ range_ = 'Sheet1'
 
 sheet_obj = access_sheet(spreadsheet_id, range_)
 df = sheet_to_df(sheet_obj)
-
-with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-    pprint(df)
-
-format_plot(df)
-
+pprint(df)
+create_plot(df)
 plt.show()
 
 #embed plot into tkinter gui
