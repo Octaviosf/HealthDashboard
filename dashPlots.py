@@ -76,30 +76,29 @@ def create_plot(df):
     labelpad = 25
     labelfontsize = 18
     linewidth=2
-    rotation=30
-
+    rotation=0
+    dateformat = '%a-%b-%d'
     # Total Mass plot
-    ax0 = plt.subplot2grid((3,1), (0,0), rowspan=2)
+    ax0 = plt.subplot2grid((4,1), (0,0), rowspan=2)
     ax0.grid()
     ax0.set_title('Body Composition', fontsize=30, pad=30)
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
     ax0.tick_params(axis='x', rotation=rotation)
-    lin1 = ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
+    ax0.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+    ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
 
     # Lean Mass plot
-    ax1 = ax0.twinx()
+    ax1 = plt.subplot2grid((4,1), (2,0), rowspan=1)
+    ax1.grid()
     ax1.set_ylabel('Lean Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
-    lin2 = ax1.plot(x, df[['lean_body_mass_lb']], '--ro', label='Lean Mass', linewidth=linewidth)
-
-    # Total / Lean Mass legend
-    lns0 = lin1+lin2
-    labels0 = [l.get_label() for l in lns0]
-    ax1.legend(lns0, labels0, prop={'size': 20})
+    ax1.set_xlim(xmin, xmax)
+    ax1.tick_params(axis='x', rotation=rotation)
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+    ax1.plot(x, df[['lean_body_mass_lb']], '--ro', label='Lean Mass', linewidth=linewidth)
 
     # Fat Mass plot
-    ax2 = plt.subplot2grid((3,1), (2,0), rowspan=1)
+    ax2 = plt.subplot2grid((4,1), (3,0), rowspan=1)
     ax2.grid()
     ax2.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax2.tick_params(axis='x', rotation=rotation)
@@ -109,7 +108,7 @@ def create_plot(df):
     ax3 = ax2.twinx()
     ax3.set_ylabel('Fat %', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_xlim(xmin, xmax)
-    ax3.xaxis.set_major_formatter(mdates.DateFormatter('%B-%d'))
+    ax3.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     lin3 = ax3.plot(x, df[['fat_%']], '--ko', alpha=1.0, label='Fat %', linewidth=linewidth)
 
     # Fat Mass / Percentage legend
