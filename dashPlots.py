@@ -1,6 +1,7 @@
 from pprint import pprint
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 def access_sheet(spreadsheet_id, range_):
     """
@@ -66,11 +67,22 @@ def create_plot(df):
     import matplotlib.dates as mdates
 
     # global plot format
-    plt.figure(figsize=(17, 14), dpi=100)
+    plt.figure(figsize=(17, 12), dpi=100)
 #    f.tight_layout()
     x = df.index
     xmin = df.index.tolist()[0]-1
     xmax = df.index.tolist()[-1]+4
+    y_t_min = float(df[['weight_lb']].min()-0.25)
+    y_t_max = float(df[['weight_lb']].max()+0.25)
+    y_l_min = float(df[['lean_body_mass_lb']].min()-0.25)
+    y_l_max = float(df[['lean_body_mass_lb']].max()+0.25)
+    y_f_min = float(df[['fat_mass_lb']].min()-2)
+    y_f_max = float(df[['fat_mass_lb']].max()+2)
+    y_fp_min = float(df[['fat_%']].min()-0.5)
+    y_fp_max = float(df[['fat_%']].max()+0.5)
+#    y_f_ticks = np.linspace(round(y_f_min*2)/2, round(y_f_max*2)/2, 5).tolist()
+#    y_fp_ticks = np.linspace(round(y_fp_min*2)/2, round(y_fp_max*2)/2, 5).tolist()
+
     plt.rc('xtick', labelsize=18)
     plt.rc('ytick', labelsize=18)
     labelpad = 25
@@ -84,6 +96,7 @@ def create_plot(df):
     ax0.set_title('Body Composition', fontsize=30, pad=30)
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
+    ax0.set_ylim(y_t_min, y_t_max)
     ax0.tick_params(axis='x', rotation=rotation)
     ax0.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
@@ -93,21 +106,27 @@ def create_plot(df):
     ax1.grid()
     ax1.set_ylabel('Lean Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_xlim(xmin, xmax)
+    ax1.set_ylim(y_l_min, y_l_max)
     ax1.tick_params(axis='x', rotation=rotation)
     ax1.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    ax1.plot(x, df[['lean_body_mass_lb']], '--ro', label='Lean Mass', linewidth=linewidth)
+    ax1.plot(x, df[['lean_body_mass_lb']], '--go', label='Lean Mass', linewidth=linewidth)
 
     # Fat Mass plot
     ax2 = plt.subplot2grid((4,1), (3,0), rowspan=1)
-    ax2.grid()
+    ax2.grid(axis='x')
     ax2.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax2.tick_params(axis='x', rotation=rotation)
-    lin2 = ax2.plot(x, df[['fat_mass_lb']], '--co', alpha=1.0, label='Fat Mass', linewidth=linewidth)
+#    ax2.set_yticklabels(y_f_ticks)
+#    ax2.set_ylim(y_f_min, y_f_max)
+    lin2 = ax2.plot(x, df[['fat_mass_lb']], '--ro', alpha=1.0, label='Fat Mass', linewidth=linewidth)
 
     # Fat % plot
     ax3 = ax2.twinx()
+    ax3.grid()
     ax3.set_ylabel('Fat %', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_xlim(xmin, xmax)
+#    ax3.set_yticklabels(y_fp_ticks)
+#    ax3.set_ylim(y_fp_min, y_fp_max)
     ax3.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     lin3 = ax3.plot(x, df[['fat_%']], '--ko', alpha=1.0, label='Fat %', linewidth=linewidth)
 
