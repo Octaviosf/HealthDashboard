@@ -1,7 +1,13 @@
-from pprint import pprint
-import pandas as pd
-import matplotlib.pyplot as plt
 import tkinter as tk
+from tkinter import ttk
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+from matplotlib.figure import Figure
+
+import matplotlib.pyplot as plt
+import pandas as pd
+from pprint import pprint
 
 def access_sheet(spreadsheet_id, range_):
     """
@@ -67,7 +73,7 @@ def create_plot(df):
     import matplotlib.dates as mdates
 
     # global plot format
-    plt.figure(figsize=(17, 12), dpi=100)
+    fig = plt.figure(figsize=(17, 12), dpi=100)
     plt.rc('xtick', labelsize=18)
     plt.rc('ytick', labelsize=18)
 
@@ -125,9 +131,9 @@ def create_plot(df):
     labels1 = [l.get_label() for l in lns1]
     ax3.legend(lns1, labels1, prop={'size': 20})
 
-    return None
+    return fig
 
-class HealthDashBoard(tk.Tk):
+class SmartMirror(tk.Tk):
 
     def __init__(self, *args, **kwargs):
 
@@ -141,40 +147,56 @@ class HealthDashBoard(tk.Tk):
 
         self.frames = {}
 
-        frame = StartPage(container, self)
+        for F in (MainMenu, HealthDashboard):
+            frame = F(container, self)
+            self.frames[F] = frame
+            frame.grid(row=0, column=0, sticky="nsew")
 
-        self.frames[StartPage] = frame
-
-        frame.grid(row=0, column=0, sticky="nsew")
-
-        self.show_frame(StartPage)
+        self.show_frame(MainMenu)
 
     def show_frame(self, cont):
 
         frame = self.frames[cont]
         frame.tkraise()
 
-class StartPage(tk.Frame):
+class MainMenu(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Start Page", font=("Verdana", 12))
+        label = tk.Label(self, text="Smart Mirror", font=("Verdana", 12))
         label.pack(pady=10, padx=10)
 
+        button1 = ttk.Button(self, text="Health Dashboard",
+                             command=lambda: controller.show_frame(HealthDashboard))
+        button1.pack()
 
-spreadsheet_id = '10pFtYAvmRedAWNU1vB-JDZRGKiRD4EZDH6zGzkghpZ0'
-range_ = 'Sheet1'
-sheet_obj = access_sheet(spreadsheet_id, range_)
+class HealthDashboard(tk.Frame):
 
-df = sheet_to_df(sheet_obj)
-pprint(df)
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Health Dashboard", font=("Verdana", 12))
+        label.pack(pady=10, padx=10)
 
-create_plot(df)
-#plt.show()
+        button1 = ttk.Button(self, text="Main Menu",
+                             command=lambda: controller.show_frame(MainMenu))
+        button1.pack()
 
-app = HealthDashBoard()
-app.mainloop()
-#embed plot into tkinter gui
+        spreadsheet_id = '10pFtYAvmRedAWNU1vB-JDZRGKiRD4EZDH6zGzkghpZ0'
+        range_ = 'Sheet1'
+        sheet_obj = access_sheet(spreadsheet_id, range_)
+
+        df = sheet_to_df(sheet_obj)
+
+        fig = create_plot(df)
+
+        # embed plot into SmartMirror gui
+        canvas = FigureCanvasTkAgg(fig, self)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
 #show gui
+app = SmartMirror()
+app.mainloop()
+
+
