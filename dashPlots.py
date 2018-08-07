@@ -82,10 +82,17 @@ def create_plot(df):
     x = df.index
     xmin = df.index.tolist()[0]-1
     xmax = df.index.tolist()[-1]+4
-    y_t_min = float(df[['weight_lb']].min()-0.25)
-    y_t_max = float(df[['weight_lb']].max()+0.25)
-    y_l_min = float(df[['muscle_lb']].min()-0.25)
-    y_l_max = float(df[['muscle_lb']].max()+0.25)
+    lim_pads = 0.25
+    y_t_min = float(df[['weight_lb']].min()-1)
+    y_t_max = float(df[['weight_lb']].max()+1)
+    y_m_min = float(df[['muscle_lb']].min()-lim_pads)
+    y_m_max = float(df[['muscle_lb']].max()+lim_pads)
+    y_f_min = float(df[['fat_lb']].min()-lim_pads)
+    y_f_max = float(df[['fat_lb']].max()+lim_pads)
+    y_b_min = float(df[['bone_lb']].min()-lim_pads)
+    y_b_max = float(df[['bone_lb']].max()+lim_pads)
+    y_w_min = float(df[['water_%']].min()-lim_pads)
+    y_w_max = float(df[['water_%']].max()+lim_pads)
     labelpad = 25
     labelfontsize = 20
     linewidth = 2
@@ -93,7 +100,7 @@ def create_plot(df):
     dateformat = '%a-%b-%d'
 
     # Total Mass plot
-    ax0 = plt.subplot2grid((4,1), (0,0), rowspan=2)
+    ax0 = plt.subplot2grid((6,1), (0,0), rowspan=1)
     ax0.grid()
     ax0.set_title('Body Composition', fontsize=30, pad=30)
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
@@ -104,10 +111,10 @@ def create_plot(df):
     ax0.plot(x, df[['weight_lb']], '--ko', label='Total Mass', linewidth=linewidth)
 
     # Muscle Mass plot
-    ax1 = plt.subplot2grid((4,1), (2,0), rowspan=1)
+    ax1 = plt.subplot2grid((6,1), (1,0), rowspan=1)
     ax1.grid()
     ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-    ax1.set_ylim(y_l_min, y_l_max)
+    ax1.set_ylim(y_m_min, y_m_max)
     ax1.tick_params(axis='x', rotation=rotation)
     lin0 = ax1.plot(x, df[['muscle_lb']], '--ro', label='Muscle Mass', linewidth=linewidth)
 
@@ -116,7 +123,7 @@ def create_plot(df):
     ax2.set_ylabel('Muscle %', fontsize=labelfontsize, labelpad=labelpad)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin1 = ax2.plot(x, df[['fat_%']], '--mo', label='Muscle %', linewidth=linewidth)
+    lin1 = ax2.plot(x, df[['muscle_%']], '--mo', label='Muscle %', linewidth=linewidth)
 
     # Muscle Mass / Percentage legend
     lns0 = lin0+lin1
@@ -125,9 +132,10 @@ def create_plot(df):
 
 
     # Fat Mass plot
-    ax3 = plt.subplot2grid((4,1), (3,0), rowspan=1)
+    ax3 = plt.subplot2grid((6,1), (2,0), rowspan=1)
     ax3.grid()
     ax3.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax3.set_ylim(y_f_min, y_f_max)
     ax3.tick_params(axis='x', rotation=rotation)
     lin2 = ax3.plot(x, df[['fat_lb']], '--bo', alpha=1.0, label='Fat Mass', linewidth=linewidth)
 
@@ -142,6 +150,34 @@ def create_plot(df):
     lns1 = lin2+lin3
     labels1 = [l.get_label() for l in lns1]
     ax4.legend(lns1, labels1, prop={'size': 20})
+
+    # Bone Mass plot
+    ax5 = plt.subplot2grid((6,1), (3,0), rowspan=1)
+    ax5.grid()
+    ax5.set_ylabel('Bone Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax5.set_ylim(y_b_min, y_b_max)
+    lin4 = ax5.plot(x, df[['bone_lb']], '-ro', label='Bone Mass', linewidth=linewidth)
+
+    ax6 = ax5.twinx()
+    ax6.set_ylabel('Bone %', fontsize=labelfontsize, labelpad=labelpad)
+    ax6.set_xlim(xmin, xmax)
+    ax6.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+    lin5 = ax6.plot(x, df[['bone_%']], '-mo', alpha=1.0, label='Bone %', linewidth=linewidth)
+
+    # Bone Mass / Percentage legend
+    lns2 = lin4+lin5
+    labels2 = [l.get_label() for l in lns2]
+    ax6.legend(lns2, labels2, prop={'size': 20})
+
+    # Water % plot
+    ax7 = plt.subplot2grid((6,1), (4,0), rowspan=1)
+    ax7.grid()
+    ax7.set_ylabel('Water %', fontsize=labelfontsize, labelpad=labelpad)
+    ax7.set_xlim(xmin, xmax)
+    ax7.set_ylim(y_w_min, y_w_max)
+    ax7.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+    ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
+
 
     return fig
 
