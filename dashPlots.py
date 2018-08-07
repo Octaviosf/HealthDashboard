@@ -101,36 +101,49 @@ def create_plot(df):
     ax0.set_ylim(y_t_min, y_t_max)
     ax0.tick_params(axis='x', rotation=rotation)
     ax0.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
+    ax0.plot(x, df[['weight_lb']], '--ko', label='Total Mass', linewidth=linewidth)
 
     # Muscle Mass plot
     ax1 = plt.subplot2grid((4,1), (2,0), rowspan=1)
     ax1.grid()
     ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-    ax1.set_xlim(xmin, xmax)
+#    ax1.set_xlim(xmin, xmax)
     ax1.set_ylim(y_l_min, y_l_max)
     ax1.tick_params(axis='x', rotation=rotation)
-    ax1.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    ax1.plot(x, df[['muscle_lb']], '--go', label='Muscle Mass', linewidth=linewidth)
+#    ax1.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+    lin0 = ax1.plot(x, df[['muscle_lb']], '--ro', label='Muscle Mass', linewidth=linewidth)
+
+    # Muscle % plot
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('Muscle %', fontsize=labelfontsize, labelpad=labelpad)
+    ax2.set_xlim(xmin, xmax)
+    ax2.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+    lin1 = ax2.plot(x, df[['fat_%']], '--mo', label='Fat %', linewidth=linewidth)
+
+    # Muscle Mass / Percentage legend
+    lns0 = lin0+lin1
+    labels0 = [l.get_label() for l in lns0]
+    ax2.legend(lns0, labels0, prop={'size': 20})
+
 
     # Fat Mass plot
-    ax2 = plt.subplot2grid((4,1), (3,0), rowspan=1)
-    ax2.grid()
-    ax2.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-    ax2.tick_params(axis='x', rotation=rotation)
-    lin2 = ax2.plot(x, df[['fat_mass_lb']], '--ro', alpha=1.0, label='Fat Mass', linewidth=linewidth)
+    ax3 = plt.subplot2grid((4,1), (3,0), rowspan=1)
+    ax3.grid()
+    ax3.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax3.tick_params(axis='x', rotation=rotation)
+    lin2 = ax3.plot(x, df[['fat_lb']], '--bo', alpha=1.0, label='Fat Mass', linewidth=linewidth)
 
     # Fat % plot
-    ax3 = ax2.twinx()
-    ax3.set_ylabel('Fat %', fontsize=labelfontsize, labelpad=labelpad)
-    ax3.set_xlim(xmin, xmax)
-    ax3.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin3 = ax3.plot(x, df[['fat_%']], '--ko', alpha=1.0, label='Fat %', linewidth=linewidth)
+    ax4 = ax3.twinx()
+    ax4.set_ylabel('Fat %', fontsize=labelfontsize, labelpad=labelpad)
+    ax4.set_xlim(xmin, xmax)
+    ax4.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+    lin3 = ax4.plot(x, df[['fat_%']], '--co', alpha=1.0, label='Fat %', linewidth=linewidth)
 
     # Fat Mass / Percentage legend
     lns1 = lin2+lin3
     labels1 = [l.get_label() for l in lns1]
-    ax3.legend(lns1, labels1, prop={'size': 20})
+    ax4.legend(lns1, labels1, prop={'size': 20})
 
     return fig
 
@@ -183,7 +196,7 @@ class HealthDashboard(tk.Frame):
                              command=lambda: controller.show_frame(MainMenu))
         button1.pack()
 
-        spreadsheet_id = '10pFtYAvmRedAWNU1vB-JDZRGKiRD4EZDH6zGzkghpZ0'
+        spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
         range_ = 'Sheet1'
         sheet_obj = access_sheet(spreadsheet_id, range_)
 
