@@ -51,7 +51,8 @@ def sheet_to_df(sheet_obj):
     df = pd.DataFrame.from_records(data, columns=labels)
 
     # format df
-    df = df[['date_time', 'weight_lb', 'lean_body_mass_lb', 'fat_mass_lb', 'fat_%']]
+    df = df[['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
+             'muscle_lb', 'BMI', 'fat_lb', 'bone_%', 'muscle_%']]
     df['date_time'] = df['date_time'].astype('datetime64[ns]')
     df = df.set_index('date_time')
 
@@ -83,8 +84,8 @@ def create_plot(df):
     xmax = df.index.tolist()[-1]+4
     y_t_min = float(df[['weight_lb']].min()-0.25)
     y_t_max = float(df[['weight_lb']].max()+0.25)
-    y_l_min = float(df[['lean_body_mass_lb']].min()-0.25)
-    y_l_max = float(df[['lean_body_mass_lb']].max()+0.25)
+    y_l_min = float(df[['muscle_lb']].min()-0.25)
+    y_l_max = float(df[['muscle_lb']].max()+0.25)
     labelpad = 25
     labelfontsize = 20
     linewidth = 2
@@ -102,15 +103,15 @@ def create_plot(df):
     ax0.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax0.plot(x, df[['weight_lb']], '--bo', label='Total Mass', linewidth=linewidth)
 
-    # Lean Mass plot
+    # Muscle Mass plot
     ax1 = plt.subplot2grid((4,1), (2,0), rowspan=1)
     ax1.grid()
-    ax1.set_ylabel('Lean Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_xlim(xmin, xmax)
     ax1.set_ylim(y_l_min, y_l_max)
     ax1.tick_params(axis='x', rotation=rotation)
     ax1.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    ax1.plot(x, df[['lean_body_mass_lb']], '--go', label='Lean Mass', linewidth=linewidth)
+    ax1.plot(x, df[['muscle_lb']], '--go', label='Muscle Mass', linewidth=linewidth)
 
     # Fat Mass plot
     ax2 = plt.subplot2grid((4,1), (3,0), rowspan=1)
