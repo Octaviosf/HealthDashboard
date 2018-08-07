@@ -104,7 +104,6 @@ def create_plot(df):
     # Total Mass plot
     ax0 = plt.subplot2grid((8,2), (4,0), rowspan=2, colspan=2)
     ax0.grid()
-    ax0.set_title('Body Composition', fontsize=30, pad=30)
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
     ax0.set_ylim(y_t_min, y_t_max)
@@ -115,6 +114,7 @@ def create_plot(df):
     # Muscle Mass plot
     ax1 = plt.subplot2grid((8,2), (0,0), rowspan=2, colspan=2)
     ax1.grid()
+    ax1.set_title('Body Composition', fontsize=30, pad=30)
     ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_ylim(y_m_min, y_m_max)
     ax1.tick_params(axis='x', rotation=rotation)
@@ -131,7 +131,6 @@ def create_plot(df):
     lns0 = lin0+lin1
     labels0 = [l.get_label() for l in lns0]
     ax2.legend(lns0, labels0, prop={'size': 20})
-
 
     # Fat Mass plot
     ax3 = plt.subplot2grid((8,2), (2,0), rowspan=2, colspan=2)
@@ -189,6 +188,7 @@ def create_plot(df):
     ax8.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax8.plot(x, df[['BMI']], '-ko', label='BMI', linewidth=linewidth)
 
+    plt.tight_layout()
 
     return fig
 
