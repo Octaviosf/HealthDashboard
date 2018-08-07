@@ -107,10 +107,8 @@ def create_plot(df):
     ax1 = plt.subplot2grid((4,1), (2,0), rowspan=1)
     ax1.grid()
     ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-#    ax1.set_xlim(xmin, xmax)
     ax1.set_ylim(y_l_min, y_l_max)
     ax1.tick_params(axis='x', rotation=rotation)
-#    ax1.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     lin0 = ax1.plot(x, df[['muscle_lb']], '--ro', label='Muscle Mass', linewidth=linewidth)
 
     # Muscle % plot
@@ -118,7 +116,7 @@ def create_plot(df):
     ax2.set_ylabel('Muscle %', fontsize=labelfontsize, labelpad=labelpad)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin1 = ax2.plot(x, df[['fat_%']], '--mo', label='Fat %', linewidth=linewidth)
+    lin1 = ax2.plot(x, df[['fat_%']], '--mo', label='Muscle %', linewidth=linewidth)
 
     # Muscle Mass / Percentage legend
     lns0 = lin0+lin1
