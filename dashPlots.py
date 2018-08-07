@@ -93,6 +93,8 @@ def create_plot(df):
     y_b_max = float(df[['bone_lb']].max()+lim_pads)
     y_w_min = float(df[['water_%']].min()-lim_pads)
     y_w_max = float(df[['water_%']].max()+lim_pads)
+    y_B_min = float(df[['BMI']].min()-lim_pads)
+    y_B_max = float(df[['BMI']].max()+lim_pads)
     labelpad = 25
     labelfontsize = 20
     linewidth = 2
@@ -177,6 +179,15 @@ def create_plot(df):
     ax7.set_ylim(y_w_min, y_w_max)
     ax7.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
+
+    # BMI plot
+    ax8 = plt.subplot2grid((6,1), (5,0), rowspan=1)
+    ax8.grid()
+    ax8.set_ylabel('BMI', fontsize=labelfontsize, labelpad=labelpad)
+    ax8.set_xlim(xmin, xmax)
+    ax8.set_ylim(y_B_min, y_B_max)
+    ax8.xaxis.set_major_locator(mdates.DateFormatter(dateformat))
+    ax8.plot(x, df[['BMI']], '-ko', label='BMI', linewidth=linewidth)
 
 
     return fig
