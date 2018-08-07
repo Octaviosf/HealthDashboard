@@ -180,13 +180,13 @@ def create_plot(df):
     ax7.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
 
-    # BMI plot
+    # Water % plot
     ax8 = plt.subplot2grid((6,1), (5,0), rowspan=1)
     ax8.grid()
     ax8.set_ylabel('BMI', fontsize=labelfontsize, labelpad=labelpad)
     ax8.set_xlim(xmin, xmax)
     ax8.set_ylim(y_B_min, y_B_max)
-    ax8.xaxis.set_major_locator(mdates.DateFormatter(dateformat))
+    ax8.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax8.plot(x, df[['BMI']], '-ko', label='BMI', linewidth=linewidth)
 
 
