@@ -81,7 +81,7 @@ def create_plot(df):
     # parameter init
     x = df.index
     xmin = df.index.tolist()[0]-1
-    xmax = df.index.tolist()[-1]+4
+    xmax = df.index.tolist()[-1]+2
     lim_pads = 0.25
     y_t_min = float(df[['weight_lb']].min()-1)
     y_t_max = float(df[['weight_lb']].max()+1)
@@ -102,7 +102,7 @@ def create_plot(df):
     dateformat = '%a-%b-%d'
 
     # Total Mass plot
-    ax0 = plt.subplot2grid((6,1), (0,0), rowspan=1)
+    ax0 = plt.subplot2grid((8,2), (4,0), rowspan=2, colspan=2)
     ax0.grid()
     ax0.set_title('Body Composition', fontsize=30, pad=30)
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
@@ -113,7 +113,7 @@ def create_plot(df):
     ax0.plot(x, df[['weight_lb']], '--ko', label='Total Mass', linewidth=linewidth)
 
     # Muscle Mass plot
-    ax1 = plt.subplot2grid((6,1), (1,0), rowspan=1)
+    ax1 = plt.subplot2grid((8,2), (0,0), rowspan=2, colspan=2)
     ax1.grid()
     ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_ylim(y_m_min, y_m_max)
@@ -134,7 +134,7 @@ def create_plot(df):
 
 
     # Fat Mass plot
-    ax3 = plt.subplot2grid((6,1), (2,0), rowspan=1)
+    ax3 = plt.subplot2grid((8,2), (2,0), rowspan=2, colspan=2)
     ax3.grid()
     ax3.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_ylim(y_f_min, y_f_max)
@@ -154,7 +154,7 @@ def create_plot(df):
     ax4.legend(lns1, labels1, prop={'size': 20})
 
     # Bone Mass plot
-    ax5 = plt.subplot2grid((6,1), (3,0), rowspan=1)
+    ax5 = plt.subplot2grid((8,2), (6,0), rowspan=1, colspan=2)
     ax5.grid()
     ax5.set_ylabel('Bone Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax5.set_ylim(y_b_min, y_b_max)
@@ -172,7 +172,7 @@ def create_plot(df):
     ax6.legend(lns2, labels2, prop={'size': 20})
 
     # Water % plot
-    ax7 = plt.subplot2grid((6,1), (4,0), rowspan=1)
+    ax7 = plt.subplot2grid((8,2), (7,0), rowspan=1, colspan=1)
     ax7.grid()
     ax7.set_ylabel('Water %', fontsize=labelfontsize, labelpad=labelpad)
     ax7.set_xlim(xmin, xmax)
@@ -180,8 +180,8 @@ def create_plot(df):
     ax7.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
 
-    # Water % plot
-    ax8 = plt.subplot2grid((6,1), (5,0), rowspan=1)
+    # BMI plot
+    ax8 = plt.subplot2grid((8,2), (7,1), rowspan=1, colspan=1)
     ax8.grid()
     ax8.set_ylabel('BMI', fontsize=labelfontsize, labelpad=labelpad)
     ax8.set_xlim(xmin, xmax)
