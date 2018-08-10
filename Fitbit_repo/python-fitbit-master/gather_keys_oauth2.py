@@ -1,8 +1,3 @@
-#! ~/anaconda3/bin/python
-'''
-#!/usr/bin/env python
-
-'''
 import cherrypy
 import os
 import sys
