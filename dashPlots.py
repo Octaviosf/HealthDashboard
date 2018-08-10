@@ -65,7 +65,7 @@ def sheet_to_df(sheet_obj):
 
     return df
 
-def create_plot(df):
+def bodycomp_plot(df):
     """
     creates and  formats  a plot using data from df
     :param df: dataframe
@@ -192,6 +192,21 @@ def create_plot(df):
 
     return fig
 
+def sleep_plot():
+
+    # sleep efficiency plot: (rem+light+deep) / (awake+rem+light+deep)
+
+    # sleep stages % grouped bar plot for current week (4 stages per day = 4 bars per day) w/ last weeks avg at end
+
+        # duration label above each stage
+
+        # total duration label above each night
+
+    # minutes to fall asleep plot (type: stages)
+
+    # minutes after wakeup plot (type: stages)
+
+
 class SmartMirror(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -247,7 +262,7 @@ class HealthDashboard(tk.Frame):
 
         df = sheet_to_df(sheet_obj)
 
-        fig = create_plot(df)
+        fig = bodycomp_plot(df)
 
         # embed plot into SmartMirror gui
         canvas = FigureCanvasTkAgg(fig, self)
