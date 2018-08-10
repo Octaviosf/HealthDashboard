@@ -22,7 +22,7 @@ def access_sheet(spreadsheet_id, range_):
 
     # create service instance
     SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-    store = oauth_file.Storage('token.json')
+    store = oauth_file.Storage('token.json') # accesses token.json (initialized with quickstart.py)
     creds = store.get()
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
