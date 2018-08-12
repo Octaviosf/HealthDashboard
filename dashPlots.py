@@ -206,6 +206,8 @@ def sleep_plot():
 
     # minutes after wakeup plot (type: stages)
 
+    return None
+
 
 class SmartMirror(tk.Tk):
 
