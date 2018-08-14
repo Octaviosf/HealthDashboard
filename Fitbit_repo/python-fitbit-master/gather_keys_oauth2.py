@@ -34,7 +34,7 @@ class OAuth2Server:
         """
         url, _ = self.fitbit.client.authorize_token_url()
         # Open the web browser in a new thread for command-line browser support
-        threading.Timer(1, webbrowser.open, args=(url,)).start()
+        threading.Timer(0, webbrowser.open, args=(url,)).start()
         cherrypy.quickstart(self)
 
     @cherrypy.expose
@@ -67,7 +67,7 @@ class OAuth2Server:
     def _shutdown_cherrypy(self):
         """ Shutdown cherrypy in one second, if it's running """
         if cherrypy.engine.state == cherrypy.engine.states.STARTED:
-            threading.Timer(1, cherrypy.engine.exit).start()
+            threading.Timer(0, cherrypy.engine.exit).start()
 
 
 if __name__ == '__main__':
