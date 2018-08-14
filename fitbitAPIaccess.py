@@ -35,18 +35,42 @@ print(dates)
 # initialize pandas dataframe and save as csv file
 class fitbit_df(object):
     def __init__(self, Client_ID, Client_Secret):
+        # request access and refresh tokens from Fitbit client
         server = Oauth2.OAuth2Server(Client_ID, Client_Secret)
         server.browser_authorize()
 
-        Access_Token = str(server.fitbit.client.session.token['access_token'])
-        Refresh_Token = str(server.fitbit.client.session.token['refresh_token'])
+        self.Access_Token = str(server.fitbit.client.session.token['access_token'])
+        self.Refresh_Token = str(server.fitbit.client.session.token['refresh_token'])
 
-        auth2_client = fitbit.Fitbit(Client_ID, Client_Secret, oauth2=True,
-                                     access_token=Access_Token, refresh_token=Refresh_Token)
-
-
+        self.auth2_client = fitbit.Fitbit(Client_ID, Client_Secret, oauth2=True,
+                                     access_token=self.Access_Token, refresh_token=self.Refresh_Token)
 
 
+        # init dates list for data request from Fitbit
+        dates = []
+        start_day = datetime.strptime('2018-08-07', '%Y-%m-%d')
+
+        days_from_start = (datetime.now() - start_day).days
+
+        day = start_day
+
+        for d in range(days_from_start):
+            dates.append(day)
+            day += timedelta(days=1)
+
+        # init S_data
+        S_data = []
+
+        for day in dates:
+            S_stats = self.auth2_client.get_sleep(day)
+            S_stages = S_stats['levels']
+            S_efficiency = efficiency(S_stages)
+            min_to_sleep = S_stats['minutessToFallAsleep']
+            min_after_wake = S_stats['minutesAfterWakeup']
+            # S_event_duration = S_stages['deep'] + 'light' + 'rem' + 'wake'
+            S_data.append([day, S_efficiency, S_stages, min_to_sleep, min_after_wake])
+
+        print(S_data)
 
 
 
