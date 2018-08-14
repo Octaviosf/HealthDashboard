@@ -4,10 +4,10 @@ import pandas as pd
 from datetime import datetime as datetime
 from datetime import timedelta
 
-"""
-CLIENT_ID = '22CXZR'
-CLIENT_SECRET = 'e2f4370b9bce7138faad9093accfd245'
+Client_ID = '22CXZR'
+Client_Secret = 'e2f4370b9bce7138faad9093accfd245'
 
+"""
 server = Oauth2.OAuth2Server(CLIENT_ID, CLIENT_SECRET)
 server.browser_authorize()
 
@@ -16,7 +16,6 @@ REFRESH_TOKEN = str(server.fitbit.client.session.token['refresh_token'])
 
 auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True,
                              access_token=ACCESS_TOKEN, refresh_token=REFRESH_TOKEN)
-"""
 dates = []
 start_day = datetime.strptime('2018-08-07', '%Y-%m-%d')
 
@@ -30,9 +29,23 @@ for d in range(days_from_start):
 
 print(dates)
 
+"""
 ###
 
 # initialize pandas dataframe and save as csv file
+def S_stages_summary(sleep_stages):
+    """
+    :param sleep_stages: dictionary capturing sleep stages
+    :return: tuple with float of sleep efficiency and int of sleep event duration
+    """
+
+    event_duration = sleep_stages['deep'] + sleep_stages['light'] + sleep_stages['rem'] + sleep_stages['wake']
+
+    efficiency = (sleep_stages['deep'] + sleep_stages['light'] + sleep_stages['rem']) / event_duration
+    efficiency = round(efficiency, 2)
+
+    return (efficiency, event_duration)
+
 class fitbit_df(object):
     def __init__(self, Client_ID, Client_Secret):
         # request access and refresh tokens from Fitbit client
@@ -59,18 +72,21 @@ class fitbit_df(object):
             day += timedelta(days=1)
 
         # init S_data
-        S_data = []
+        self.S_data = []
 
-        for day in dates:
-            S_stats = self.auth2_client.get_sleep(day)
-            S_stages = S_stats['levels']
-            S_efficiency = efficiency(S_stages)
-            min_to_sleep = S_stats['minutessToFallAsleep']
-            min_after_wake = S_stats['minutesAfterWakeup']
-            # S_event_duration = S_stages['deep'] + 'light' + 'rem' + 'wake'
-            S_data.append([day, S_efficiency, S_stages, min_to_sleep, min_after_wake])
-
-        print(S_data)
+        try:
+            for day in dates:
+                S_stats = self.auth2_client.get_sleep(day)
+                S_stages = S_stats['summary']['stages']
+                (S_efficiency, S_event_duration) = S_stages_summary(S_stages)
+                min_to_sleep = S_stats['sleep']['minutessToFallAsleep']
+                min_after_wake = S_stats['sleep']['minutesAfterWakeup']
+                self.S_data.append([day, S_efficiency, S_event_duration, S_stages, min_to_sleep, min_after_wake])
+        except Exception as e:
+            print('error:', str(e))
+            print(S_stats)
+sleep_df = fitbit_df(Client_ID, Client_Secret)
+print(sleep_df.S_data)
 
 
 
