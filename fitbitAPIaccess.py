@@ -79,8 +79,8 @@ class fitbit_df(object):
                 S_stats = self.auth2_client.get_sleep(day)
                 S_stages = S_stats['summary']['stages']
                 (S_efficiency, S_event_duration) = S_stages_summary(S_stages)
-                min_to_sleep = S_stats['sleep']['minutessToFallAsleep']
-                min_after_wake = S_stats['sleep']['minutesAfterWakeup']
+                min_to_sleep = S_stats['sleep'][0]['minutesToFallAsleep']
+                min_after_wake = S_stats['sleep'][0]['minutesAfterWakeup']
                 self.S_data.append([day, S_efficiency, S_event_duration, S_stages, min_to_sleep, min_after_wake])
         except Exception as e:
             print('error:', str(e))
