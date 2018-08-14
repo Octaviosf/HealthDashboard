@@ -33,6 +33,21 @@ print(dates)
 ###
 
 # initialize pandas dataframe and save as csv file
+class fitbit_df(object):
+    def __init__(self, Client_ID, Client_Secret):
+        server = Oauth2.OAuth2Server(Client_ID, Client_Secret)
+        server.browser_authorize()
+
+        Access_Token = str(server.fitbit.client.session.token['access_token'])
+        Refresh_Token = str(server.fitbit.client.session.token['refresh_token'])
+
+        auth2_client = fitbit.Fitbit(Client_ID, Client_Secret, oauth2=True,
+                                     access_token=Access_Token, refresh_token=Refresh_Token)
+
+
+
+
+
 
 
 # if csv file exists then request sleep logs from most recent entry in csv file onwards
