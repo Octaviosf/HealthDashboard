@@ -76,7 +76,10 @@ class fitbit_df(object):
 
         try:
             for day in dates:
-                S_stats = self.auth2_client.get_sleep(day)
+                S_stats = self.auth2_client.sleep(day)
+                # each date has different logid with some duplicates in 'stages' - means duplicate error due to official fitbit side
+                # error due to this unoffical API by orcasgit making incorrect url and thus receiving incorrect response
+                print(S_stats)
                 S_stages = S_stats['summary']['stages']
                 (S_efficiency, S_event_duration) = S_stages_summary(S_stages)
                 min_to_sleep = S_stats['sleep'][0]['minutesToFallAsleep']
