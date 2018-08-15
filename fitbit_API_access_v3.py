@@ -43,7 +43,15 @@ sleep_url = 'https://api.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
 sleep_stats = fitbit_request(sleep_url, access_token)
 print(sleep_stats)
 
+### TO DO ###
 
+# create fnc for trading auth_code for tokens which returns True if tokens exist (prevents need to visit auth_url repeatedly)
+
+# create fnc to acquire refresh tokens
+
+# create a fitbit class with methods that make specific GET requests
+
+# arrange sleep data into csv file
 
 
 
