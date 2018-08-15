@@ -3,17 +3,50 @@ import base64
 
 """
 # copy auth_url to browser for authorization of this computer
-auth_url = 'https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redirect_uri=https%3A%2F%2Flocalhost%2Fcallback&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight'
+auth_url = 
+https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redirect_uri=https%3A%2F%2Flocalhost%2Fcallback&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight
+
 """
 
-def fitbit_request(url, access_token):
+class Fitbit(object):
 
-    header = {'Authorization': 'Bearer ' + str(access_token)}
+    def __init__(self, client_id, client_secret, auth_code):
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.auth_code = auth_code
 
-    request = requests.get(url=url, headers=header)
-    response = request.json()
+        token_url = 'https://api.fitbit.com/oauth2/token'
+        data = {'code': auth_code,
+            'redirect_uri': 'https://localhost/callback',
+            'client_id': client_id,
+            'grant_type': 'authorization_code'}
 
-    return response
+        b64_str = base64.b64encode((client_id + ":" + client_secret).encode("utf-8"))
+        headers = {'Authorization': 'Basic ' + b64_str.decode(),
+                   'Content-Type': 'application/x-www-form-urlencoded'}
+
+        request = requests.post(url=token_url, data=data, headers=headers)
+        response = request.json()
+
+        try:
+            self.access_token = response['access_token']
+            self.refresh_token = response['refresh_token']
+            self.tokens_recieved = True
+        except Exception as e:
+            self.tokens_recieved = False
+            print('Unable to exchange authorization for tokens:', str(e))
+
+    def GET_request(self, url):
+
+        header = {'Authorization': 'Bearer ' + str(self.access_token)}
+
+        try:
+            request = requests.get(url=url, headers=header)
+            response = request.json()
+        except Exception as e:
+            print('Unable to make GET request:', str(e))
+
+        return response
 
 # trade auth_code for tokens
 client_id = '22CXZR'
