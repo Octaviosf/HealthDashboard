@@ -63,7 +63,7 @@ class fitbit_df(object):
         dates = []
         start_day = datetime.strptime('2018-08-07', '%Y-%m-%d')
 
-        days_from_start = (datetime.now() - start_day).days
+        days_from_start = (datetime.now() - start_day).days + 1
 
         day = start_day
 
@@ -82,11 +82,16 @@ class fitbit_df(object):
                 min_to_sleep = S_stats['sleep'][0]['minutesToFallAsleep']
                 min_after_wake = S_stats['sleep'][0]['minutesAfterWakeup']
                 self.S_data.append([day, S_efficiency, S_event_duration, S_stages, min_to_sleep, min_after_wake])
-        except Exception as e:
-            print('error:', str(e))
-            print(S_stats)
+        except KeyError:
+            print("Entry for", datetime.strftime(day, "%Y-%m-%d"), "not available.")
+            print("Try to sync Fitbit wearable to app")
+
 sleep_df = fitbit_df(Client_ID, Client_Secret)
 print(sleep_df.S_data)
+
+date = datetime.strptime('2018-08-09', '%Y-%m-%d')
+print(date, ":", sleep_df.auth2_client.get_sleep(date))
+
 
 
 
