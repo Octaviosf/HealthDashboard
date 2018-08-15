@@ -69,12 +69,21 @@ class Fitbit(object):
 
         return response
 
-# trade auth_code for tokens
 client_id = '22CXZR'
 client_secret = 'e2f4370b9bce7138faad9093accfd245'
 # code returned after visiting auth_url
-auth_code = '3b929495e80b104da4d7f03e7680d57a3c088a3e'
+auth_code = ''
 
+# make sleep request
+sleep_url = 'https://api.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
+
+fitbit = Fitbit(client_id, client_secret, auth_code)
+
+sleep_stats = fitbit.get_request(url=sleep_url)
+print(sleep_stats)
+
+
+"""
 token_url = 'https://api.fitbit.com/oauth2/token'
 
 data = {'code': auth_code,
@@ -91,11 +100,8 @@ response = request.json()
 
 access_token = response['access_token']
 refresh_token = response['refresh_token']
+"""
 
-# make sleep request
-sleep_url = 'https://api.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
-sleep_stats = fitbit_request(sleep_url, access_token)
-print(sleep_stats)
 
 ### TO DO ###
 
