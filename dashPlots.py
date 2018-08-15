@@ -4,6 +4,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
+import datetime as dt
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -80,8 +81,8 @@ def bodycomp_plot(df):
 
     # parameter init
     x = df.index
-    xmin = df.index.tolist()[0]-1
-    xmax = df.index.tolist()[-1]+2
+    xmin = df.index.tolist()[0] - dt.timedelta(days=1)
+    xmax = df.index.tolist()[-1] + dt.timedelta(days=2)
     lim_pads = 0.25
     y_t_min = float(df[['weight_lb']].min()-1)
     y_t_max = float(df[['weight_lb']].max()+1)
