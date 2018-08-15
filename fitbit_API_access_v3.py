@@ -10,28 +10,35 @@ https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redi
 
 class Fitbit(object):
 
-    def __init__(self, client_id, client_secret, auth_code):
+    def __init__(self, client_id, client_secret):
         self.client_id = client_id
         self.client_secret = client_secret
-        self.auth_code = auth_code
         self.token_url = 'https://api.fitbit.com/oauth2/token'
-
-        data = {'code': auth_code,
-            'redirect_uri': 'https://localhost/callback',
-            'client_id': client_id,
-            'grant_type': 'authorization_code'}
 
         b64_str = base64.b64encode((client_id + ":" + client_secret).encode("utf-8"))
         self.token_headers = {'Authorization': 'Basic ' + b64_str.decode(),
-                   'Content-Type': 'application/x-www-form-urlencoded'}
+                              'Content-Type': 'application/x-www-form-urlencoded'}
 
-        request = requests.post(url=self.token_url, data=data, headers=self.token_headers)
+    def token_request(self, auth_code):
+
+        self.auth_code = auth_code
+        self.auth_data = {'code': self.auth_code,
+                          'redirect_uri': 'https://localhost/callback',
+                          'client_id': self.client_id,
+                          'grant_type': 'authorization_code'}
+
+        request = requests.post(url=self.token_url, data=self.auth_data, headers=self.token_headers)
         response = request.json()
 
         try:
             self.access_token = response['access_token']
             self.refresh_token = response['refresh_token']
             self.tokens_recieved = True
+
+            with open('tokens.txt', 'w') as token_file:
+                token_file.write(str(self.access_token)+'\n')
+                token_file.write(str(self.refresh_token))
+
         except Exception as e:
             self.tokens_recieved = False
             print('Unable to exchange authorization for tokens:', str(e))
