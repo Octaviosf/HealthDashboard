@@ -1,5 +1,7 @@
 import base64
-#import urllib2
+import urllib
+from bs4 import BeautifulSoup
+import urllib.request as request
 import urllib3
 import sys
 import json
@@ -19,7 +21,7 @@ auth_code = '208305c2551ad56368b523db7aacada025db7b40#_=_'
 
 """
 
-
+http = urllib3.PoolManager()
 
 #These are the secrets etc from Fitbit developer
 OAuthTwoClientID = client_id
@@ -37,26 +39,34 @@ BodyText = {'code' : AuthorisationCode,
             'client_id' : OAuthTwoClientID,
             'grant_type' : 'authorization_code'}
 
-BodyURLEncoded = urllib.parse.urlencode(BodyText)
-print(BodyURLEncoded)
+client_auth = (OAuthTwoClientID + ":" + ClientOrConsumerSecret).encode('utf-8')
+
+# when adding string with b64encoded str you must decode()
+headers = {'Authorization': 'Basic ' + base64.b64encode(client_auth).decode(),
+           'Content-Type': 'application/x-www-form-urlencoded'}
+#BodyURLEncoded = urllib.urlencode(BodyText)
+#print(BodyURLEncoded)
 
 #Start the request
-req = urllib2.Request(TokenURL,BodyURLEncoded)
+#req = urllib2.Request(TokenURL,BodyURLEncoded)
+req = http.request('POST', url=TokenURL, headers=headers, fields=BodyText)
 
 #Add the headers, first we base64 encode the client id and client secret with a : inbetween and create the authorisation header
-req.add_header('Authorization', 'Basic ' + base64.b64encode(OAuthTwoClientID + ":" + ClientOrConsumerSecret))
-req.add_header('Content-Type', 'application/x-www-form-urlencoded')
+#req.add_header('Authorization', 'Basic ' + base64.b64encode(OAuthTwoClientID + ":" + ClientOrConsumerSecret))
+#req.add_header('Content-Type', 'application/x-www-form-urlencoded')
 
 #Fire off the request
 try:
-  response = urllib2.urlopen(req)
+    response = request.urlopen(req)
+    #soup = BeautifulSoup(response.data)
+    #print("Output >>> " + soup)
 
-  FullResponse = response.read()
+    FullResponse = response.read()
 
-  print("Output >>> " + FullResponse)
-except urllib2.URLError as e:
-  print(e.code)
-  print(e.read())
+    print("Output >>> " + FullResponse)
+except urllib.error.URLError as e:
+    print(e.code)
+    print(e.read())
 
 
 """
