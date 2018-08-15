@@ -14,18 +14,18 @@ class Fitbit(object):
         self.client_id = client_id
         self.client_secret = client_secret
         self.auth_code = auth_code
+        self.token_url = 'https://api.fitbit.com/oauth2/token'
 
-        token_url = 'https://api.fitbit.com/oauth2/token'
         data = {'code': auth_code,
             'redirect_uri': 'https://localhost/callback',
             'client_id': client_id,
             'grant_type': 'authorization_code'}
 
         b64_str = base64.b64encode((client_id + ":" + client_secret).encode("utf-8"))
-        headers = {'Authorization': 'Basic ' + b64_str.decode(),
+        self.token_headers = {'Authorization': 'Basic ' + b64_str.decode(),
                    'Content-Type': 'application/x-www-form-urlencoded'}
 
-        request = requests.post(url=token_url, data=data, headers=headers)
+        request = requests.post(url=self.token_url, data=data, headers=self.token_headers)
         response = request.json()
 
         try:
@@ -36,15 +36,36 @@ class Fitbit(object):
             self.tokens_recieved = False
             print('Unable to exchange authorization for tokens:', str(e))
 
-    def GET_request(self, url):
+    def refresh_tokens(self):
+
+        refresh_data = {'grant_type': 'refresh_token',
+                        'refresh_token': str(self.refresh_token)}
+
+        request = requests.post(self.token_url, data=refresh_data, headers=self.token_headers)
+        response = request.json()
+
+        try:
+            self.access_token = response['access_token']
+            self.refresh_token = response['refresh_token']
+            self.tokens_recieved = True
+        except Exception as e:
+            self.tokens_recieved = False
+            print('Unable to exchange authorization for tokens:', str(e))
+
+        return (self.access_token, self.refresh_token)
+
+    def get_request(self, url):
 
         header = {'Authorization': 'Bearer ' + str(self.access_token)}
 
+        request = requests.get(url=url, headers=header)
+        response = request.json()
         try:
-            request = requests.get(url=url, headers=header)
-            response = request.json()
-        except Exception as e:
-            print('Unable to make GET request:', str(e))
+            error = response['errors'][0]['errorType']
+            if error == 'expired_token':
+                # may not work due to syntax of self.refresh_tokens()
+                (self.access_token, self.refresh_token) = self.refresh_tokens()
+                self.get_request(self, url)
 
         return response
 
