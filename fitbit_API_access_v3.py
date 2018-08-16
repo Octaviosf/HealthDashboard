@@ -23,12 +23,12 @@ class Fitbit(object):
                 break
             else:
                 print('\n"fitbit_tokens.txt" does not exist')
-                self.auth_code = input("Enter authorization code: ")
+                self.auth_code = str(input("Enter authorization code: "))
                 try:
-                    self.token_request(self.auth_code)
+                    self.token_request()
                     print('\n"fitbit_tokens.txt" initialized')
-                except:
-                    print('\nPossible error with authorization code')
+                except Exception as e:
+                    print('\nError:', str(e))
                     print('Try again')
 
     def token_request(self):
@@ -90,10 +90,11 @@ class Fitbit(object):
         try:
             error = response['errors'][0]['errorType']
             if error == 'expired_token':
-                # may not work due to syntax of self.refresh_tokens()
                 (self.access_token, self.refresh_token) = self.refresh_tokens()
+                print('recursive get_request() call: line 94')
                 self.get_request(url)
         except KeyError:
+            print('returning get_request() response:', response)
             return response
 
 ### TO DO ###
