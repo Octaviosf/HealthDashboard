@@ -8,11 +8,11 @@ class Fitbit(object):
         self.client_id = client_id
         self.client_secret = client_secret
         self.token_url = 'https://api.fitbit.com/oauth2/token'
+        self.token_file_path = token_file_path
 
         b64_str = base64.b64encode((client_id + ":" + client_secret).encode("utf-8"))
         self.token_headers = {'Authorization': 'Basic ' + b64_str.decode(),
                               'Content-Type': 'application/x-www-form-urlencoded'}
-        self.token_file_path = token_file_path
 
         while True:
             if os.path.isfile(token_file_path) and os.access(token_file_path, os.R_OK):
@@ -47,7 +47,6 @@ class Fitbit(object):
             with open(self.token_file_path, 'w+') as token_file:
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
-
         except Exception as e:
             print('\nFrom token_request():', str(e))
             print('Current file path:', os.path.abspath(os.curdir))
@@ -70,7 +69,6 @@ class Fitbit(object):
             with open(self.token_file_path, 'w') as token_file:
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
-
         except Exception as e:
             print('\nFrom refresh_tokens():', str(e))
 
@@ -97,7 +95,7 @@ class Fitbit(object):
 1. Create file directory: ~/Documents/IoTHealth
 
 2. Assign 'token_file_path' below to absolute file path through above directory 
-    (i.e. /home/sosa/Documents/IoTHealth/fitbit_tokens.txt)
+    (i.e. token_file_path = "/home/sosa/Documents/IoTHealth/fitbit_tokens.txt")
 
 3. visit 'auth_url' and copy-paste 'auth_code' from end of callback url to console prompt at file-run
     auth_url = https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redirect_uri=https%3A%2F%2Flocalhost%2Fcallback&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight
