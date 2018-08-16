@@ -16,7 +16,6 @@ class Fitbit(object):
 
         while True:
             if os.path.isfile(token_file_path) and os.access(token_file_path, os.R_OK):
-                print('\nfitbit_tokens.txt exists')
                 with open(token_file_path, 'r') as token_file:
                     self.refresh_token = token_file.readline()[:-1]
                     self.access_token = token_file.readline()[:-1]
@@ -89,7 +88,8 @@ class Fitbit(object):
                 (self.access_token, self.refresh_token) = self.refresh_tokens()
                 response = self.get_request(url)
         except KeyError:
-            continue
+            pass
+
         return response
 
 ### TO DO ###
@@ -113,7 +113,6 @@ fitbit = Fitbit(client_id, client_secret, token_file_path)
 
 sleep_stats = fitbit.get_request(url=sleep_url)
 print('\n'+str(sleep_stats))
-
 
 ### TO DO ###
 
