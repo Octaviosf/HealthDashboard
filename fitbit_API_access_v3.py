@@ -23,6 +23,7 @@ class Fitbit(object):
         self.client_secret = client_secret
         self.token_url = 'https://API.fitbit.com/oauth2/token'
         self.token_file_path = token_file_path
+        self.auth_code = None
 
         # create data for tokens request
         self.auth_data = {'code': self.auth_code,
