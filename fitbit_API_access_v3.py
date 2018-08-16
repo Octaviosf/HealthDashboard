@@ -4,7 +4,7 @@ import os
 
 class Fitbit(object):
 
-    def __init__(self, client_id, client_secret):
+    def __init__(self, client_id, client_secret, token_file_path):
         self.client_id = client_id
         self.client_secret = client_secret
         self.token_url = 'https://api.fitbit.com/oauth2/token'
@@ -12,7 +12,7 @@ class Fitbit(object):
         b64_str = base64.b64encode((client_id + ":" + client_secret).encode("utf-8"))
         self.token_headers = {'Authorization': 'Basic ' + b64_str.decode(),
                               'Content-Type': 'application/x-www-form-urlencoded'}
-        self.token_file_path = '~/Documents/IoTHealth/fitbit_tokens.txt'
+        self.token_file_path = token_file_path
 
     def token_request(self, auth_code):
 
@@ -84,20 +84,23 @@ class Fitbit(object):
 """
 1. Create file directory: ~/Documents/IoTHealth
 
-2. visit 'auth_url' and copy-paste 'auth_code' from end of callback url to assignment below
+2. Assign 'token_file_path' below to absolute file path through above directory 
+    (i.e. /home/sosa/Documents/IoTHealth/fitbit_tokens.txt)
+
+3. visit 'auth_url' and copy-paste 'auth_code' from end of callback url to assignment below
     auth_url = https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redirect_uri=https%3A%2F%2Flocalhost%2Fcallback&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight
 """
 
 # code returned after visiting auth_url
-auth_code = '3174d1698eb0fc38c6f929deac7c44d8625881eb'
+auth_code = '6cc12427bae4b0bf4adf6102eb827e5713d4f578'
 
 client_id = '22CXZR'
 client_secret = 'e2f4370b9bce7138faad9093accfd245'
-
+token_file_path = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 # make sleep request
 sleep_url = 'https://api.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
 
-fitbit = Fitbit(client_id, client_secret)
+fitbit = Fitbit(client_id, client_secret, token_file_path)
 
 if os.path.isfile(fitbit.token_file_path) and os.access(fitbit.token_file_path, os.R_OK):
     print('fitbit_tokens.txt exists')
