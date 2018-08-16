@@ -1,12 +1,6 @@
 import requests
 import base64
-
-"""
-# copy auth_url to browser for authorization of this computer
-auth_url = 
-https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redirect_uri=https%3A%2F%2Flocalhost%2Fcallback&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight
-
-"""
+import os
 
 class Fitbit(object):
 
@@ -18,6 +12,7 @@ class Fitbit(object):
         b64_str = base64.b64encode((client_id + ":" + client_secret).encode("utf-8"))
         self.token_headers = {'Authorization': 'Basic ' + b64_str.decode(),
                               'Content-Type': 'application/x-www-form-urlencoded'}
+        self.token_file_path = '~/Documents/IoTHealth/fitbit_tokens.txt'
 
     def token_request(self, auth_code):
 
@@ -35,15 +30,18 @@ class Fitbit(object):
             self.refresh_token = response['refresh_token']
             self.tokens_recieved = True
 
-            with open('tokens.txt', 'w') as token_file:
-                token_file.write(str(self.access_token)+'\n')
-                token_file.write(str(self.refresh_token))
+            with open(self.token_file_path, 'w') as token_file:
+                token_file.write(str(self.refresh_token)+'\n')
+                token_file.write(str(self.access_token))
 
         except Exception as e:
             self.tokens_recieved = False
             print('Unable to exchange authorization for tokens:', str(e))
 
     def refresh_tokens(self):
+
+        with open(self.token_file_path, 'r') as token_file:
+            self.refresh_token = token_file.readline()[:-1]
 
         refresh_data = {'grant_type': 'refresh_token',
                         'refresh_token': str(self.refresh_token)}
@@ -55,6 +53,11 @@ class Fitbit(object):
             self.access_token = response['access_token']
             self.refresh_token = response['refresh_token']
             self.tokens_recieved = True
+
+            with open(self.token_file_path, 'w') as token_file:
+                token_file.write(str(self.refresh_token)+'\n')
+                token_file.write(str(self.access_token))
+
         except Exception as e:
             self.tokens_recieved = False
             print('Unable to exchange authorization for tokens:', str(e))
@@ -73,18 +76,36 @@ class Fitbit(object):
                 # may not work due to syntax of self.refresh_tokens()
                 (self.access_token, self.refresh_token) = self.refresh_tokens()
                 self.get_request(self, url)
+        except KeyError:
 
-        return response
+            return response
+
+### TO DO ###
+"""
+1. Create file directory: ~/Documents/IoTHealth
+
+2. visit 'auth_url' and copy-paste 'auth_code' from end of callback url to assignment below
+    auth_url = https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redirect_uri=https%3A%2F%2Flocalhost%2Fcallback&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight
+"""
+
+# code returned after visiting auth_url
+auth_code = ''
 
 client_id = '22CXZR'
 client_secret = 'e2f4370b9bce7138faad9093accfd245'
-# code returned after visiting auth_url
-auth_code = ''
 
 # make sleep request
 sleep_url = 'https://api.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
 
-fitbit = Fitbit(client_id, client_secret, auth_code)
+fitbit = Fitbit(client_id, client_secret)
+
+if os.path.isfile(fitbit.token_file_path) and os.access(fitbit.token_file_path, os.R_OK):
+    print('fitbit_tokens.txt exists')
+else:
+    print('"fitbit_tokens.txt" does not exist')
+    print('initializing "fitbit_tokens.txt" ...')
+    fitbit.token_request(auth_code)
+    print('"fitbit_tokens.txt" initialized')
 
 sleep_stats = fitbit.get_request(url=sleep_url)
 print(sleep_stats)
