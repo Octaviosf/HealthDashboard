@@ -13,7 +13,7 @@ class Fitbit(object):
         """
         initialize data for Fitbit API requests
 
-        :param token_file_path: absolute file path from /home to /IoTHealth
+        :param token_file_path: absolute file path from /home to /fitbit_tokens.txt
         """
 
         # assignments
