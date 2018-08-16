@@ -155,6 +155,7 @@ class Fitbit(object):
 
 
 """
+
 User to-do 
 
 1. Create file directory: ~/Documents/IoTHealth
@@ -172,7 +173,7 @@ User to-do
 --
 
 Example
-"""
+
 # assignments
 file_path = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 date_range = ('2018-08-07', '2018-08-15')
@@ -183,14 +184,5 @@ fitbit = Fitbit(file_path)
 # request sleep data, capture response, and print response
 sleep_data = fitbit.sleeplogs_range(date_range)
 print('\n'+str(sleep_data))
-"""
---
-
-Dev to-do
-
-1. Create a fitbit class with methods that make specific GET requests
-
-2. Arrange sleep data into csv file
-
 
 """
