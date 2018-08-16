@@ -14,9 +14,25 @@ class Fitbit(object):
                               'Content-Type': 'application/x-www-form-urlencoded'}
         self.token_file_path = token_file_path
 
-    def token_request(self, auth_code):
+        while True:
+            if os.path.isfile(token_file_path) and os.access(token_file_path, os.R_OK):
+                print('\nfitbit_tokens.txt exists')
+                with open(token_file_path, 'r') as token_file:
+                    self.refresh_token = token_file.readline()[:-1]
+                    self.access_token = token_file.readline()[:-1]
+                break
+            else:
+                print('\n"fitbit_tokens.txt" does not exist')
+                self.auth_code = input("Enter authorization code: ")
+                try:
+                    self.token_request(self.auth_code)
+                    print('\n"fitbit_tokens.txt" initialized')
+                except:
+                    print('\nPossible error with authorization code')
+                    print('Try again')
 
-        self.auth_code = auth_code
+    def token_request(self):
+
         self.auth_data = {'code': self.auth_code,
                           'redirect_uri': 'https://localhost/callback',
                           'client_id': self.client_id,
@@ -87,12 +103,9 @@ class Fitbit(object):
 2. Assign 'token_file_path' below to absolute file path through above directory 
     (i.e. /home/sosa/Documents/IoTHealth/fitbit_tokens.txt)
 
-3. visit 'auth_url' and copy-paste 'auth_code' from end of callback url to assignment below
+3. visit 'auth_url' and copy-paste 'auth_code' from end of callback url to console prompt at file-run
     auth_url = https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=22CXZR&redirect_uri=https%3A%2F%2Flocalhost%2Fcallback&scope=activity%20nutrition%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight
 """
-
-# code returned after visiting auth_url
-auth_code = '6cc12427bae4b0bf4adf6102eb827e5713d4f578'
 
 client_id = '22CXZR'
 client_secret = 'e2f4370b9bce7138faad9093accfd245'
@@ -102,16 +115,8 @@ sleep_url = 'https://api.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
 
 fitbit = Fitbit(client_id, client_secret, token_file_path)
 
-if os.path.isfile(fitbit.token_file_path) and os.access(fitbit.token_file_path, os.R_OK):
-    print('fitbit_tokens.txt exists')
-else:
-    print('"fitbit_tokens.txt" does not exist')
-    print('initializing "fitbit_tokens.txt" ...')
-    fitbit.token_request(auth_code)
-    print('"fitbit_tokens.txt" initialized')
-
 sleep_stats = fitbit.get_request(url=sleep_url)
-print(sleep_stats)
+print('\n', sleep_stats)
 
 
 ### TO DO ###
