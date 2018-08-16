@@ -30,13 +30,14 @@ class Fitbit(object):
             self.refresh_token = response['refresh_token']
             self.tokens_recieved = True
 
-            with open(self.token_file_path, 'w') as token_file:
+            with open(self.token_file_path, 'w+') as token_file:
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
 
         except Exception as e:
             self.tokens_recieved = False
-            print('Unable to exchange authorization for tokens:', str(e))
+            print('\nUnable to exchange authorization for tokens:', str(e))
+            print('Current file path:', os.path.abspath(os.curdir))
 
     def refresh_tokens(self):
 
@@ -60,7 +61,7 @@ class Fitbit(object):
 
         except Exception as e:
             self.tokens_recieved = False
-            print('Unable to exchange authorization for tokens:', str(e))
+            print('\nUnable to exchange authorization for tokens:', str(e))
 
         return (self.access_token, self.refresh_token)
 
@@ -88,7 +89,7 @@ class Fitbit(object):
 """
 
 # code returned after visiting auth_url
-auth_code = ''
+auth_code = '3174d1698eb0fc38c6f929deac7c44d8625881eb'
 
 client_id = '22CXZR'
 client_secret = 'e2f4370b9bce7138faad9093accfd245'
@@ -108,26 +109,6 @@ else:
 
 sleep_stats = fitbit.get_request(url=sleep_url)
 print(sleep_stats)
-
-
-"""
-token_url = 'https://api.fitbit.com/oauth2/token'
-
-data = {'code': auth_code,
-            'redirect_uri': 'https://localhost/callback',
-            'client_id': client_id,
-            'grant_type': 'authorization_code'}
-
-b64_str = base64.b64encode((client_id + ":" + client_secret).encode("utf-8"))
-headers = {'Authorization': 'Basic ' + b64_str.decode(),
-           'Content-Type': 'application/x-www-form-urlencoded'}
-
-request = requests.post(url=token_url, data=data, headers=headers)
-response = request.json()
-
-access_token = response['access_token']
-refresh_token = response['refresh_token']
-"""
 
 
 ### TO DO ###
