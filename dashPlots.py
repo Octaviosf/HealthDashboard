@@ -240,11 +240,12 @@ def sleep_plots():
         return sleep_data_list
 
     # assignments
-    url = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
+    tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
+    sleep_data_fp = '/home/sosa/Documents/IoTHealth/sleep_data_fp.txt'
     date_range = ('2018-08-07', '2018-08-15')
 
     # create interaction object with Fitbit API
-    fitbit = Fitbit(url)
+    fitbit = Fitbit(tokens_fp)
 
     # recieve sleep data
     sleep_data = fitbit.sleeplogs_range(date_range)['sleep']
@@ -252,7 +253,44 @@ def sleep_plots():
     # capture data for sleep plots
     sleep_plot_data = sleep_data_essentials(sleep_data)
 
+    if os.path.isfile(sleep_data_fp) and os.access(sleep_data_fp, os.R_OK):
+        with open(sleep_data_fp, 'r') as sleep_file:
+            sleep_data_local = exec(sleep_file.readline())
+
+        # update sleep_data_local using fitbit request
+
+    else:
+        sleep_data = fitbit.sleeplogs_range(date_range)['sleep']
+        with open(sleep_data_fp, 'w+') as sleep_file:
+            sleep_file.write(sleep_data)
+
     print(sleep_plot_data)
+
+    # TODO Dev
+    """
+        1. Create Sleep() class with attributes:
+                a. write sleep.txt file if nonexistent
+                b. update sleep.txt
+                c. create sleep_data_dataframe
+                d. create fig, capturing plots, using sleep_data_dataframe
+                etc ...
+                
+        
+        --
+        
+        Future TODO
+        
+        1. Create Body() class with attributes:
+                a. write body.txt file if nonexistent
+                b. update body.txt
+                etc ...
+                
+        2. Create IotHealth() class with attributes:
+                a. write all .txt files if nonexistent
+                b. update all .txt files
+                etc ...
+    
+    """
 
     # create csv file with sleep data if not already in existence
 
@@ -272,7 +310,6 @@ def sleep_plots():
     # minutes after wakeup plot (type: stages)
 
     return None
-
 
 class SmartMirror(tk.Tk):
 
