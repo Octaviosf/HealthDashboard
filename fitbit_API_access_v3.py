@@ -44,14 +44,12 @@ class Fitbit(object):
         try:
             self.access_token = response['access_token']
             self.refresh_token = response['refresh_token']
-            self.tokens_recieved = True
 
             with open(self.token_file_path, 'w+') as token_file:
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
 
         except Exception as e:
-            self.tokens_recieved = False
             print('\nFrom token_request():', str(e))
             print('Current file path:', os.path.abspath(os.curdir))
 
@@ -69,14 +67,12 @@ class Fitbit(object):
         try:
             self.access_token = response['access_token']
             self.refresh_token = response['refresh_token']
-            self.tokens_recieved = True
 
             with open(self.token_file_path, 'w') as token_file:
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
 
         except Exception as e:
-            self.tokens_recieved = False
             print('\nFrom refresh_tokens():', str(e))
 
         return (self.access_token, self.refresh_token)
