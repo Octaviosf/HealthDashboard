@@ -152,8 +152,8 @@ class Fitbit(object):
         url = 'https://api.fitbit.com/1.2/user/-/sleep/date/' + date_range[0] +\
               '/' + date_range[1] + '.json'
 
-        # request data
-        self.data_request(url)
+        # request data and return response
+        return self.data_request(url)
 """
 User to-do 
 
@@ -180,7 +180,8 @@ sleep_url = 'https://API.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
 fitbit = Fitbit(client_id=ID, client_secret=secret, token_file_path=file_path)
 
 # request sleep data, capture response, and print response
-sleep_data = fitbit.data_request(url=sleep_url)
+date_range = ('2018-08-07', '2018-08-15')
+sleep_data = fitbit.sleeplogs_range(date_range)
 print('\n'+str(sleep_data))
 
 """
