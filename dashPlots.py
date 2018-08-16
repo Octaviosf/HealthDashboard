@@ -5,6 +5,7 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 import datetime as dt
+from IoTHealth.fitbit import Fitbit
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -66,7 +67,7 @@ def sheet_to_df(sheet_obj):
 
     return df
 
-def bodycomp_plot(df):
+def bodycomp_plots(df):
     """
     creates and  formats  a plot using data from df
     :param df: dataframe
@@ -119,7 +120,7 @@ def bodycomp_plot(df):
     ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_ylim(y_m_min, y_m_max)
     ax1.tick_params(axis='x', rotation=rotation)
-    lin0 = ax1.plot(x, df[['muscle_lb']], '--ro', label='Muscle Mass', linewidth=linewidth)
+    lin0 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Muscle Mass', linewidth=linewidth)
 
     # Muscle % plot
     ax2 = ax1.twinx()
@@ -139,7 +140,7 @@ def bodycomp_plot(df):
     ax3.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_ylim(y_f_min, y_f_max)
     ax3.tick_params(axis='x', rotation=rotation)
-    lin2 = ax3.plot(x, df[['fat_lb']], '--bo', alpha=1.0, label='Fat Mass', linewidth=linewidth)
+    lin2 = ax3.plot(x, df[['fat_lb']], '--ko', alpha=1.0, label='Fat Mass', linewidth=linewidth)
 
     # Fat % plot
     ax4 = ax3.twinx()
@@ -158,13 +159,13 @@ def bodycomp_plot(df):
     ax5.grid()
     ax5.set_ylabel('Bone Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax5.set_ylim(y_b_min, y_b_max)
-    lin4 = ax5.plot(x, df[['bone_lb']], '-ro', label='Bone Mass', linewidth=linewidth)
+    lin4 = ax5.plot(x, df[['bone_lb']], '-ko', label='Bone Mass', linewidth=linewidth)
 
     ax6 = ax5.twinx()
     ax6.set_ylabel('Bone %', fontsize=labelfontsize, labelpad=labelpad)
     ax6.set_xlim(xmin, xmax)
     ax6.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin5 = ax6.plot(x, df[['bone_%']], '-mo', alpha=1.0, label='Bone %', linewidth=linewidth)
+    lin5 = ax6.plot(x, df[['bone_%']], '-co', alpha=1.0, label='Bone %', linewidth=linewidth)
 
     # Bone Mass / Percentage legend
     lns2 = lin4+lin5
@@ -193,11 +194,74 @@ def bodycomp_plot(df):
 
     return fig
 
-def sleep_plot():
+
+
+def sleep_plots():
+
+    from IoTHealth.fitbit import Fitbit
+    from datetime import datetime as dt
+    from datetime import timedelta
+
+    def sleep_data_essentials(sleep_data):
+        """
+        :param sleep_data: original sleep data from Fitbit request
+        :return: list of sleep logs with essential data
+        """
+
+        dict_labels = ["dateOfSleep", "minutesAfterWakeup",
+                       "minutesToFallAsleep", "startTime"]
+
+        stages_labels = ["deep", "light", "rem", "wake"]
+
+        sleep_data_list = []
+
+        for sleep in sleep_data:
+            sleep_essentials = {}
+            duration_sleep = 0
+            duration_total = 0
+
+            for label in dict_labels:
+                sleep_essentials[label] = sleep[label]
+
+            for label in stages_labels:
+                sleep_essentials[label] = sleep["levels"]["summary"][label]["minutes"]
+                duration_total += sleep_essentials[label]
+
+            for label in stages_labels[:-1]:
+                duration_sleep += sleep_essentials[label]
+
+            sleep_essentials["efficiency"] = round(duration_sleep / duration_total, 2)
+
+            sleep_essentials["duration"] = duration_total
+            sleep_data_list.append(sleep_essentials)
+
+        sleep_data_list.reverse()
+
+        return sleep_data_list
+
+    # assignments
+    url = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
+    date_range = ('2018-08-07', '2018-08-15')
+
+    # create interaction object with Fitbit API
+    fitbit = Fitbit(url)
+
+    # recieve sleep data
+    sleep_data = fitbit.sleeplogs_range(date_range)['sleep']
+
+    # capture data for sleep plots
+    sleep_plot_data = sleep_data_essentials(sleep_data)
+
+    print(sleep_plot_data)
+
+    # create csv file with sleep data if not already in existence
 
     # sleep efficiency plot: (rem+light+deep) / (awake+rem+light+deep)
 
+    # sleep total_duration plot w/ superimposed lifetime median
+
     # sleep stages % grouped bar plot for current week (4 stages per day = 4 bars per day) w/ last weeks avg at end
+        # lifetime medians for each stage is superimposed in lighter colors on each daily stage plot
 
         # duration label above each stage
 
@@ -265,7 +329,7 @@ class HealthDashboard(tk.Frame):
 
         df = sheet_to_df(sheet_obj)
 
-        fig = bodycomp_plot(df)
+        fig = bodycomp_plots(df)
 
         # embed plot into SmartMirror gui
         canvas = FigureCanvasTkAgg(fig, self)

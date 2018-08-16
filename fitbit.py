@@ -9,18 +9,18 @@ class Fitbit(object):
         -request and refresh tokens
         -request data
     """
-    def __init__(self, token_file_path):
+    def __init__(self, tokens_filepath):
         """
         initialize data for Fitbit API requests
 
-        :param token_file_path: absolute file path from /home to /fitbit_tokens.txt
+        :param tokens_filepath: absolute file path from /home to /fitbit_tokens.txt
         """
 
         # assignments
         self.client_id = '22CXZR'
         self.client_secret = 'e2f4370b9bce7138faad9093accfd245'
         self.token_url = 'https://API.fitbit.com/oauth2/token'
-        self.token_file_path = token_file_path
+        self.tokens_filepath = tokens_filepath
         self.auth_code = None
 
         # create data for tokens request
@@ -37,9 +37,9 @@ class Fitbit(object):
         # test fitbit_tokens.txt existence, if not create file
         while True:
             # test existence of file and readability
-            if os.path.isfile(token_file_path) and os.access(token_file_path, os.R_OK):
+            if os.path.isfile(tokens_filepath) and os.access(tokens_filepath, os.R_OK):
                 # capture tokens from file
-                with open(token_file_path, 'r') as token_file:
+                with open(tokens_filepath, 'r') as token_file:
                     self.refresh_token = token_file.readline()[:-1]
                     self.access_token = token_file.readline()[:-1]
                 break
@@ -70,7 +70,7 @@ class Fitbit(object):
             self.refresh_token = response['refresh_token']
 
             # create "fitbit_tokens.txt"
-            with open(self.token_file_path, 'w+') as token_file:
+            with open(self.tokens_filepath, 'w+') as token_file:
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
         except Exception as e:
@@ -85,7 +85,7 @@ class Fitbit(object):
         """
 
         # read refresh token from "fitbit_tokens.txt"
-        with open(self.token_file_path, 'r') as token_file:
+        with open(self.tokens_filepath, 'r') as token_file:
             self.refresh_token = token_file.readline()[:-1]
 
         # create data for refresh token request
@@ -102,7 +102,7 @@ class Fitbit(object):
             self.refresh_token = response['refresh_token']
 
             # overwrite file with new tokens
-            with open(self.token_file_path, 'w') as token_file:
+            with open(self.tokens_filepath, 'w') as token_file:
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
         except Exception as e:
