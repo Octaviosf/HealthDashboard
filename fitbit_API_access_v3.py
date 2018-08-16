@@ -81,7 +81,7 @@ class Fitbit(object):
 
     def refresh_tokens(self):
         """
-        refresh the tokens
+        refresh tokens
 
         :return: tuple capturing access and refresh tokens, respectively
         """
@@ -112,7 +112,7 @@ class Fitbit(object):
 
         return self.access_token, self.refresh_token
 
-    def get_request(self, url):
+    def data_request(self, url):
         """
         request data from Fitbit API
 
@@ -134,20 +134,33 @@ class Fitbit(object):
                 # refresh tokens
                 (self.access_token, self.refresh_token) = self.refresh_tokens()
                 # request data using new tokens and capture response
-                response = self.get_request(url)
+                response = self.data_request(url)
         except KeyError:
             pass
 
         return response
 
+    def sleeplogs_range(self, date_range):
+        """
+        request sleep-logs from Fitbit API for date range
 
+        :param date_range: tuple of start and end date strings, respectively (YYYY-mm-dd format)
+        :return: response from sleep-logs request
+        """
+
+        # url formatted according to Fitbit API docs
+        url = 'https://api.fitbit.com/1.2/user/-/sleep/date/' + date_range[0] +\
+              '/' + date_range[1] + '.json'
+
+        # request data
+        self.data_request(url)
 """
 User to-do 
 
 1. Create file directory: ~/Documents/IoTHealth
 
-2. Assign 'token_file_path' below to absolute file path through above directory 
-    (i.e. token_file_path = "/home/sosa/Documents/IoTHealth/fitbit_tokens.txt")
+2. Assign 'file_path' below to absolute file path through above directory 
+    (i.e. file_path = "/home/sosa/Documents/IoTHealth/fitbit_tokens.txt")
 
 3. Visit 'auth_url' and input 'auth_code' from end of callback url to console prompt 
 
@@ -163,11 +176,11 @@ secret = 'e2f4370b9bce7138faad9093accfd245'
 file_path = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 sleep_url = 'https://API.fitbit.com/1.2/user/-/sleep/date/2018-08-09.json'
 
-# create instance for Fitbit API requests
+# create instance for Fitbit API interaction
 fitbit = Fitbit(client_id=ID, client_secret=secret, token_file_path=file_path)
 
 # request sleep data, capture response, and print response
-sleep_data = fitbit.get_request(url=sleep_url)
+sleep_data = fitbit.data_request(url=sleep_url)
 print('\n'+str(sleep_data))
 
 """
@@ -176,4 +189,5 @@ Dev to-do
 1. Create a fitbit class with methods that make specific GET requests
 
 2. Arrange sleep data into csv file
+
 """
