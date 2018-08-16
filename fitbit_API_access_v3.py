@@ -75,9 +75,8 @@ class Fitbit(object):
             if error == 'expired_token':
                 # may not work due to syntax of self.refresh_tokens()
                 (self.access_token, self.refresh_token) = self.refresh_tokens()
-                self.get_request(self, url)
+                self.get_request(url)
         except KeyError:
-
             return response
 
 ### TO DO ###
