@@ -4,6 +4,11 @@ import os
 
 
 class Fitbit(object):
+    """
+    Interact with Fitbit API:
+        -request and refresh tokens
+        -request data
+    """
     def __init__(self, client_id, client_secret, token_file_path):
         """
         initialize data for Fitbit API requests
@@ -110,7 +115,7 @@ class Fitbit(object):
         """
         request data from Fitbit API
 
-        :param url: url request for specific data - formatted according to API
+        :param url: url request for data - formatted according to API
         :return: response from data request
         """
 
