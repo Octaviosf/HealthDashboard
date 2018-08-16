@@ -31,7 +31,11 @@ class Fitbit(object):
                     print('\nError:', str(e))
                     print('Try again')
 
+        print('Broke out of while loop successfully')
+
     def token_request(self):
+
+        print('token_request() execution began')
 
         self.auth_data = {'code': self.auth_code,
                           'redirect_uri': 'https://localhost/callback',
@@ -50,12 +54,15 @@ class Fitbit(object):
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
 
+            print('from token_request(),\n\trefresh_token=%s\n\taccess_token=%s', self.refresh_token, self.access_token)
         except Exception as e:
             self.tokens_recieved = False
             print('\nUnable to exchange authorization for tokens:', str(e))
             print('Current file path:', os.path.abspath(os.curdir))
 
     def refresh_tokens(self):
+
+        print('refresh_tokens() execution began')
 
         with open(self.token_file_path, 'r') as token_file:
             self.refresh_token = token_file.readline()[:-1]
@@ -75,6 +82,7 @@ class Fitbit(object):
                 token_file.write(str(self.refresh_token)+'\n')
                 token_file.write(str(self.access_token))
 
+            print('from refresh_tokens(),\n\trefresh_token=%s\n\taccess_token=%s', self.refresh_token, self.access_token)
         except Exception as e:
             self.tokens_recieved = False
             print('\nUnable to exchange authorization for tokens:', str(e))
@@ -83,19 +91,23 @@ class Fitbit(object):
 
     def get_request(self, url):
 
+        print('get_request() execution began')
+
         header = {'Authorization': 'Bearer ' + str(self.access_token)}
 
         request = requests.get(url=url, headers=header)
         response = request.json()
         try:
+            print('from get_request(), try-except block executed')
             error = response['errors'][0]['errorType']
-            if error == 'expired_token':
+            if error == 'invalid_token':
                 (self.access_token, self.refresh_token) = self.refresh_tokens()
                 print('recursive get_request() call: line 94')
-                self.get_request(url)
+                response = self.get_request(url)
         except KeyError:
             print('returning get_request() response:', response)
-            return response
+
+        return response
 
 ### TO DO ###
 """
