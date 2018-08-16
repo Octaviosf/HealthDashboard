@@ -153,10 +153,9 @@ class Fitbit(object):
         # request data and return response
         return self.data_request(url)
 
+# TODO User
 
 """
-
-User to-do 
 
 1. Create file directory: ~/Documents/IoTHealth
 
@@ -170,10 +169,11 @@ User to-do
                scope=activity%20nutrition%20heartrate%20location%20nutrition%20
                profile%20settings%20sleep%20social%20weight
                
---
+"""
 
-Example
+# EXAMPLE using Fitbit()
 
+"""
 # assignments
 file_path = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 date_range = ('2018-08-07', '2018-08-15')
