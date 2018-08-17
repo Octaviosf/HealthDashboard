@@ -274,7 +274,6 @@ def sleep_plots():
                 c. create sleep_data_dataframe
                 d. create fig, capturing plots, using sleep_data_dataframe
                 etc ...
-                
         
         --
         
