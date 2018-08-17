@@ -3,7 +3,6 @@ from datetime import datetime as dt
 from datetime import timedelta
 import os
 import pandas as pd
-from pprint import pprint
 
 class Sleep(object):
     def __init__(self, sleep_file_path, tokens_file_path):
@@ -125,7 +124,6 @@ sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 # recieve sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
 
-print("type(sleep.sleep_logs):", type(sleep.sleep_logs))
 with pd.option_context("display.max_rows", 10, "display.max_columns", 9):
     print(sleep.sleep_logs)
 
@@ -139,5 +137,8 @@ with pd.option_context("display.max_rows", 10, "display.max_columns", 9):
        DONE b. update sleep.csv
        DONE c. create sleep_logs_dataframe
             d. create fig, capturing plots, using sleep_logs_dataframe
+            e. create sleep_%YYYY-%mm-%dd.csv backup file every month on 1st
+                - may be useful to create datetime class variable which updates to current
+                    date each month and date is posted to filename 
             etc ...
 """
