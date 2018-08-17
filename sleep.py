@@ -20,10 +20,10 @@ class Sleep(object):
 
         if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
             local_logs = pd.read_csv(self.sleep_file_path)
+            local_logs = local_logs.set_index("dateOfSleep")
 
             # test if local_logs are up to date
-            print("local_logs.index.max():", local_logs.index.max())
-            latest_date_local = (local_logs.index.max()).strftime("%Y-%m-%d")
+            latest_date_local = local_logs.index.max()
 
             if latest_date_local == today:
                 sleep_logs = local_logs
@@ -50,13 +50,19 @@ class Sleep(object):
 
             fitbit = Fitbit(self.tokens_file_path)
             raw_logs = fitbit.sleeplogs_range(date_range)
-            api_logs = self.essentials(raw_logs)
 
-            frames = [local_logs, api_logs]
-            sleep_logs = pd.concat(frames)
+            # test whether logs returned
+            if not raw_logs['sleep']:
+                sleep_logs = local_logs
+            else:
+                api_logs = self.essentials(raw_logs)
 
-            # overwrite .csv file
-            sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
+                frames = [local_logs, api_logs]
+                sleep_logs = pd.concat(frames)
+
+                # overwrite .csv file
+                sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
+
             self.logs_uptodate = True
 
         return sleep_logs
