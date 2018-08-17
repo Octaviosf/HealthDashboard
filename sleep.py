@@ -3,7 +3,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 import os
 import pandas as pd
-import pprint
+from pprint import pprint
 
 class Sleep(object):
     def __init__(self, sleep_file_path, tokens_file_path):
@@ -22,6 +22,7 @@ class Sleep(object):
             local_logs = pd.read_csv(self.sleep_file_path)
 
             # test if local_logs are up to date
+            print("local_logs.index.max():", local_logs.index.max())
             latest_date_local = (local_logs.index.max()).strftime("%Y-%m-%d")
 
             if latest_date_local == today:
@@ -69,7 +70,7 @@ class Sleep(object):
         """
 
         dict_labels = ["dateOfSleep", "minutesAfterWakeup",
-                               "minutesToFallAsleep", "startTime"]
+                       "minutesToFallAsleep", "startTime"]
 
         stages_labels = ["deep", "light", "rem", "wake"]
 
@@ -102,13 +103,11 @@ class Sleep(object):
         # create list of DateFrames
         for log in sleep_logs:
             df = pd.DataFrame.from_dict(data=log)
-            pprint(df)
             df = df.set_index("dateOfSleep")
             frames.append(df)
 
         # concatenate DataFrames
         sleep_logs = pd.concat(frames)
-        print("type(concatenated sleep logs):", type(sleep_logs))
 
         return sleep_logs
 
@@ -120,7 +119,9 @@ sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 # recieve sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
 
-pprint(sleep.sleep_logs)
+print("type(sleep.sleep_logs):", type(sleep.sleep_logs))
+with pd.option_context("display.max_rows", 10, "display.max_columns", 9):
+    print(sleep.sleep_logs)
 
 # TODO Dev
 
