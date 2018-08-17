@@ -1,8 +1,9 @@
-def sleep_plots():
-    from IoTHealth.fitbit import Fitbit
-    from datetime import datetime as dt
-    from datetime import timedelta
+from IoTHealth.fitbit import Fitbit
+from datetime import datetime as dt
+from datetime import timedelta
 
+class Sleep(object):
+    def __init__(self, sleep_file_path):
     def sleep_data_essentials(sleep_data):
         """
         :param sleep_data: original sleep data from Fitbit request
