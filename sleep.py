@@ -2,6 +2,7 @@ from IoTHealth.fitbit import Fitbit
 from datetime import datetime as dt
 from datetime import timedelta
 import os
+import pandas as pd
 import json
 
 class Sleep(object):
@@ -12,14 +13,6 @@ class Sleep(object):
         self.tokens_file_path = tokens_file_path
         self.logs_uptodate = False
         self.sleep_logs = self.update_logs()
-
-        """
-        if os.path.isfile(sleep_file_path) and os.access(sleep_file_path, os.R_OK):
-            self.sleep_logs = pd.read_csv(sleep_file_path)
-        else:
-            print('"sleep.csv" does not exist')
-            self.sleep_logs = self.update_logs()
-        """
 
     def update_logs(self):
 
@@ -36,12 +29,16 @@ class Sleep(object):
                 self.logs_uptodate = True
                 print("sleep_logs are up-to-date")
         else:
+            # create .csv file
             date_range = ("2018-08-07", today)
 
             fitbit = Fitbit(self.tokens_filepath)
             raw_logs = fitbit.sleeplogs_range(date_range)
-            # create df from raw_logs
+
+            # create df from raw_logs using essentials()
             sleep_logs = self.essentials(raw_logs)
+            sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
+
             self.logs_uptodate = True
 
         if not self.logs_uptodate:
@@ -56,14 +53,12 @@ class Sleep(object):
 
             frames = [local_logs, api_logs]
             sleep_logs = pd.concat(frames)
+
+            # overwrite .csv file
+            sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
             self.logs_uptodate = True
 
         return sleep_logs
-
-
-
-
-
 
     def essentials(self, sleep_logs_raw):
         """
@@ -104,9 +99,15 @@ class Sleep(object):
 
         return sleep_logs
 
+
+
+
+
+
+
     # assignments
     tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
-    sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep_logs_fp.txt'
+    sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
     date_range = ('2018-08-07', '2018-08-15')
 
     # create interaction object with Fitbit API
@@ -139,9 +140,9 @@ class Sleep(object):
     """
         1. Create Sleep() class with attributes:
                 a. essentials() returns pandas df
-                a. create are_logs_uptodate boolean
-                a. write sleep.csv file if nonexistent
-                b. update sleep.csv
+           DONE a. create are_logs_uptodate boolean
+           DONE a. write sleep.csv file if nonexistent
+           DONE b. update sleep.csv
                 c. create sleep_logs_dataframe
                 d. create fig, capturing plots, using sleep_logs_dataframe
                 etc ...
