@@ -4,16 +4,22 @@ from datetime import timedelta
 
 class Sleep(object):
     def __init__(self, sleep_file_path):
-    def sleep_data_essentials(sleep_data):
+
+        # assignments
+        self.dict_labels = ["dateOfSleep", "minutesAfterWakeup",
+                               "minutesToFallAsleep", "startTime"]
+
+        self.stages_labels = ["deep", "light", "rem", "wake"]
+
+        self.sleep_data = None
+
+    def essentials(self, sleep_data):
         """
+        Capture data essential for plots
+
         :param sleep_data: original sleep data from Fitbit request
         :return: list of sleep logs with essential data
         """
-
-        dict_labels = ["dateOfSleep", "minutesAfterWakeup",
-                       "minutesToFallAsleep", "startTime"]
-
-        stages_labels = ["deep", "light", "rem", "wake"]
 
         sleep_data_list = []
 
@@ -22,14 +28,14 @@ class Sleep(object):
             duration_sleep = 0
             duration_total = 0
 
-            for label in dict_labels:
+            for label in self.dict_labels:
                 sleep_essentials[label] = sleep[label]
 
-            for label in stages_labels:
+            for label in self.stages_labels:
                 sleep_essentials[label] = sleep["levels"]["summary"][label]["minutes"]
                 duration_total += sleep_essentials[label]
 
-            for label in stages_labels[:-1]:
+            for label in self.stages_labels[:-1]:
                 duration_sleep += sleep_essentials[label]
 
             sleep_essentials["efficiency"] = round(duration_sleep / duration_total, 2)
@@ -38,8 +44,9 @@ class Sleep(object):
             sleep_data_list.append(sleep_essentials)
 
         sleep_data_list.reverse()
+        sleep_data = sleep_data_list
 
-        return sleep_data_list
+        return sleep_data
 
     # assignments
     tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
