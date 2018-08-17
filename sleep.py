@@ -3,7 +3,7 @@ from datetime import datetime as dt
 from datetime import timedelta
 
 class Sleep(object):
-    def __init__(self, sleep_file_path):
+    def __init__(self, sleep_data, sleep_file_path):
 
         # assignments
         self.dict_labels = ["dateOfSleep", "minutesAfterWakeup",
@@ -11,9 +11,11 @@ class Sleep(object):
 
         self.stages_labels = ["deep", "light", "rem", "wake"]
 
-        self.sleep_data = None
+        self.sleep_data = sleep_data
 
-    def essentials(self, sleep_data):
+        self.sleep_file_path = sleep_file_path
+
+    def essentials(self):
         """
         Capture data essential for plots
 
@@ -23,7 +25,7 @@ class Sleep(object):
 
         sleep_data_list = []
 
-        for sleep in sleep_data:
+        for sleep in self.sleep_data:
             sleep_essentials = {}
             duration_sleep = 0
             duration_total = 0
@@ -59,8 +61,11 @@ class Sleep(object):
     # recieve sleep data
     sleep_data = fitbit.sleeplogs_range(date_range)['sleep']
 
+    # create Sleep() object
+    sleep = Sleep(sleep_data, sleep_data_fp)
+
     # capture data for sleep plots
-    sleep_plot_data = sleep_data_essentials(sleep_data)
+    sleep_data = sleep.essentials()
 
     if os.path.isfile(sleep_data_fp) and os.access(sleep_data_fp, os.R_OK):
         with open(sleep_data_fp, 'r') as sleep_file:
