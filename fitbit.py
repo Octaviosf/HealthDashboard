@@ -173,6 +173,8 @@ class Fitbit(object):
 
 # EXAMPLE using Fitbit()
 
+"""
+
 # assignments
 file_path = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 date_range = ('2018-08-07', '2018-08-15')
@@ -184,3 +186,4 @@ fitbit = Fitbit(file_path)
 sleep_data = fitbit.sleeplogs_range(date_range)
 print('\n'+str(sleep_data))
 
+"""
