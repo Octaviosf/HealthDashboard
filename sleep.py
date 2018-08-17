@@ -76,41 +76,41 @@ class Sleep(object):
         sleep_logs = []
         frames = []
 
-        try:
-            # create list of sleep logs
-            for log_raw in sleep_logs_raw["sleep"]:
-                sleep_log = {}
-                duration_sleep = 0
-                duration_total = 0
+        # create list of sleep logs
+        for log_raw in sleep_logs_raw["sleep"]:
+            sleep_log = {}
+            duration_sleep = 0
+            duration_total = 0
 
-                for label in dict_labels:
-                    sleep_log[label] = log_raw[label]
+            for label in dict_labels:
+                sleep_log[label] = [log_raw[label]]
 
-                for label in stages_labels:
-                    sleep_log[label] = log_raw["levels"]["summary"][label]["minutes"]
-                    duration_total += sleep_log[label]
+            for label in stages_labels:
+                sleep_log[label] = [log_raw["levels"]["summary"][label]["minutes"]]
+                duration_total += sleep_log[label]
 
-                for label in stages_labels[:-1]:
-                    duration_sleep += sleep_log[label]
+            for label in stages_labels[:-1]:
+                duration_sleep += sleep_log[label]
 
-                sleep_log["efficiency"] = round(duration_sleep / duration_total, 2)
+            sleep_log["efficiency"] = [round(duration_sleep / duration_total, 2)]
 
-                sleep_log["duration"] = duration_total
-                sleep_logs.append(sleep_log)
+            sleep_log["duration"] = [duration_total]
+            sleep_logs.append(sleep_log)
 
-            sleep_logs.reverse()
+        sleep_logs.reverse()
 
-            # create list of DateFrames
-            for log in sleep_logs:
-                df = pd.DataFrame.from_dict(data=log, orient='columns')
-                df = df.set_index("dateOfSleep")
-                frames.append(df)
+        # create list of DateFrames
+        for log in sleep_logs:
+            print(log)
+            df = pd.DataFrame.from_dict(data=log)
+            print(df)
+            df = df.set_index("dateOfSleep")
+            frames.append(df)
 
-            # concatenate DataFrames
-            sleep_logs = pd.concat(frames)
-        except Exception as e:
-            print("Error:", str(e))
-            print(sleep_logs_raw)
+        # concatenate DataFrames
+        sleep_logs = pd.concat(frames)
+        print("type(concatenated sleep logs):", type(sleep_logs))
+
         return sleep_logs
 
 
