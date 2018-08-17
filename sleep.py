@@ -23,13 +23,6 @@ class Sleep(object):
 
     def update_logs(self):
 
-        # test
-        from datetime import datetime as dt
-        today = dt.today()
-        latest_date_local = "2018-08-07"
-        print("type(today):", type(today))
-
-
         today = dt.today().strftime("%Y-%m-%d")
 
         if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
