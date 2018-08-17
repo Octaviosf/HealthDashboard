@@ -137,8 +137,14 @@ with pd.option_context("display.max_rows", 10, "display.max_columns", 9):
        DONE b. update sleep.csv
        DONE c. create sleep_logs_dataframe
             d. create fig, capturing plots, using sleep_logs_dataframe
-            e. create sleep_%YYYY-%mm-%dd.csv backup file every month on 1st
-                - may be useful to create datetime class variable which updates to current
-                    date each month and date is posted to filename 
             etc ...
+"""
+
+# TODO Dev Future
+
+"""
+    1. create sleep_%YYYY-%mm-%dd.csv backup file every month on 1st
+        - may be useful to create datetime class variable which updates to current
+            date each month and date is posted to filename 
+
 """
