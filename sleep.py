@@ -13,10 +13,15 @@ class Sleep(object):
         self.logs_uptodate = False
         self.sleep_logs = self.update_logs()
 
+    # break up update_logs() method into two methods: update_local_logs() and create_csv()
+        # call two methods in __init__()
     def update_logs(self):
 
         today = dt.today().strftime("%Y-%m-%d")
 
+        # test if sleep.csv exists and whether it is up-to-date
+            # if file_exists: (sleep_logs, logs_uptodate) = update_local_logs()
+            # else: (sleep_logs, logs_uptodate) = create_csv()
         if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
             local_logs = pd.read_csv(self.sleep_file_path)
             local_logs = local_logs.set_index("dateOfSleep")
@@ -28,6 +33,9 @@ class Sleep(object):
                 sleep_logs = local_logs
                 self.logs_uptodate = True
                 print("sleep_logs are up-to-date")
+
+        # create up-to-date sleep.csv file if it is nonexistent
+        # create function which creates sleep.csv file and returns sleep_logs and logs_uptodate boolean
         else:
             # create .csv file
             date_range = ("2018-08-07", today)
@@ -41,6 +49,7 @@ class Sleep(object):
 
             self.logs_uptodate = True
 
+        # update sleep.csv if it exists and not up-to-date
         if not self.logs_uptodate:
             latest_date_local = dt.strptime(latest_date_local, "%Y-%m-%d")
             next_date_local = (latest_date_local + timedelta(days=1)).strftime("%Y-%m-%d")
@@ -76,9 +85,7 @@ class Sleep(object):
 
         dict_labels = ["dateOfSleep", "minutesAfterWakeup",
                        "minutesToFallAsleep", "startTime"]
-
         stages_labels = ["deep", "light", "rem", "wake"]
-
         sleep_logs = []
         frames = []
 
@@ -132,11 +139,12 @@ with pd.option_context("display.max_rows", 10, "display.max_columns", 9):
 """
     1. Create Sleep() class with attributes:
        DONE a. essentials() returns pandas df
-       DONE a. create are_logs_uptodate boolean
-       DONE a. write sleep.csv file if nonexistent
-       DONE b. update sleep.csv
-       DONE c. create sleep_logs_dataframe
-            d. create fig, capturing plots, using sleep_logs_dataframe
+       DONE b. create are_logs_uptodate boolean
+       DONE c. write sleep.csv file if nonexistent
+       DONE d. update sleep.csv
+       DONE e. create sleep_logs_dataframe
+            f. clean and comment sleep.py code
+            g. create fig, capturing plots, using sleep_logs_dataframe
             etc ...
 """
 
