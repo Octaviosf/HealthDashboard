@@ -87,10 +87,10 @@ class Sleep(object):
 
             for label in stages_labels:
                 sleep_log[label] = [log_raw["levels"]["summary"][label]["minutes"]]
-                duration_total += sleep_log[label]
+                duration_total += sleep_log[label][0]
 
             for label in stages_labels[:-1]:
-                duration_sleep += sleep_log[label]
+                duration_sleep += sleep_log[label][0]
 
             sleep_log["efficiency"] = [round(duration_sleep / duration_total, 2)]
 
@@ -101,9 +101,8 @@ class Sleep(object):
 
         # create list of DateFrames
         for log in sleep_logs:
-            print(log)
             df = pd.DataFrame.from_dict(data=log)
-            print(df)
+            pprint(df)
             df = df.set_index("dateOfSleep")
             frames.append(df)
 
