@@ -65,7 +65,7 @@ class Sleep(object):
         Capture data essential for plots
 
         :param sleep_logs_raw: original sleep data from Fitbit request
-        :return: list of sleep logs with essential data
+        :return: DataFrame of sleep logs with essential data
         """
 
         dict_labels = ["dateOfSleep", "minutesAfterWakeup",
@@ -74,17 +74,19 @@ class Sleep(object):
         stages_labels = ["deep", "light", "rem", "wake"]
 
         sleep_logs = []
+        frames = []
 
-        for sleep_raw in sleep_logs_raw:
+        # create list of sleep logs
+        for log_raw in sleep_logs_raw:
             sleep_log = {}
             duration_sleep = 0
             duration_total = 0
 
             for label in dict_labels:
-                sleep_log[label] = sleep_raw[label]
+                sleep_log[label] = log_raw[label]
 
             for label in stages_labels:
-                sleep_log[label] = sleep_raw["levels"]["summary"][label]["minutes"]
+                sleep_log[label] = log_raw["levels"]["summary"][label]["minutes"]
                 duration_total += sleep_log[label]
 
             for label in stages_labels[:-1]:
@@ -96,6 +98,15 @@ class Sleep(object):
             sleep_logs.append(sleep_log)
 
         sleep_logs.reverse()
+
+        # create list of DateFrames
+        for log in sleep_logs:
+            df = pd.DataFrame.from_dict(data=log, orient='columns')
+            df = df.set_index("dateOfSleep")
+            frames.append(df)
+
+        # concatenate DataFrames
+        sleep_logs = pd.concat(frames)
 
         return sleep_logs
 
@@ -139,7 +150,7 @@ class Sleep(object):
 
     """
         1. Create Sleep() class with attributes:
-                a. essentials() returns pandas df
+           DONE a. essentials() returns pandas df
            DONE a. create are_logs_uptodate boolean
            DONE a. write sleep.csv file if nonexistent
            DONE b. update sleep.csv
