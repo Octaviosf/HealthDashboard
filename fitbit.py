@@ -128,7 +128,7 @@ class Fitbit(object):
         # handle expired token error
         try:
             error = response['errors'][0]['errorType']
-            if error == 'invalid_token':
+            if error == 'invalid_token' or error == 'expired_token':
                 # refresh tokens
                 (self.access_token, self.refresh_token) = self.refresh_tokens()
                 # request data using new tokens and capture response
@@ -173,7 +173,6 @@ class Fitbit(object):
 
 # EXAMPLE using Fitbit()
 
-"""
 # assignments
 file_path = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 date_range = ('2018-08-07', '2018-08-15')
@@ -185,4 +184,3 @@ fitbit = Fitbit(file_path)
 sleep_data = fitbit.sleeplogs_range(date_range)
 print('\n'+str(sleep_data))
 
-"""
