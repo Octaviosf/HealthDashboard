@@ -69,6 +69,7 @@ class Sleep(object):
                 # update sleep.csv
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
 
+
         return sleep_logs
 
     def initialize_csv(self):
@@ -132,7 +133,7 @@ class Sleep(object):
 
         return sleep_logs
 
-    def plot_efficiency(self, grid_shape, position, rowspan, colspan):
+    def plot_efficiency(self, grid_shape, position, rowspan):
 
         # global plot format
         fig = plt.figure(figsize=(17,12), dpi=100)
@@ -141,13 +142,13 @@ class Sleep(object):
 
         # parameter init
         x = self.sleep_logs.index
-        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
-        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=2)
+        xmin = dt.strptime(self.sleep_logs.index.tolist()[0], "%Y-%m-%d") - timedelta(days=1)
+        xmax = dt.strptime(self.sleep_logs.index.tolist()[-1], "%Y-%m-%d") + timedelta(days=2)
         labelpad = 25
         labelfontsize = 20
         dateformat = "%a-%b-%d"
 
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
         ax.grid()
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         ax.set_xlim(xmin, xmax)
@@ -164,13 +165,12 @@ sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 
 # fig parameters
 grid_shape = (4, 1)
-position = (3, 1)
+position = (3, 0)
 rowspan = 1
-colspan = 1
 
 # capture sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
-efficiency_plot = sleep.plot_efficiency(grid_shape, position, rowspan, colspan)
+efficiency_plot = sleep.plot_efficiency(grid_shape, position, rowspan)
 efficiency_plot.show()
 
 """
