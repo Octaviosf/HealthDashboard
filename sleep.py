@@ -13,7 +13,6 @@ class Sleep(object):
         self.logs_uptodate = False
         self.today = dt.today().strftime("%Y-%m-%d")
 
-        # TODO call update_local_logs() and create_csv() in __init__()
         if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
             self.sleep_logs = self.update_local_logs()
         else:
@@ -73,70 +72,6 @@ class Sleep(object):
 
         return sleep_logs
 
-    # break up update_logs() method into two methods: update_local_logs() and create_csv()
-        # call two methods in __init__()
-    """
-    def update_logs(self):
-
-        today = dt.today().strftime("%Y-%m-%d")
-
-        # test if sleep.csv exists and whether it is up-to-date
-            # if file_exists: (sleep_logs, logs_uptodate) = update_local_logs()
-            # else: (sleep_logs, logs_uptodate) = create_csv()
-        if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
-            local_logs = pd.read_csv(self.sleep_file_path)
-            local_logs = local_logs.set_index("dateOfSleep")
-
-            # test if local_logs are up to date
-            latest_date_local = local_logs.index.max()
-
-            if latest_date_local == today:
-                sleep_logs = local_logs
-                self.logs_uptodate = True
-                print("sleep_logs are up-to-date")
-
-        # create up-to-date sleep.csv file if it is nonexistent
-        # create function which creates sleep.csv file and returns sleep_logs and logs_uptodate boolean
-        else:
-            # create .csv file
-            date_range = ("2018-08-07", today)
-
-            fitbit = Fitbit(self.tokens_file_path)
-            raw_logs = fitbit.sleeplogs_range(date_range)
-
-            # create df from raw_logs using essentials()
-            sleep_logs = self.essentials(raw_logs)
-            sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
-
-            self.logs_uptodate = True
-
-        # update sleep.csv if it exists and not up-to-date
-        if not self.logs_uptodate:
-            latest_date_local = dt.strptime(latest_date_local, "%Y-%m-%d")
-            next_date_local = (latest_date_local + timedelta(days=1)).strftime("%Y-%m-%d")
-
-            date_range = (next_date_local, today)
-
-            fitbit = Fitbit(self.tokens_file_path)
-            raw_logs = fitbit.sleeplogs_range(date_range)
-
-            # test whether logs returned
-            if not raw_logs['sleep']:
-                sleep_logs = local_logs
-            else:
-                api_logs = self.essentials(raw_logs)
-
-                frames = [local_logs, api_logs]
-                sleep_logs = pd.concat(frames)
-
-                # overwrite .csv file
-                sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
-
-            self.logs_uptodate = True
-
-        return sleep_logs
-    """
-
     def essentials(self, sleep_logs_raw):
         """
         Capture data essential for plots
@@ -193,7 +128,7 @@ sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 # recieve sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
 
-with pd.option_context("display.max_rows", 10, "display.max_columns", 9):
+with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
     print(sleep.sleep_logs)
 
 # TODO Dev
@@ -207,6 +142,7 @@ with pd.option_context("display.max_rows", 10, "display.max_columns", 9):
        DONE e. create sleep_logs_dataframe
             f. clean and comment sleep.py code
             g. create fig, capturing plots, using sleep_logs_dataframe
+            h. find out why minutesAfterWakeup and minutesToFallAsleep are mostly 0
             etc ...
 """
 
