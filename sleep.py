@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.dates import date2num
 import numpy as np
+import numpy.ma as ma
 
 class Sleep(object):
     """
@@ -192,6 +193,7 @@ class Sleep(object):
 
         x = self.sleep_logs.index
         x = date2num(x)
+        print('type(x)', type(x))
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         numdays = xmax-xmin+timedelta(days=1)
@@ -209,16 +211,32 @@ class Sleep(object):
         light_median = np.around(np.median(light_perc), 3)
         deep_median = np.around(np.median(deep_perc), 3)
 
-        awake_median_array = np.full(median_array_shape, awake_median)
-        rem_median_array = np.full(median_array_shape, rem_median)
-        light_median_array = np.full(median_array_shape, light_median)
-        deep_median_array = np.full(median_array_shape, deep_median)
+        awake_median_array = np.full(median_array_shape, awake_median)[0]
+        rem_median_array = np.full(median_array_shape, rem_median)[0]
+        light_median_array = np.full(median_array_shape, light_median)[0]
+        deep_median_array = np.full(median_array_shape, deep_median)[0]
 
         xticks = [xmin + timedelta(days=d) for d in range(0, numdays.days)]
         bar_width = 0.2
         labelpad = 25
         labelfontsize = 20
         dateformat = '%a-%b-%d'
+        medians_linewidth = 3
+        medians_edgecolor = 'w'
+        alpha = 0.25
+        medians_color = 'k'
+
+        mask_awake_perc = ma.where(awake_perc>=awake_median_array)
+        mask_awake_median = ma.where(awake_median_array>=awake_perc)
+
+        mask_rem_perc = ma.where(rem_perc>=rem_median_array)
+        mask_rem_median = ma.where(rem_median_array>=rem_perc)
+
+        mask_light_perc = ma.where(light_perc>=light_median_array)
+        mask_light_median = ma.where(light_median_array>=light_perc)
+
+        mask_deep_perc = ma.where(deep_perc>=deep_median_array)
+        mask_deep_median = ma.where(deep_median_array>=deep_perc)
 
         annotate_height = 1
         annotate_fontsize = 18
@@ -251,11 +269,40 @@ class Sleep(object):
             ax.text(x_pos+0.3, annotate_height, int(round(deep_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
 
+        # plot stages
+        ax.bar((x-0.3)[mask_awake_median], awake_median_array[mask_awake_median], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center', label='Awake')
+        ax.bar((x-0.3)[mask_awake_perc], awake_median_array[mask_awake_perc], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
+
+        ax.bar((x-0.1)[mask_rem_median], rem_median_array[mask_rem_median], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
         ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center', label='REM')
+        ax.bar((x-0.1)[mask_rem_perc], rem_median_array[mask_rem_perc], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
+
+        ax.bar((x+0.1)[mask_light_median], light_median_array[mask_light_median], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
         ax.bar(x+0.1, light_perc, width=bar_width, align='center', label='Light')
+        ax.bar((x+0.1)[mask_light_perc], light_median_array[mask_light_perc], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
+
+        ax.bar((x+0.3)[mask_deep_median], deep_median_array[mask_deep_median], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
         ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center', label='Deep')
+        ax.bar((x+0.3)[mask_deep_perc], deep_median_array[mask_deep_perc], alpha=alpha,
+               color=medians_color, width=bar_width, align='center')
+
+
+        """
+        ax.bar(x-0.1, rem_median_array, edgecolor=medians_edgecolor, linewidth=medians_linewidth, alpha=0.5, color='c', width=bar_width, align='center')
+        ax.bar(x+0.1, light_median_array, edgecolor=medians_edgecolor, linewidth=medians_linewidth, alpha=0.5, width=bar_width, align='center')
+        ax.bar(x+0.3, deep_median_array, edgecolor=medians_edgecolor, linewidth=medians_linewidth, alpha=0.5, color='b', width=bar_width, align='center')
+        """
+
         plt.legend(prop={'size': 15}, loc='upper right')
+
 
 
         plt.tight_layout()
