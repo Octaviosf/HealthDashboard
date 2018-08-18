@@ -11,10 +11,71 @@ class Sleep(object):
         self.sleep_file_path = sleep_file_path
         self.tokens_file_path = tokens_file_path
         self.logs_uptodate = False
-        self.sleep_logs = self.update_logs()
+        self.today = dt.today().strftime("%Y-%m-%d")
+
+        # TODO call update_local_logs() and create_csv() in __init__()
+        if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
+            self.sleep_logs = self.update_local_logs()
+        else:
+            self.sleep_logs = self.create_csv()
+
+    def update_local_logs(self):
+
+        local_logs = pd.read_csv(self.sleep_file_path)
+        local_logs = local_logs.set_index("dateOfSleep")
+
+        # test if local_logs are up to date
+        latest_date_local = local_logs.index.max()
+
+        if latest_date_local == self.today:
+            sleep_logs = local_logs
+            self.logs_uptodate = True
+            print("sleep_logs are up-to-date")
+        else:
+            latest_date_local = dt.strptime(latest_date_local, "%Y-%m-%d")
+            next_date_local = (latest_date_local + timedelta(days=1)).strftime("%Y-%m-%d")
+
+            date_range = (next_date_local, self.today)
+
+            fitbit = Fitbit(self.tokens_file_path)
+            raw_logs = fitbit.sleeplogs_range(date_range)
+
+            # test whether logs returned
+            if not raw_logs['sleep']:
+                sleep_logs = local_logs
+                self.logs_uptodate = True
+            else:
+                api_logs = self.essentials(raw_logs)
+
+                frames = [local_logs, api_logs]
+                sleep_logs = pd.concat(frames)
+
+                # overwrite .csv file
+                sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
+
+                self.logs_uptodate = True
+
+        return sleep_logs
+
+    def create_csv(self):
+
+        # create .csv file
+        date_range = ("2018-08-07", self.today)
+
+        fitbit = Fitbit(self.tokens_file_path)
+        raw_logs = fitbit.sleeplogs_range(date_range)
+
+        # create df from raw_logs using essentials()
+        sleep_logs = self.essentials(raw_logs)
+        sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
+
+        self.logs_uptodate = True
+
+        return sleep_logs
 
     # break up update_logs() method into two methods: update_local_logs() and create_csv()
         # call two methods in __init__()
+    """
     def update_logs(self):
 
         today = dt.today().strftime("%Y-%m-%d")
@@ -74,6 +135,7 @@ class Sleep(object):
             self.logs_uptodate = True
 
         return sleep_logs
+    """
 
     def essentials(self, sleep_logs_raw):
         """
