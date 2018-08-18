@@ -5,72 +5,94 @@ import os
 import pandas as pd
 
 class Sleep(object):
+    """
+    Interact with sleep logs:
+        - request sleep logs
+        - update sleep logs
+        - create sleep.csv
+        - capture explicit data from raw sleep logs
+    """
     def __init__(self, sleep_file_path, tokens_file_path):
+        """
+        Create and/or update sleep.csv
+        Capture sleep_logs using instance variable
+
+        :param sleep_file_path: absolute file-path to sleep.csv
+        :param tokens_file_path: absolute file-path to fitbit_tokens.txt
+        """
 
         # assignments
         self.sleep_file_path = sleep_file_path
         self.tokens_file_path = tokens_file_path
         self.today = dt.today().strftime("%Y-%m-%d")
 
+        # capture up-to-date sleep logs
         if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
             self.sleep_logs = self.update_local_logs()
         else:
-            self.sleep_logs = self.create_csv()
+            self.sleep_logs = self.initialize_csv()
 
     def update_local_logs(self):
+        """
+        Update sleep.csv and sleep_logs
 
+        :return: up-to-date sleep_logs
+        """
+
+        # read sleep.csv and capture data
         local_logs = pd.read_csv(self.sleep_file_path)
         local_logs = local_logs.set_index("dateOfSleep")
-
-        # test if local_logs are up to date
         latest_date_local = local_logs.index.max()
 
+        # update sleep_logs, depending on latest entry
         if latest_date_local == self.today:
             sleep_logs = local_logs
-            print("sleep_logs are up-to-date")
         else:
+            # request missing logs from Fitbit
             latest_date_local = dt.strptime(latest_date_local, "%Y-%m-%d")
             next_date_local = (latest_date_local + timedelta(days=1)).strftime("%Y-%m-%d")
-
             date_range = (next_date_local, self.today)
-
             fitbit = Fitbit(self.tokens_file_path)
             raw_logs = fitbit.sleeplogs_range(date_range)
 
-            # test whether logs returned
+            # update sleep_logs and sleep.csv, depending on logs returned from Fitbit
             if not raw_logs['sleep']:
                 sleep_logs = local_logs
             else:
-                api_logs = self.essentials(raw_logs)
-
+                # concatenate local_logs and api_logs
+                api_logs = self.capture_explicit_data(raw_logs)
                 frames = [local_logs, api_logs]
                 sleep_logs = pd.concat(frames)
 
-                # overwrite .csv file
+                # update sleep.csv
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
 
         return sleep_logs
 
-    def create_csv(self):
+    def initialize_csv(self):
+        """
+        Initialize sleep.csv with up-to-date sleep logs
 
-        # create .csv file
+        :return: up-to-date sleep logs
+        """
+
+        # request all sleep logs from Fitbit
         date_range = ("2018-08-07", self.today)
-
         fitbit = Fitbit(self.tokens_file_path)
         raw_logs = fitbit.sleeplogs_range(date_range)
 
-        # create df from raw_logs using essentials()
-        sleep_logs = self.essentials(raw_logs)
+        # capture explicit data from returned logs
+        sleep_logs = self.capture_explicit_data(raw_logs)
         sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
 
         return sleep_logs
 
-    def essentials(self, sleep_logs_raw):
+    def capture_explicit_data(self, sleep_logs_raw):
         """
-        Capture data essential for plots
+        Capture explicit data from raw sleep logs
 
         :param sleep_logs_raw: original sleep data from Fitbit request
-        :return: DataFrame of sleep logs with essential data
+        :return sleep_logs: explicit sleep data
         """
 
         dict_labels = ["dateOfSleep", "minutesAfterWakeup",
@@ -128,7 +150,7 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
 
 """
     1. Create Sleep() class with attributes:
-       DONE a. essentials() returns pandas df
+       DONE a. capture_explicit_data() returns pandas df
        DONE b. create are_logs_uptodate boolean
        DONE c. write sleep.csv file if nonexistent
        DONE d. update sleep.csv
