@@ -176,7 +176,8 @@ class Sleep(object):
 
         # annotate bars
         for date, height in zip(x, y):
-            ax.text(date, height+0.02, height, fontsize=18, fontweight='bold', horizontalalignment='center')
+            ax.text(date, height+0.02, height, fontsize=18,
+                    fontweight='bold', horizontalalignment='center')
 
         ax.bar(x, y, edgecolor='k', width=0.5, linewidth=1.5)
 
@@ -215,6 +216,10 @@ class Sleep(object):
         ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
+        for x_pos, awake_p in zip(x, awake_perc):
+            ax.text(x_pos-0.3, 1, int(round(awake_p, 0)), fontsize=18,
+                    fontweight='bold', horizontalalignment='center', color='w')
+
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center')
         ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center')
         ax.bar(x+0.1, light_perc, width=bar_width, align='center')
@@ -243,7 +248,7 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
 """
 
 # set fig shape and show
-plt.figure(figsize=(17,12))
+plt.figure(figsize=(30,20))
 efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan)
 stages_plot = sleep.plot_stages(grid_shape, stages_plt_pos, rowspan)
 stages_plot.show()
