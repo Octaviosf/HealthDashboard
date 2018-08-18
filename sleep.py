@@ -12,7 +12,6 @@ class Sleep(object):
         - create sleep.csv
         - capture explicit data from raw sleep logs
     """
-
     def __init__(self, sleep_file_path, tokens_file_path):
         """
         Create and/or update sleep.csv
