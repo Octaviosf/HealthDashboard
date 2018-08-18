@@ -238,10 +238,12 @@ class Sleep(object):
             ax.text(x_pos+0.3, annotate_height, int(round(deep_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
 
-        ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center')
-        ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center')
-        ax.bar(x+0.1, light_perc, width=bar_width, align='center')
-        ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center')
+        ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center', label='Awake')
+        ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center', label='REM')
+        ax.bar(x+0.1, light_perc, width=bar_width, align='center', label='Light')
+        ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center', label='Deep')
+        plt.legend(prop={'size': 15}, loc='upper right')
+
 
         plt.tight_layout()
 
