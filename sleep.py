@@ -132,7 +132,7 @@ class Sleep(object):
 
         return sleep_logs
 
-    def plot(self):
+    def plot_efficiency(self, grid_shape, position, rowspan, colspan):
 
         # global plot format
         fig = plt.figure(figsize=(17,12), dpi=100)
@@ -142,20 +142,42 @@ class Sleep(object):
         # parameter init
         x = self.sleep_logs.index
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
+        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=2)
+        labelpad = 25
+        labelfontsize = 20
+        dateformat = "%a-%b-%d"
 
-
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
+        ax.grid()
+        ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
+        ax.set_xlim(xmin, xmax)
+        ax.set_ylim(0, 1)
+        ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+        ax.bar(x, self.sleep_logs[['efficiency']], color='r', edgecolor='k')
 
         return fig
+
 
 # assignments
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 
+# fig parameters
+grid_shape = (4, 1)
+position = (3, 1)
+rowspan = 1
+colspan = 1
+
 # capture sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
+efficiency_plot = sleep.plot_efficiency(grid_shape, position, rowspan, colspan)
+efficiency_plot.show()
 
+"""
 with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
     print(sleep.sleep_logs)
+"""
+
 
 # TODO Dev
 
