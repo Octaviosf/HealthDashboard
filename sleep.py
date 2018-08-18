@@ -3,6 +3,8 @@ from datetime import datetime as dt
 from datetime import timedelta
 import os
 import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 class Sleep(object):
     """
@@ -130,6 +132,20 @@ class Sleep(object):
 
         return sleep_logs
 
+    def plot(self):
+
+        # global plot format
+        fig = plt.figure(figsize=(17,12), dpi=100)
+        plt.rc("xtick", labelsize=18)
+        plt.rc("ytick", labelsize=18)
+
+        # parameter init
+        x = self.sleep_logs.index
+        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
+
+
+
+        return fig
 
 # assignments
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
