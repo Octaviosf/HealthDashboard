@@ -14,8 +14,8 @@ class Sleep(object):
     """
     def __init__(self, sleep_file_path, tokens_file_path):
         """
-        Create and/or update sleep.csv
-        Capture sleep_logs using instance variable
+        create and/or update sleep.csv
+        capture sleep_logs using instance variable
 
         :param sleep_file_path: absolute file-path to sleep.csv
         :param tokens_file_path: absolute file-path to fitbit_tokens.txt
@@ -34,7 +34,7 @@ class Sleep(object):
 
     def update_local_logs(self):
         """
-        Update sleep.csv and sleep_logs
+        update sleep.csv and sleep_logs
 
         :return: up-to-date sleep_logs
         """
@@ -71,7 +71,7 @@ class Sleep(object):
 
     def initialize_csv(self):
         """
-        Initialize sleep.csv with up-to-date sleep logs
+        initialize sleep.csv with up-to-date sleep logs
 
         :return sleep_logs: up-to-date sleep logs
         """
@@ -89,7 +89,7 @@ class Sleep(object):
 
     def capture_explicit_data(self, sleep_logs_raw):
         """
-        Capture explicit data from raw sleep logs
+        capture explicit data from raw sleep logs
 
         :param sleep_logs_raw: raw sleep data from Fitbit request
         :return sleep_logs: explicit sleep data captured from raw logs
@@ -151,8 +151,8 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
        DONE d. update sleep.csv
        DONE e. create sleep_logs_dataframe
        DONE f. clean and comment sleep.py code
-            g. create fig, capturing plots, using sleep_logs_dataframe
-            h. find out why minutesAfterWakeup and minutesToFallAsleep are mostly 0
+            g. find out why minutesAfterWakeup and minutesToFallAsleep are mostly 0
+            h. create fig, capturing plots, using sleep_logs_dataframe
             etc ...
 """
 
