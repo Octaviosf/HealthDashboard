@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+from matplotlib.dates import date2num
 import numpy as np
 
 class Sleep(object):
@@ -189,6 +190,7 @@ class Sleep(object):
         plt.rc('ytick', labelsize=18)
 
         x = self.sleep_logs.index
+        x = date2num(x)
         durations = self.sleep_logs['duration'].values
         awake_perc = np.around(self.sleep_logs['wake'].values / durations, 3) * 100
         rem_perc = np.around(self.sleep_logs['rem'].values / durations, 3) * 100
@@ -205,15 +207,15 @@ class Sleep(object):
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
         ax.grid()
         ax.set_title('Sleep Stages', fontsize=30, pad=30)
-        ax.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
+        ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
         ax.set_xlim(xmin, xmax)
         ax.set_yticks(np.arange(0, 110, 10))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
-        ax.bar(x, awake_perc, color='m', width=bar_width, align='center')
-        ax.bar(x, rem_perc, color='c', width=bar_width, align='center')
-        ax.bar(x, light_perc, width=bar_width, align='center')
-        ax.bar(x, deep_perc, color='b', width=bar_width, align='center')
+        ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center')
+        ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center')
+        ax.bar(x+0.1, light_perc, width=bar_width, align='center')
+        ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center')
 
         plt.tight_layout()
 
