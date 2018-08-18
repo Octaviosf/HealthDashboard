@@ -141,9 +141,16 @@ class Sleep(object):
         return sleep_logs
 
     def plot_efficiency(self, grid_shape, position, rowspan):
+        """
+        plot sleep efficiency
+
+        :param grid_shape: grid shape
+        :param position: position within grid
+        :param rowspan: grid rows spanned by plot
+        :return:
+        """
 
         # global plot format
-        plt.figure(figsize=(17,12), dpi=100)
         plt.rc("xtick", labelsize=18)
         plt.rc("ytick", labelsize=18)
 
@@ -172,9 +179,45 @@ class Sleep(object):
 
         ax.bar(x, y, edgecolor='k', width=0.5, linewidth=1.5)
 
+        plt.tight_layout()
 
         return plt
 
+    def plot_stages(self, grid_shape, position, rowspan):
+
+        plt.rc('xtick', labelsize=18)
+        plt.rc('ytick', labelsize=18)
+
+        x = self.sleep_logs.index
+        durations = self.sleep_logs['duration'].values
+        awake_perc = np.around(self.sleep_logs['wake'].values / durations, 3) * 100
+        rem_perc = np.around(self.sleep_logs['rem'].values / durations, 3) * 100
+        light_perc = np.around(self.sleep_logs['light'].values / durations, 3) * 100
+        deep_perc = np.around(self.sleep_logs['deep'].values / durations, 3) * 100
+
+        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
+        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
+        bar_width = 0.2
+        labelpad = 25
+        labelfontsize = 20
+        dateformat = '%a-%b-%d'
+
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
+        ax.grid()
+        ax.set_title('Sleep Stages', fontsize=30, pad=30)
+        ax.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
+        ax.set_xlim(xmin, xmax)
+        ax.set_yticks(np.arange(0, 110, 10))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+
+        ax.bar(x, awake_perc, color='m', width=bar_width, align='center')
+        ax.bar(x, rem_perc, color='c', width=bar_width, align='center')
+        ax.bar(x, light_perc, width=bar_width, align='center')
+        ax.bar(x, deep_perc, color='b', width=bar_width, align='center')
+
+        plt.tight_layout()
+
+        return plt
 
 # assignments
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
@@ -182,16 +225,23 @@ sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 
 # fig parameters
 grid_shape = (4, 1)
-position = (2, 0)
+eff_plt_pos = (2, 0)
+stages_plt_pos = (0, 0)
 rowspan = 2
 
 # capture sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
 
+"""
 with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
     print(sleep.sleep_logs)
+"""
 
-efficiency_plot = sleep.plot_efficiency(grid_shape, position, rowspan)
+# set fig shape and show
+plt.figure(figsize=(17,12))
+efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan)
+stages_plot = sleep.plot_stages(grid_shape, stages_plt_pos, rowspan)
+stages_plot.show()
 efficiency_plot.show()
 
 
@@ -212,6 +262,8 @@ efficiency_plot.show()
                 -- for minutesAfterWakeup = 0 makes sense as I've pressed "awake" on app
                     when I get up from bed rather than pressing it as soon as I wake and press
                     "done" when I get up from bed
+       DONE h. create efficiency_plot()
+            i. create stages_plot()
             h. create fig, capturing plots, using sleep_logs_dataframe
             etc ...
 """
