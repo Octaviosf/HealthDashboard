@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import numpy as np
 
 class Sleep(object):
     """
@@ -69,6 +70,8 @@ class Sleep(object):
                 # update sleep.csv
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
 
+        sleep_logs.index = pd.to_datetime(sleep_logs.index)
+        # sleep_logs = sleep_logs.index.astype('datetime64[ns]')
 
         return sleep_logs
 
@@ -87,6 +90,8 @@ class Sleep(object):
         # capture explicit data from raw logs
         sleep_logs = self.capture_explicit_data(raw_logs)
         sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
+
+        sleep_logs.index = pd.to_datetime(sleep_logs.index)
 
         return sleep_logs
 
@@ -131,32 +136,37 @@ class Sleep(object):
         # concatenate DataFrames
         sleep_logs = pd.concat(frames)
 
+        sleep_logs.index = pd.to_datetime(sleep_logs.index)
+
         return sleep_logs
 
     def plot_efficiency(self, grid_shape, position, rowspan):
 
         # global plot format
-        fig = plt.figure(figsize=(17,12), dpi=100)
+        plt.figure(figsize=(17,12), dpi=100)
         plt.rc("xtick", labelsize=18)
         plt.rc("ytick", labelsize=18)
 
         # parameter init
         x = self.sleep_logs.index
-        xmin = dt.strptime(self.sleep_logs.index.tolist()[0], "%Y-%m-%d") - timedelta(days=1)
-        xmax = dt.strptime(self.sleep_logs.index.tolist()[-1], "%Y-%m-%d") + timedelta(days=2)
+        y = self.sleep_logs['efficiency'].tolist()
+        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
+        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         labelpad = 25
         labelfontsize = 20
         dateformat = "%a-%b-%d"
 
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
         ax.grid()
+        ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         ax.set_xlim(xmin, xmax)
-        ax.set_ylim(0, 1)
+        ax.set_ylim(0, 1.0)
+        ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-        ax.bar(x, self.sleep_logs[['efficiency']], color='r', edgecolor='k')
+        ax.bar(x, y, edgecolor='k', width=0.5, linewidth=1.5)
 
-        return fig
+        return plt
 
 
 # assignments
@@ -165,18 +175,18 @@ sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 
 # fig parameters
 grid_shape = (4, 1)
-position = (3, 0)
-rowspan = 1
+position = (2, 0)
+rowspan = 2
 
 # capture sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
+
+with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
+    print(sleep.sleep_logs)
+
 efficiency_plot = sleep.plot_efficiency(grid_shape, position, rowspan)
 efficiency_plot.show()
 
-"""
-with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
-    print(sleep.sleep_logs)
-"""
 
 
 # TODO Dev
