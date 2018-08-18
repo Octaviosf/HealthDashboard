@@ -199,6 +199,8 @@ class Sleep(object):
 
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
+        numdays = xmax-xmin+timedelta(days=1)
+        xticks = [xmin + timedelta(days=d) for d in range(0, numdays.days)]
         bar_width = 0.2
         labelpad = 25
         labelfontsize = 20
@@ -208,8 +210,9 @@ class Sleep(object):
         ax.grid()
         ax.set_title('Sleep Stages', fontsize=30, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
-        ax.set_xlim(xmin, xmax)
-        ax.set_yticks(np.arange(0, 110, 10))
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation = -45, ha='left', rotation_mode='anchor')
+        ax.set_xticks(xticks)
+        ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center')
