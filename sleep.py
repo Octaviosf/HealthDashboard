@@ -207,6 +207,12 @@ class Sleep(object):
         labelfontsize = 20
         dateformat = '%a-%b-%d'
 
+        annotate_height = 1
+        annotate_fontsize = 18
+        annotate_fontweight = 'bold'
+        annotate_align = 'center'
+        annotate_color = 'w'
+
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
         ax.grid()
         ax.set_title('Sleep Stages', fontsize=30, pad=30)
@@ -217,8 +223,20 @@ class Sleep(object):
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
         for x_pos, awake_p in zip(x, awake_perc):
-            ax.text(x_pos-0.3, 1, int(round(awake_p, 0)), fontsize=18,
-                    fontweight='bold', horizontalalignment='center', color='w')
+            ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
+                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+
+        for x_pos, rem_p in zip(x, rem_perc):
+            ax.text(x_pos-0.1, annotate_height, int(round(rem_p, 0)), fontsize=annotate_fontsize,
+                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+
+        for x_pos, light_p in zip(x, light_perc):
+            ax.text(x_pos+0.1, annotate_height, int(round(light_p, 0)), fontsize=annotate_fontsize,
+                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+
+        for x_pos, deep_p in zip(x, deep_perc):
+            ax.text(x_pos+0.3, annotate_height, int(round(deep_p, 0)), fontsize=annotate_fontsize,
+                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
 
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center')
         ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center')
@@ -228,6 +246,7 @@ class Sleep(object):
         plt.tight_layout()
 
         return plt
+
 
 # assignments
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
