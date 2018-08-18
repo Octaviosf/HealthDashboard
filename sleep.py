@@ -12,6 +12,7 @@ class Sleep(object):
         - create sleep.csv
         - capture explicit data from raw sleep logs
     """
+
     def __init__(self, sleep_file_path, tokens_file_path):
         """
         Create and/or update sleep.csv
@@ -44,7 +45,7 @@ class Sleep(object):
         local_logs = local_logs.set_index("dateOfSleep")
         latest_date_local = local_logs.index.max()
 
-        # update sleep_logs, depending on latest entry
+        # update sleep_logs, depending on latest local entry
         if latest_date_local == self.today:
             sleep_logs = local_logs
         else:
@@ -59,7 +60,7 @@ class Sleep(object):
             if not raw_logs['sleep']:
                 sleep_logs = local_logs
             else:
-                # concatenate local_logs and api_logs
+                # capture explicit data from raw logs and append to local_logs
                 api_logs = self.capture_explicit_data(raw_logs)
                 frames = [local_logs, api_logs]
                 sleep_logs = pd.concat(frames)
@@ -73,7 +74,7 @@ class Sleep(object):
         """
         Initialize sleep.csv with up-to-date sleep logs
 
-        :return: up-to-date sleep logs
+        :return sleep_logs: up-to-date sleep logs
         """
 
         # request all sleep logs from Fitbit
@@ -81,7 +82,7 @@ class Sleep(object):
         fitbit = Fitbit(self.tokens_file_path)
         raw_logs = fitbit.sleeplogs_range(date_range)
 
-        # capture explicit data from returned logs
+        # capture explicit data from raw logs
         sleep_logs = self.capture_explicit_data(raw_logs)
         sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
 
@@ -91,40 +92,35 @@ class Sleep(object):
         """
         Capture explicit data from raw sleep logs
 
-        :param sleep_logs_raw: original sleep data from Fitbit request
-        :return sleep_logs: explicit sleep data
+        :param sleep_logs_raw: raw sleep data from Fitbit request
+        :return sleep_logs: explicit sleep data captured from raw logs
         """
 
+        # assignments
         dict_labels = ["dateOfSleep", "minutesAfterWakeup",
                        "minutesToFallAsleep", "startTime"]
         stages_labels = ["deep", "light", "rem", "wake"]
         sleep_logs = []
         frames = []
 
-        # create list of sleep logs
+        # create dictionary list to capture explicit data
         for log_raw in sleep_logs_raw["sleep"]:
             sleep_log = {}
             duration_sleep = 0
             duration_total = 0
-
             for label in dict_labels:
                 sleep_log[label] = [log_raw[label]]
-
             for label in stages_labels:
                 sleep_log[label] = [log_raw["levels"]["summary"][label]["minutes"]]
                 duration_total += sleep_log[label][0]
-
             for label in stages_labels[:-1]:
                 duration_sleep += sleep_log[label][0]
-
             sleep_log["efficiency"] = [round(duration_sleep / duration_total, 2)]
-
             sleep_log["duration"] = [duration_total]
             sleep_logs.append(sleep_log)
-
         sleep_logs.reverse()
 
-        # create list of DateFrames
+        # create DataFrame list from dictionary list
         for log in sleep_logs:
             df = pd.DataFrame.from_dict(data=log)
             df = df.set_index("dateOfSleep")
@@ -155,7 +151,7 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
        DONE c. write sleep.csv file if nonexistent
        DONE d. update sleep.csv
        DONE e. create sleep_logs_dataframe
-            f. clean and comment sleep.py code
+       DONE f. clean and comment sleep.py code
             g. create fig, capturing plots, using sleep_logs_dataframe
             h. find out why minutesAfterWakeup and minutesToFallAsleep are mostly 0
             etc ...
