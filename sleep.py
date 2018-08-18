@@ -192,15 +192,28 @@ class Sleep(object):
 
         x = self.sleep_logs.index
         x = date2num(x)
+        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
+        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
+        numdays = xmax-xmin+timedelta(days=1)
+        median_array_shape = (1, len(x))
+
         durations = self.sleep_logs['duration'].values
+
         awake_perc = np.around(self.sleep_logs['wake'].values / durations, 3) * 100
         rem_perc = np.around(self.sleep_logs['rem'].values / durations, 3) * 100
         light_perc = np.around(self.sleep_logs['light'].values / durations, 3) * 100
         deep_perc = np.around(self.sleep_logs['deep'].values / durations, 3) * 100
 
-        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
-        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
-        numdays = xmax-xmin+timedelta(days=1)
+        awake_median = np.around(np.median(awake_perc), 3)
+        rem_median = np.around(np.median(rem_perc), 3)
+        light_median = np.around(np.median(light_perc), 3)
+        deep_median = np.around(np.median(deep_perc), 3)
+
+        awake_median_array = np.full(median_array_shape, awake_median)
+        rem_median_array = np.full(median_array_shape, rem_median)
+        light_median_array = np.full(median_array_shape, light_median)
+        deep_median_array = np.full(median_array_shape, deep_median)
+
         xticks = [xmin + timedelta(days=d) for d in range(0, numdays.days)]
         bar_width = 0.2
         labelpad = 25
