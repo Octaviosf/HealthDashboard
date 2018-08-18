@@ -135,7 +135,7 @@ class Sleep(object):
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 
-# recieve sleep data
+# capture sleep data
 sleep = Sleep(sleep_logs_fp, tokens_fp)
 
 with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
@@ -151,7 +151,12 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
        DONE d. update sleep.csv
        DONE e. create sleep_logs_dataframe
        DONE f. clean and comment sleep.py code
-            g. find out why minutesAfterWakeup and minutesToFallAsleep are mostly 0
+       DONE g. find out why minutesAfterWakeup and minutesToFallAsleep are mostly 0
+                -- for minutesToFallAsleep = 0 makes sense as I've been staying awake till
+                    im ready to KO
+                -- for minutesAfterWakeup = 0 makes sense as I've pressed "awake" on app
+                    when I get up from bed rather than pressing it as soon as I wake and press
+                    "done" when I get up from bed
             h. create fig, capturing plots, using sleep_logs_dataframe
             etc ...
 """
