@@ -147,7 +147,7 @@ class Sleep(object):
         plt.rc("xtick", labelsize=18)
         plt.rc("ytick", labelsize=18)
 
-        # parameter init
+        # initialize parameter values
         x = self.sleep_logs.index
         y = self.sleep_logs['efficiency'].tolist()
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
@@ -156,6 +156,7 @@ class Sleep(object):
         labelfontsize = 20
         dateformat = "%a-%b-%d"
 
+        # set parameters
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
         ax.grid()
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
@@ -164,7 +165,13 @@ class Sleep(object):
         ax.set_ylim(0, 1.0)
         ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+
+        # annotate bars
+        for date, height in zip(x, y):
+            ax.text(date, height+0.02, height, fontsize=18, fontweight='bold', horizontalalignment='center')
+
         ax.bar(x, y, edgecolor='k', width=0.5, linewidth=1.5)
+
 
         return plt
 
