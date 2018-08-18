@@ -10,7 +10,6 @@ class Sleep(object):
         # assignments
         self.sleep_file_path = sleep_file_path
         self.tokens_file_path = tokens_file_path
-        self.logs_uptodate = False
         self.today = dt.today().strftime("%Y-%m-%d")
 
         if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
@@ -28,7 +27,6 @@ class Sleep(object):
 
         if latest_date_local == self.today:
             sleep_logs = local_logs
-            self.logs_uptodate = True
             print("sleep_logs are up-to-date")
         else:
             latest_date_local = dt.strptime(latest_date_local, "%Y-%m-%d")
@@ -42,7 +40,6 @@ class Sleep(object):
             # test whether logs returned
             if not raw_logs['sleep']:
                 sleep_logs = local_logs
-                self.logs_uptodate = True
             else:
                 api_logs = self.essentials(raw_logs)
 
@@ -51,8 +48,6 @@ class Sleep(object):
 
                 # overwrite .csv file
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
-
-                self.logs_uptodate = True
 
         return sleep_logs
 
@@ -67,8 +62,6 @@ class Sleep(object):
         # create df from raw_logs using essentials()
         sleep_logs = self.essentials(raw_logs)
         sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
-
-        self.logs_uptodate = True
 
         return sleep_logs
 
