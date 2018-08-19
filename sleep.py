@@ -193,7 +193,7 @@ class Sleep(object):
         x = date2num(x)
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
-        numdays = xmax-xmin+timedelta(days=1)
+        numdays = xmax-xmin
         median_array_shape = (1, len(x))
 
         durations = self.sleep_logs['duration'].values
@@ -213,7 +213,7 @@ class Sleep(object):
         light_median_array = np.full(median_array_shape, light_median)[0]
         deep_median_array = np.full(median_array_shape, deep_median)[0]
 
-        xticks = [xmin + timedelta(days=d) for d in range(0, numdays.days)]
+        xticks = [xmin + timedelta(days=d) for d in range(1, numdays.days)]
         bar_width = 0.2
         labelpad = 25
         labelfontsize = 20
@@ -268,7 +268,7 @@ class Sleep(object):
 
         # plot stages
         ax.bar((x-0.3)[mask_awake_median], awake_median_array[mask_awake_median], alpha=alpha,
-               color=medians_color, width=bar_width, align='center', label='Median')
+               color=medians_color, width=bar_width, align='center')
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center', label='Awake')
         ax.bar((x-0.3)[mask_awake_perc], awake_median_array[mask_awake_perc], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
@@ -289,7 +289,7 @@ class Sleep(object):
                color=medians_color, width=bar_width, align='center')
         ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center', label='Deep')
         ax.bar((x+0.3)[mask_deep_perc], deep_median_array[mask_deep_perc], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
+               color=medians_color, width=bar_width, align='center', label='Median')
 
 
         """
