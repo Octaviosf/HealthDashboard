@@ -65,9 +65,13 @@ class Sleep(object):
                 sleep_logs = local_logs
             else:
                 # capture explicit data from raw logs and append to local_logs
-                api_logs = self.capture_explicit_data(raw_logs)
+                api_logs = self.capture_explicit_data(raw_logs) # TODO BM
+                print('from update_local_logs(), api_logs:', api_logs) # TODO bug check
+                print('from update_local_logs(), local_logs:', local_logs) # TODO bug check
                 frames = [local_logs, api_logs]
                 sleep_logs = pd.concat(frames)
+
+                print("from update_local_logs(), sleep_logs:", sleep_logs) # TODO Bug check
 
                 # update sleep.csv
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
@@ -119,6 +123,9 @@ class Sleep(object):
             duration_total = 0
             for label in dict_labels:
                 sleep_log[label] = [log_raw[label]]
+                # TODO bug check
+                if label == "dateOfSleep":
+                    print(sleep_log[label])
             for label in stages_labels:
                 sleep_log[label] = [log_raw["levels"]["summary"][label]["minutes"]]
                 duration_total += sleep_log[label][0]
@@ -132,13 +139,18 @@ class Sleep(object):
         # create DataFrame list from dictionary list
         for log in sleep_logs:
             df = pd.DataFrame.from_dict(data=log)
+            # TODO bug check: possibly set_index after concat?
+            print(("df:", df))
             df = df.set_index("dateOfSleep")
+            print(("df.set_index('dateOfSleep'):", df))
             frames.append(df)
 
         # concatenate DataFrames
         sleep_logs = pd.concat(frames)
+        print('from capture_explicit_data(), sleep_logs:', sleep_logs) # TODO bug check
+        print('from capture_explicit_data(), type(sleep_logs.index.tolist()[0])):', type(sleep_logs.index.tolist()[0]))
 
-        sleep_logs.index = pd.to_datetime(sleep_logs.index)
+        # sleep_logs.index = pd.to_datetime(sleep_logs.index) # TODO Is sleep_logs.index already in datetime???
 
         return sleep_logs
 
@@ -193,7 +205,6 @@ class Sleep(object):
 
         x = self.sleep_logs.index
         x = date2num(x)
-        print('type(x)', type(x))
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         numdays = xmax-xmin+timedelta(days=1)
@@ -271,7 +282,7 @@ class Sleep(object):
 
         # plot stages
         ax.bar((x-0.3)[mask_awake_median], awake_median_array[mask_awake_median], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
+               color=medians_color, width=bar_width, align='center', label='Median')
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center', label='Awake')
         ax.bar((x-0.3)[mask_awake_perc], awake_median_array[mask_awake_perc], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
