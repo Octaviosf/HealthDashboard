@@ -65,13 +65,9 @@ class Sleep(object):
                 sleep_logs = local_logs
             else:
                 # capture explicit data from raw logs and append to local_logs
-                api_logs = self.capture_explicit_data(raw_logs) # TODO BM
-                print('from update_local_logs(), api_logs:', api_logs) # TODO bug check
-                print('from update_local_logs(), local_logs:', local_logs) # TODO bug check
+                api_logs = self.capture_explicit_data(raw_logs)
                 frames = [local_logs, api_logs]
                 sleep_logs = pd.concat(frames)
-
-                print("from update_local_logs(), sleep_logs:", sleep_logs) # TODO Bug check
 
                 # update sleep.csv
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
@@ -123,9 +119,6 @@ class Sleep(object):
             duration_total = 0
             for label in dict_labels:
                 sleep_log[label] = [log_raw[label]]
-                # TODO bug check
-                if label == "dateOfSleep":
-                    print(sleep_log[label])
             for label in stages_labels:
                 sleep_log[label] = [log_raw["levels"]["summary"][label]["minutes"]]
                 duration_total += sleep_log[label][0]
@@ -139,18 +132,11 @@ class Sleep(object):
         # create DataFrame list from dictionary list
         for log in sleep_logs:
             df = pd.DataFrame.from_dict(data=log)
-            # TODO bug check: possibly set_index after concat?
-            print(("df:", df))
             df = df.set_index("dateOfSleep")
-            print(("df.set_index('dateOfSleep'):", df))
             frames.append(df)
 
         # concatenate DataFrames
         sleep_logs = pd.concat(frames)
-        print('from capture_explicit_data(), sleep_logs:', sleep_logs) # TODO bug check
-        print('from capture_explicit_data(), type(sleep_logs.index.tolist()[0])):', type(sleep_logs.index.tolist()[0]))
-
-        # sleep_logs.index = pd.to_datetime(sleep_logs.index) # TODO Is sleep_logs.index already in datetime???
 
         return sleep_logs
 
