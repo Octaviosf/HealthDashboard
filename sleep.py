@@ -132,11 +132,11 @@ class Sleep(object):
         # create DataFrame list from dictionary list
         for log in sleep_logs:
             df = pd.DataFrame.from_dict(data=log)
-            df = df.set_index("dateOfSleep")
             frames.append(df)
 
-        # concatenate DataFrames
+        # concatenate DataFrames and set index
         sleep_logs = pd.concat(frames)
+        sleep_logs = sleep_logs.set_index('dateOfSleep')
 
         return sleep_logs
 
