@@ -184,63 +184,58 @@ class Sleep(object):
 
         return plt
 
-    def plot_stages(self, grid_shape, position, rowspan):
+    def plot_stages_percent(self, grid_shape, position, rowspan):
 
+        # initialize graph params
         plt.rc('xtick', labelsize=18)
         plt.rc('ytick', labelsize=18)
-
         x = self.sleep_logs.index
         x = date2num(x)
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         numdays = xmax-xmin
         median_array_shape = (1, len(x))
-
-        durations = self.sleep_logs['duration'].values
-
-        awake_perc = np.around(self.sleep_logs['wake'].values / durations, 3) * 100
-        rem_perc = np.around(self.sleep_logs['rem'].values / durations, 3) * 100
-        light_perc = np.around(self.sleep_logs['light'].values / durations, 3) * 100
-        deep_perc = np.around(self.sleep_logs['deep'].values / durations, 3) * 100
-
-        awake_median = np.around(np.median(awake_perc), 3)
-        rem_median = np.around(np.median(rem_perc), 3)
-        light_median = np.around(np.median(light_perc), 3)
-        deep_median = np.around(np.median(deep_perc), 3)
-
-        awake_median_array = np.full(median_array_shape, awake_median)[0]
-        rem_median_array = np.full(median_array_shape, rem_median)[0]
-        light_median_array = np.full(median_array_shape, light_median)[0]
-        deep_median_array = np.full(median_array_shape, deep_median)[0]
-
         xticks = [xmin + timedelta(days=d) for d in range(1, numdays.days)]
         bar_width = 0.2
         labelpad = 25
         labelfontsize = 20
         dateformat = '%a-%b-%d'
-        medians_linewidth = 3
-        medians_edgecolor = 'w'
-        alpha = 0.25
+        alpha = 0.3
         medians_color = 'k'
-
-        mask_awake_perc = ma.where(awake_perc>=awake_median_array)
-        mask_awake_median = ma.where(awake_median_array>=awake_perc)
-
-        mask_rem_perc = ma.where(rem_perc>=rem_median_array)
-        mask_rem_median = ma.where(rem_median_array>=rem_perc)
-
-        mask_light_perc = ma.where(light_perc>=light_median_array)
-        mask_light_median = ma.where(light_median_array>=light_perc)
-
-        mask_deep_perc = ma.where(deep_perc>=deep_median_array)
-        mask_deep_median = ma.where(deep_median_array>=deep_perc)
-
         annotate_height = 1
         annotate_fontsize = 18
         annotate_fontweight = 'bold'
         annotate_align = 'center'
         annotate_color = 'w'
 
+        # initialize graph data
+        durations = self.sleep_logs['duration'].values
+        awake_perc = np.around(self.sleep_logs['wake'].values / durations, 3) * 100
+        rem_perc = np.around(self.sleep_logs['rem'].values / durations, 3) * 100
+        light_perc = np.around(self.sleep_logs['light'].values / durations, 3) * 100
+        deep_perc = np.around(self.sleep_logs['deep'].values / durations, 3) * 100
+        awake_median = np.around(np.median(awake_perc), 3)
+        rem_median = np.around(np.median(rem_perc), 3)
+        light_median = np.around(np.median(light_perc), 3)
+        deep_median = np.around(np.median(deep_perc), 3)
+        awake_median_array = np.full(median_array_shape, awake_median)[0]
+        rem_median_array = np.full(median_array_shape, rem_median)[0]
+        light_median_array = np.full(median_array_shape, light_median)[0]
+        deep_median_array = np.full(median_array_shape, deep_median)[0]
+
+
+        # initialize masks
+        mask_awake_perc = ma.where(awake_perc>=awake_median_array)
+        mask_awake_median = ma.where(awake_median_array>=awake_perc)
+        mask_rem_perc = ma.where(rem_perc>=rem_median_array)
+        mask_rem_median = ma.where(rem_median_array>=rem_perc)
+        mask_light_perc = ma.where(light_perc>=light_median_array)
+        mask_light_median = ma.where(light_median_array>=light_perc)
+        mask_deep_perc = ma.where(deep_perc>=deep_median_array)
+        mask_deep_median = ma.where(deep_median_array>=deep_perc)
+
+
+        # set graph params
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
         ax.grid()
         ax.set_title('Sleep Stages', fontsize=30, pad=30)
@@ -249,60 +244,44 @@ class Sleep(object):
         ax.set_xticks(xticks)
         ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+        plt.legend(prop={'size': 15}, loc='upper right')
+        plt.tight_layout()
 
+        # annotate each stage with percentage
         for x_pos, awake_p in zip(x, awake_perc):
             ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-
         for x_pos, rem_p in zip(x, rem_perc):
             ax.text(x_pos-0.1, annotate_height, int(round(rem_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-
         for x_pos, light_p in zip(x, light_perc):
             ax.text(x_pos+0.1, annotate_height, int(round(light_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-
         for x_pos, deep_p in zip(x, deep_perc):
             ax.text(x_pos+0.3, annotate_height, int(round(deep_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
 
-        # plot stages
+        # plot stages with masks
         ax.bar((x-0.3)[mask_awake_median], awake_median_array[mask_awake_median], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center', label='Awake')
         ax.bar((x-0.3)[mask_awake_perc], awake_median_array[mask_awake_perc], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
-
         ax.bar((x-0.1)[mask_rem_median], rem_median_array[mask_rem_median], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
         ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center', label='REM')
         ax.bar((x-0.1)[mask_rem_perc], rem_median_array[mask_rem_perc], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
-
         ax.bar((x+0.1)[mask_light_median], light_median_array[mask_light_median], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
         ax.bar(x+0.1, light_perc, width=bar_width, align='center', label='Light')
         ax.bar((x+0.1)[mask_light_perc], light_median_array[mask_light_perc], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
-
         ax.bar((x+0.3)[mask_deep_median], deep_median_array[mask_deep_median], alpha=alpha,
                color=medians_color, width=bar_width, align='center')
         ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center', label='Deep')
         ax.bar((x+0.3)[mask_deep_perc], deep_median_array[mask_deep_perc], alpha=alpha,
                color=medians_color, width=bar_width, align='center', label='Median')
-
-
-        """
-        ax.bar(x-0.1, rem_median_array, edgecolor=medians_edgecolor, linewidth=medians_linewidth, alpha=0.5, color='c', width=bar_width, align='center')
-        ax.bar(x+0.1, light_median_array, edgecolor=medians_edgecolor, linewidth=medians_linewidth, alpha=0.5, width=bar_width, align='center')
-        ax.bar(x+0.3, deep_median_array, edgecolor=medians_edgecolor, linewidth=medians_linewidth, alpha=0.5, color='b', width=bar_width, align='center')
-        """
-
-        plt.legend(prop={'size': 15}, loc='upper right')
-
-
-
-        plt.tight_layout()
 
         return plt
 
@@ -328,7 +307,7 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
 # set fig shape and show
 plt.figure(figsize=(30,20))
 efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan)
-stages_plot = sleep.plot_stages(grid_shape, stages_plt_pos, rowspan)
+stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan)
 stages_plot.show()
 efficiency_plot.show()
 
@@ -351,7 +330,10 @@ efficiency_plot.show()
                     when I get up from bed rather than pressing it as soon as I wake and press
                     "done" when I get up from bed
        DONE h. create efficiency_plot()
-            i. create stages_plot()
+       DONE i. create stages_plot()
+            j. create radial (hypnogram) bar plot for each day, with clock y-axis, and plotting bedtime, stages, out-of-bedtime
+                -- plot each stage on own bar (inner bar is deep and outer is awake)
+            k. plot efficiency using line graph 
             h. create fig, capturing plots, using sleep_logs_dataframe
             etc ...
 """
