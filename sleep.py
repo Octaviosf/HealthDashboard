@@ -9,6 +9,7 @@ from matplotlib.dates import date2num
 import numpy as np
 import numpy.ma as ma
 
+
 class Sleep(object):
     """
     Interact with sleep logs:
@@ -214,10 +215,10 @@ class Sleep(object):
         rem_perc = np.around(self.sleep_logs['rem'].values / durations, 3) * 100
         light_perc = np.around(self.sleep_logs['light'].values / durations, 3) * 100
         deep_perc = np.around(self.sleep_logs['deep'].values / durations, 3) * 100
-        awake_median = np.around(np.median(awake_perc), 3)
-        rem_median = np.around(np.median(rem_perc), 3)
-        light_median = np.around(np.median(light_perc), 3)
-        deep_median = np.around(np.median(deep_perc), 3)
+        awake_median = float(np.around(np.median(awake_perc), 3))
+        rem_median = float(np.around(np.median(rem_perc), 3))
+        light_median = float(np.around(np.median(light_perc), 3))
+        deep_median = float(np.around(np.median(deep_perc), 3))
         awake_median_array = np.full(median_array_shape, awake_median)[0]
         rem_median_array = np.full(median_array_shape, rem_median)[0]
         light_median_array = np.full(median_array_shape, light_median)[0]
