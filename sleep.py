@@ -244,7 +244,6 @@ class Sleep(object):
         ax.set_xticks(xticks)
         ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-        plt.legend(prop={'size': 15}, loc='upper right')
         plt.tight_layout()
 
         # annotate each stage with percentage
@@ -282,6 +281,8 @@ class Sleep(object):
         ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center', label='Deep')
         ax.bar((x+0.3)[mask_deep_perc], deep_median_array[mask_deep_perc], alpha=alpha,
                color=medians_color, width=bar_width, align='center', label='Median')
+
+        plt.legend(prop={'size': 15}, loc='upper right')
 
         return plt
 
