@@ -319,13 +319,13 @@ class Sleep(object):
         today = dt.strptime(self.today, "%Y-%m-%d")
         days = [today - timedelta(days=d) for d in range(0, 7)].reverse()
 
-        plt0 = polar_hypnogram(self.sleep_time_series[days[0]], shape, (3,0))
-        plt1 = polar_hypnogram(self.sleep_time_series[days[1]], shape, (3,1))
-        plt2 = polar_hypnogram(self.sleep_time_series[days[2]], shape, (3,2))
-        plt3 = polar_hypnogram(self.sleep_time_series[days[3]], shape, (3,3))
-        plt4 = polar_hypnogram(self.sleep_time_series[days[4]], shape, (3,4))
-        plt5 = polar_hypnogram(self.sleep_time_series[days[5]], shape, (3,5))
-        plt6 = polar_hypnogram(self.sleep_time_series[days[6]], shape, (3,6))
+        plt0 = self.polar_hypnogram(self.sleep_time_series[days[0]], shape, (3,0))
+        plt1 = self.polar_hypnogram(self.sleep_time_series[days[1]], shape, (3,1))
+        plt2 = self.polar_hypnogram(self.sleep_time_series[days[2]], shape, (3,2))
+        plt3 = self.polar_hypnogram(self.sleep_time_series[days[3]], shape, (3,3))
+        plt4 = self.polar_hypnogram(self.sleep_time_series[days[4]], shape, (3,4))
+        plt5 = self.polar_hypnogram(self.sleep_time_series[days[5]], shape, (3,5))
+        plt6 = self.polar_hypnogram(self.sleep_time_series[days[6]], shape, (3,6))
 
         plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6]
 
