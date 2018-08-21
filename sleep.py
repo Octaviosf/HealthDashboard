@@ -9,7 +9,7 @@ from matplotlib.dates import date2num
 import numpy as np
 import numpy.ma as ma
 from numpy import pi
-
+import json
 
 def time2radian(time_list):
     """
@@ -94,7 +94,7 @@ class Sleep(object):
             next_date_local = (latest_date_local + timedelta(days=1)).strftime("%Y-%m-%d")
             date_range = (next_date_local, self.today)
             fitbit = Fitbit(self.tokens_file_path)
-            raw_logs = fitbit.sleeplogs_range(date_range)
+            raw_logs = fitbit.sleep_logs_range(date_range)
 
             print(raw_logs) # TODO test
 
@@ -141,7 +141,7 @@ class Sleep(object):
         # request all sleep logs from Fitbit
         date_range = ("2018-08-07", self.today)
         fitbit = Fitbit(self.tokens_file_path)
-        raw_logs = fitbit.sleeplogs_range(date_range)
+        raw_logs = fitbit.sleep_logs_range(date_range)
 
         # capture explicit data from raw logs
         sleep_logs = self.capture_explicit_data(raw_logs)
@@ -152,16 +152,20 @@ class Sleep(object):
         return sleep_logs
 
     def initialize_json(self):
+        """
+        intialize sleep_series.json with up-to-date time series
+        :return sleep_series:  up-to-date sleep series
+        """
 
+        # request all sleep series from Fitbit
+        date_range = ("2018-08-07", self.today)
+        fitbit = Fitbit(self.tokens_file_path)
+        raw_logs = fitbit.sleep_logs_range(date_range)
 
-
-
-
-
-
-
-
-
+        # capture explicit data from raw series
+        sleep_series = self.capture_series_data(raw_logs)
+        with open(self.sleep_series_file_path, 'w+') as series_file:
+            json.dump(sleep_series, series_file)
 
         return sleep_series
 
