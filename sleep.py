@@ -289,15 +289,14 @@ class Sleep(object):
 
         return plt
 
-    def plot_stages_clock(self, self.sleep_timeseries, grid_shape, position, rowspan):
+    def plot_stages_clock(self, sleep_timeseries, grid_shape, position, rowspan):
         """
-        :param self.sleep_timeseries: dictionary storing 'data' and 'shortData'; raw data dictionaries returned from Fitbit
+        :param sleep_timeseries: dictionary storing 'data' and 'shortData'; raw data dictionaries returned from Fitbit
         :param grid_shape:
         :param position:
         :param rowspan:
         :return:
-        """
-        """
+
         j. create radial (hypnogram) bar plot for each day, with clock y-axis, and plotting bedtime, stages, out-of-bedtime
             -- plot each stage on own bar
                 - inner bar is deep
@@ -312,6 +311,7 @@ class Sleep(object):
         from datetime import timedelta
         import numpy as np
 
+        """
         # initialize mock params TODO test
         sleep_timeseries = {}
         sleep_timeseries['data'] = {}
@@ -319,15 +319,16 @@ class Sleep(object):
             sleep_timeseries['data'][stage] = {}
             sleep_timeseries['data'][stage]['startTimes'] = []
             sleep_timeseries['data'][stage]['endTimes'] = []
+        """
 
         startTimes = {}
         endTimes = {}
         clock_start = 0
 
         labels_stages = ['deep', 'light', 'rem', 'wake']
-        tick_positions = date2num([dt.datetime(2018, 8, 7, hour=h) for h in range(0, 24)])
-        labels_clock = [clock_start + hour for hour in range(0, 24)]
-
+        # tick_positions = date2num([dt.datetime(2018, 8, 7, hour=h) for h in range(0, 24)])
+        # labels_clock = [clock_start + hour for hour in range(0, 24)]
+        """
         # create mock data # TODO test
         mock_start = [dt.datetime(2018, 8, 7, hour=h) for h in range(0,8)]
         mock_end = [dt.datetime(2018, 8, 7, hour=h, minute=m) for h, m in zip(range(0,8), np.full(6, 30))]
@@ -335,27 +336,18 @@ class Sleep(object):
             for s, e in zip(mock_start, mock_end):
                 sleep_timeseries['data'][stage]['startTimes'].append(s)
                 sleep_timeseries['data'][stage]['endTimes'].append(e)
+        """
         ax = plt.subplot(111, polar=True)
 
+        """
         for stage in labels_stages:
-            startTimes[stage] = date2num(sleep_timeseries['data'][stage]['startTimes'])
+            startTimes[stage] = sleep_timeseries['data'][stage]['startTimes']
             endTimes[stage] = date2num(sleep_timeseries['data'][stage]['endTimes'])
 
             # print('startTimes[%s]:' %stage, startTimes[stage])
             # print('endTimes[%s]:' %stage, endTimes[stage])
+        """
 
-        ax.barh(0, left=startTimes['deep'], width=endTimes['deep'], color='b', label='Deep')
-        ax.barh(1, left=startTimes['light'], width=endTimes['light'], label='Light')
-        ax.barh(2, left=startTimes['rem'], width=endTimes['rem'], color='c', label='REM')
-        ax.barh(3, left=startTimes['wake'], width=endTimes['wake'], color='m', label='Awake')
-
-        ax.set_theta_zero_location('N')
-        ax.set_theta_direction(-1)
-        ax.set_rlabel_position(0)
-        ax.set_thetagrids(tick_positions, labels=labels_clock)
-        ax.set_rgrids([0, 1, 2, 3], labels=labels_stages)
-
-        plt.show()
 
         return plt
 
