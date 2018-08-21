@@ -315,6 +315,12 @@ class Sleep(object):
         return plt
 
     def plot_polar_hypnograms(self, shape):
+        """
+        # TODO self.sleep_time_series is initialized from local sleep_time_series.json and/or from Fitbit response
+
+        :param shape:
+        :return:
+        """
 
         today = dt.strptime(self.today, "%Y-%m-%d")
         days = [today - timedelta(days=d) for d in range(0, 7)].reverse()
