@@ -8,6 +8,7 @@ import matplotlib.dates as mdates
 from matplotlib.dates import date2num
 import numpy as np
 import numpy.ma as ma
+from numpy import pi
 
 
 def time2radian(time_list):
@@ -43,7 +44,7 @@ class Sleep(object):
         - create sleep.csv
         - capture explicit data from raw sleep logs
     """
-    def __init__(self, sleep_file_path, tokens_file_path):
+    def __init__(self, sleep_file_path, sleep_series_file_path, tokens_file_path):
         """
         create and/or update sleep.csv
         capture sleep_logs using instance variable
@@ -54,6 +55,7 @@ class Sleep(object):
 
         # assignments
         self.sleep_file_path = sleep_file_path
+        self.sleep_series_file_path = sleep_series_file_path
         self.tokens_file_path = tokens_file_path
         self.today = dt.today().strftime("%Y-%m-%d")
 
@@ -62,6 +64,14 @@ class Sleep(object):
             self.sleep_logs = self.update_local_logs()
         else:
             self.sleep_logs = self.initialize_csv()
+
+
+        # capture up-to-date sleep time series
+        if os.path.isfile(sleep_series_file_path) and os.access(self.sleep_series_file_path, os.R_OK):
+            self.sleep_series = self.update_local_series()
+        else:
+            self.sleep_series = self.initialize_json()
+
 
     def update_local_logs(self):
         """
@@ -105,6 +115,22 @@ class Sleep(object):
 
         return sleep_logs
 
+    def update_local_series(self):
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return sleep_series
+
     def initialize_csv(self):
         """
         initialize sleep.csv with up-to-date sleep logs
@@ -124,6 +150,20 @@ class Sleep(object):
         sleep_logs.index = pd.to_datetime(sleep_logs.index)
 
         return sleep_logs
+
+    def initialize_json(self):
+
+
+
+
+
+
+
+
+
+
+
+        return sleep_series
 
     def capture_explicit_data(self, sleep_logs_raw):
         """
