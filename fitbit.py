@@ -138,7 +138,7 @@ class Fitbit(object):
 
         return response
 
-    def sleeplogs_range(self, date_range):
+    def sleep_logs_range(self, date_range):
         """
         request sleep-logs from Fitbit API for date range
 
@@ -183,7 +183,7 @@ date_range = ('2018-08-07', '2018-08-15')
 fitbit = Fitbit(file_path)
 
 # request sleep data, capture response, and print response
-sleep_data = fitbit.sleeplogs_range(date_range)
+sleep_data = fitbit.sleep_logs_range(date_range)
 print('\n'+str(sleep_data))
 
 """
