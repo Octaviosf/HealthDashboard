@@ -10,6 +10,31 @@ import numpy as np
 import numpy.ma as ma
 
 
+def time2radian(time_list):
+    """
+    :param time_list: list of dateTimes
+    :return: list of radians
+    """
+    minutes_per_day = 24*60
+    seconds_per_day = 24*60*60
+
+    radians = []
+
+    for time in time_list:
+        if isinstance(time, (dt,)):
+            proportion_of_day = time.hour/24
+            proportion_of_day += time.minute/minutes_per_day
+            proportion_of_day += time.second/seconds_per_day
+            radian = 2*pi*proportion_of_day
+            radians.append(radian)
+        else:
+            proportion_of_day = time/seconds_per_day
+            radian = 2*pi*proportion_of_day
+            radians.append(radian)
+
+    return radians
+
+
 class Sleep(object):
     """
     Interact with sleep logs:
@@ -289,10 +314,10 @@ class Sleep(object):
 
         return plt
 
-    def plot_stages_clock(self, sleep_timeseries, grid_shape, position, rowspan):
+    def plot_polar_hypnogram(self, sleep_time_series, shape, position):
         """
-        :param sleep_timeseries: dictionary storing 'data' and 'shortData'; raw data dictionaries returned from Fitbit
-        :param grid_shape:
+        :param sleep_time_series: dictionary storing 'data' and 'shortData' for specific day ['dateOFSleep']
+        :param shape:
         :param position:
         :param rowspan:
         :return:
@@ -305,49 +330,38 @@ class Sleep(object):
         * "shortData" stores moments of "wake" of duration 3 min or less
         *
         """
-        import datetime as dt
-        import matplotlib.pyplot as plt
-        from matplotlib.dates import date2num
-        from datetime import timedelta
-        import numpy as np
 
-        """
-        # initialize mock params TODO test
-        sleep_timeseries = {}
-        sleep_timeseries['data'] = {}
-        for stage in labels_stages:
-            sleep_timeseries['data'][stage] = {}
-            sleep_timeseries['data'][stage]['startTimes'] = []
-            sleep_timeseries['data'][stage]['endTimes'] = []
-        """
+        stages = ['deep', 'light', 'rem', 'wake']
+        labels_stages = ['Deep', 'Light', 'REM', 'Awake']
+        start_times = {}
+        end_times = {}
+        bar_height = 1
 
-        startTimes = {}
-        endTimes = {}
-        clock_start = 0
+        for stage in stages:
+            start_times[stage] = time2radian(sleep_time_series['data'][stage]['start_times'])
+            end_times[stage] = time2radian(sleep_time_series['data'][stage]['end_times'])
 
-        labels_stages = ['deep', 'light', 'rem', 'wake']
-        # tick_positions = date2num([dt.datetime(2018, 8, 7, hour=h) for h in range(0, 24)])
-        # labels_clock = [clock_start + hour for hour in range(0, 24)]
-        """
-        # create mock data # TODO test
-        mock_start = [dt.datetime(2018, 8, 7, hour=h) for h in range(0,8)]
-        mock_end = [dt.datetime(2018, 8, 7, hour=h, minute=m) for h, m in zip(range(0,8), np.full(6, 30))]
-        for stage in labels_stages:
-            for s, e in zip(mock_start, mock_end):
-                sleep_timeseries['data'][stage]['startTimes'].append(s)
-                sleep_timeseries['data'][stage]['endTimes'].append(e)
-        """
-        ax = plt.subplot(111, polar=True)
+        ax = plt.subplot2grid(shape, position, polar=True)
+        ax.barh(0, width=0)
+        ax.barh(1, width=0)
+        ax.barh(5, left=start_times['wake'], width=end_times['wake'], color='m', label='Awake', height=bar_height)
+        ax.barh(4, left=start_times['rem'], width=end_times['rem'], color='c', label='REM', height=bar_height)
+        ax.barh(3, left=start_times['light'], width=end_times['light'], color='C0', label='Light', height=bar_height)
+        ax.barh(2, left=start_times['deep'], width=end_times['deep'], color='b', label='Deep', height=bar_height)
+        # ax.barh(2, left=median_start, width=median_duration, color='k', alpha=0.3, label='Median', height=bar_height)
 
-        """
-        for stage in labels_stages:
-            startTimes[stage] = sleep_timeseries['data'][stage]['startTimes']
-            endTimes[stage] = date2num(sleep_timeseries['data'][stage]['endTimes'])
+        ax.set_theta_zero_location('N')
+        ax.set_theta_direction(-1)
+        ax.set_xticks(np.linspace(0, 2 * pi, 24, endpoint=False))
+        ax.set_xticklabels(range(0, 24))
 
-            # print('startTimes[%s]:' %stage, startTimes[stage])
-            # print('endTimes[%s]:' %stage, endTimes[stage])
-        """
+        ax.set_rlabel_position(0)
+        ax.set_rgrids([2, 3, 4, 5], labels=labels_stages, color='k',
+                      fontsize=12, fontweight='bold', verticalalignment='center')
 
+        # plt.legend(loc='upper right')
+
+        ax.grid(axis='x')
 
         return plt
 
