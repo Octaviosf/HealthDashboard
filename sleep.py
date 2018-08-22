@@ -169,11 +169,11 @@ class Sleep(object):
 
         return sleep_series
 
-    def capture_explicit_data(self, sleep_logs_raw):
+    def capture_explicit_data(self, sleep_raw_logs):
         """
         capture explicit data from raw sleep logs
 
-        :param sleep_logs_raw: raw sleep data from Fitbit request
+        :param sleep_raw_logs: raw sleep data from Fitbit request
         :return sleep_logs: explicit sleep data captured from raw logs
         """
 
@@ -185,14 +185,14 @@ class Sleep(object):
         frames = []
 
         # create dictionary list to capture explicit data
-        for log_raw in sleep_logs_raw["sleep"]:
+        for raw_log in sleep_raw_logs["sleep"]:
             sleep_log = {}
             duration_sleep = 0
             duration_total = 0
             for label in dict_labels:
-                sleep_log[label] = [log_raw[label]]
+                sleep_log[label] = [raw_log[label]]
             for label in stages_labels:
-                sleep_log[label] = [log_raw["levels"]["summary"][label]["minutes"]]
+                sleep_log[label] = [raw_log["levels"]["summary"][label]["minutes"]]
                 duration_total += sleep_log[label][0]
             for label in stages_labels[:-1]:
                 duration_sleep += sleep_log[label][0]
@@ -211,6 +211,65 @@ class Sleep(object):
         sleep_logs = sleep_logs.set_index('dateOfSleep')
 
         return sleep_logs
+
+    def capture_series_data(self, sleep_raw_logs):
+        """
+        capture series data from raw sleep logs
+
+        :param sleep_raw_logs: raw sleep data from Fitbit request
+        :return sleep_series: sleep series data captured from raw logs
+        """
+        # sleep_series[dateOfSleep]['data'][stage]['start_times']
+
+        """
+        sleep_series = {
+            "sleep": [
+                        {
+                            "dateOfSleep": "2018-08-07"
+                            "data": {
+                                        "deep": {
+                                                    "start_times": []
+                                                    "epoch_durations": []
+                                                }
+                                        "light": {
+                                                    "start_times": []
+                                                    "epoch_durations": []
+                                                }
+
+                                        <...>
+                                    }
+                        },
+                        {
+                            "dateOfSleep": "2018-08-08" 
+                            "data": {
+                                    <...>
+                                    }
+
+                        },
+                        <...>
+                    ]
+        }
+        """
+
+        sleep_series = {"sleep": []}
+        stages_labels = ["deep", "light", "rem", "wake"]
+
+        for raw_log in sleep_raw_logs["sleep"]:
+            sleep_series["sleep"].append({"dateOfSleep": raw_log["dateOfSleep"],
+                                          "data": {"deep": {"start_times": [],
+                                                            "epoch_durations": []},
+                                                   "light": {"start_times": [],
+                                                             "epoch_durations": []},
+                                                   "rem": {"start_times": [],
+                                                           "epoch_durations": []},
+                                                   "wake": {"start_times": [],
+                                                            "epoch_durations": []}},
+                                          "shortData": {"wake": {"start_times": [],
+                                                                 "epoch_durations": []}}})
+            sleep_series
+
+
+        return sleep_series
 
     def plot_efficiency(self, grid_shape, position, rowspan):
         """
@@ -360,7 +419,7 @@ class Sleep(object):
 
     def plot_polar_hypnograms(self, shape):
         """
-        # TODO self.sleep_time_series is initialized from local sleep_time_series.json and/or from Fitbit response
+        # TODO self.sleep_series is initialized from local sleep_series.json and/or from Fitbit response
 
         :param shape:
         :return:
@@ -369,21 +428,21 @@ class Sleep(object):
         today = dt.strptime(self.today, "%Y-%m-%d")
         days = [today - timedelta(days=d) for d in range(0, 7)].reverse()
 
-        plt0 = self.polar_hypnogram(self.sleep_time_series[days[0]], shape, (3,0))
-        plt1 = self.polar_hypnogram(self.sleep_time_series[days[1]], shape, (3,1))
-        plt2 = self.polar_hypnogram(self.sleep_time_series[days[2]], shape, (3,2))
-        plt3 = self.polar_hypnogram(self.sleep_time_series[days[3]], shape, (3,3))
-        plt4 = self.polar_hypnogram(self.sleep_time_series[days[4]], shape, (3,4))
-        plt5 = self.polar_hypnogram(self.sleep_time_series[days[5]], shape, (3,5))
-        plt6 = self.polar_hypnogram(self.sleep_time_series[days[6]], shape, (3,6))
+        plt0 = self.polar_hypnogram(self.sleep_series[days[0]], shape, (3,0))
+        plt1 = self.polar_hypnogram(self.sleep_series[days[1]], shape, (3,1))
+        plt2 = self.polar_hypnogram(self.sleep_series[days[2]], shape, (3,2))
+        plt3 = self.polar_hypnogram(self.sleep_series[days[3]], shape, (3,3))
+        plt4 = self.polar_hypnogram(self.sleep_series[days[4]], shape, (3,4))
+        plt5 = self.polar_hypnogram(self.sleep_series[days[5]], shape, (3,5))
+        plt6 = self.polar_hypnogram(self.sleep_series[days[6]], shape, (3,6))
 
         plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6]
 
         return plots
 
-    def polar_hypnogram(self, sleep_time_series, shape, position):
+    def polar_hypnogram(self, sleep_series, shape, position):
         """
-        :param sleep_time_series: dictionary storing 'data' and 'shortData' for specific day ['dateOFSleep']
+        :param sleep_series: dictionary storing 'data' and 'shortData' for specific day ['dateOFSleep']
         :param shape:
         :param position:
         :param rowspan:
@@ -401,20 +460,20 @@ class Sleep(object):
         stages = ['deep', 'light', 'rem', 'wake']
         labels_stages = ['Deep', 'Light', 'REM', 'Awake']
         start_times = {}
-        end_times = {}
+        epoch_durations = {}
         bar_height = 1
 
         for stage in stages:
-            start_times[stage] = time2radian(sleep_time_series['data'][stage]['start_times'])
-            end_times[stage] = time2radian(sleep_time_series['data'][stage]['end_times'])
+            start_times[stage] = time2radian(sleep_series['data'][stage]['start_times'])
+            epoch_durations[stage] = time2radian(sleep_series['data'][stage]['epoch_durations'])
 
         ax = plt.subplot2grid(shape, position, polar=True)
         ax.barh(0, width=0)
         ax.barh(1, width=0)
-        ax.barh(5, left=start_times['wake'], width=end_times['wake'], color='m', label='Awake', height=bar_height)
-        ax.barh(4, left=start_times['rem'], width=end_times['rem'], color='c', label='REM', height=bar_height)
-        ax.barh(3, left=start_times['light'], width=end_times['light'], color='C0', label='Light', height=bar_height)
-        ax.barh(2, left=start_times['deep'], width=end_times['deep'], color='b', label='Deep', height=bar_height)
+        ax.barh(5, left=start_times['wake'], width=epoch_durations['wake'], color='m', label='Awake', height=bar_height)
+        ax.barh(4, left=start_times['rem'], width=epoch_durations['rem'], color='c', label='REM', height=bar_height)
+        ax.barh(3, left=start_times['light'], width=epoch_durations['light'], color='C0', label='Light', height=bar_height)
+        ax.barh(2, left=start_times['deep'], width=epoch_durations['deep'], color='b', label='Deep', height=bar_height)
         # ax.barh(2, left=median_start, width=median_duration, color='k', alpha=0.3, label='Median', height=bar_height)
 
         ax.set_theta_zero_location('N')
