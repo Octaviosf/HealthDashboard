@@ -480,7 +480,7 @@ class Sleep(object):
 
         # plt.legend(loc='upper right')
 
-        ax.grid(axis='x')
+        ax.grid(True)
 
         return plt
 
