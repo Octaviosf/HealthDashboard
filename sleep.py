@@ -10,6 +10,7 @@ import numpy as np
 import numpy.ma as ma
 from numpy import pi
 import json
+import copy
 
 def time2radian(time_list):
     """
@@ -70,7 +71,6 @@ class Sleep(object):
             self.sleep_series = self.update_local_series()
         else:
             self.sleep_series = self.initialize_json()
-
 
     def update_local_logs(self):
         """
@@ -136,7 +136,8 @@ class Sleep(object):
             else:
                 # capture series data from raw logs and append to local_series
                 api_series = self.capture_series_data(raw_logs)
-                local_series["sleep"].append(api_series["sleep"])
+                for series in api_series["sleep"]:
+                    local_series["sleep"].append(series)
                 sleep_series = local_series
 
                 # update sleep_series.json
@@ -248,16 +249,18 @@ class Sleep(object):
                                          "epoch_durations": []}}}
 
         for raw_log in sleep_raw_logs["sleep"]:
-            series = series_template
+            series = copy.deepcopy(series_template)
+            # print("series:", series)
             series["dateOfSleep"] = raw_log["dateOfSleep"]
             for epoch in raw_log["levels"]["data"]:
-                    series["data"][epoch["level"]]["start_times"].append(epoch["datetime"])
-                    series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+                series["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
+                series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
             for epoch in raw_log["levels"]["shortData"]:
-                    series["shortData"][epoch["level"]]["start_times"].append(epoch["datetime"])
-                    series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+                series["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
+                series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
             sleep_series["sleep"].append(series)
 
+        sleep_series["sleep"].reverse()
         return sleep_series
 
     def plot_efficiency(self, grid_shape, position, rowspan):
@@ -484,6 +487,7 @@ class Sleep(object):
 # assignments
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
+sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
 
 # fig parameters
 grid_shape = (4, 1)
@@ -492,7 +496,8 @@ stages_plt_pos = (0, 0)
 rowspan = 2
 
 # capture sleep data
-sleep = Sleep(sleep_logs_fp, tokens_fp)
+sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
+#print(sleep.sleep_series["sleep"][0])
 
 """
 with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
