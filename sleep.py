@@ -451,10 +451,10 @@ class Sleep(object):
         """
 
         stages = ['deep', 'light', 'rem', 'wake']
-        labels_stages = ['Deep', 'Light', 'REM', 'Awake']
         start_times = {}
         epoch_durations = {}
         bar_height = 1
+        date = dt.strptime(sleep_series["dateOfSleep"], "%Y-%m-%d").strftime("%a-%b-%d")
 
         for stage in stages:
             start_times[stage] = time2radian(sleep_series['data'][stage]['start_times'])
@@ -484,6 +484,7 @@ class Sleep(object):
         ax.set_rlabel_position(0)
         ax.set_rgrids([2, 3, 4, 5], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
+        ax.set_title(label=date, pad=30, fontsize=18, fontweight='bold')
 
         # plt.legend(loc='upper right')
 
