@@ -219,53 +219,23 @@ class Sleep(object):
         :param sleep_raw_logs: raw sleep data from Fitbit request
         :return sleep_series: sleep series data captured from raw logs
         """
-        # sleep_series[dateOfSleep]['data'][stage]['start_times']
-
-        """
-        sleep_series = {
-            "sleep": [
-                        {
-                            "dateOfSleep": "2018-08-07"
-                            "data": {
-                                        "deep": {
-                                                    "start_times": []
-                                                    "epoch_durations": []
-                                                }
-                                        "light": {
-                                                    "start_times": []
-                                                    "epoch_durations": []
-                                                }
-
-                                        <...>
-                                    }
-                        },
-                        {
-                            "dateOfSleep": "2018-08-08" 
-                            "data": {
-                                    <...>
-                                    }
-
-                        },
-                        <...>
-                    ]
-        }
-        """
 
         sleep_series = {"sleep": []}
-        stages_labels = ["deep", "light", "rem", "wake"]
+        series_template = {"dateOfSleep": None,
+                           "data": {"deep": {"start_times": [],
+                                             "epoch_durations": []},
+                                    "light": {"start_times": [],
+                                              "epoch_durations": []},
+                                    "rem": {"start_times": [],
+                                            "epoch_durations": []},
+                                    "wake": {"start_times": [],
+                                             "epoch_durations": []}},
+                           "shortData": {"wake": {"start_times": [],
+                                         "epoch_durations": []}}}
 
         for raw_log in sleep_raw_logs["sleep"]:
-            series = {"dateOfSleep": raw_log["dateOfSleep"],
-                      "data": {"deep": {"start_times": [],
-                                        "epoch_durations": []},
-                               "light": {"start_times": [],
-                                         "epoch_durations": []},
-                               "rem": {"start_times": [],
-                                       "epoch_durations": []},
-                               "wake": {"start_times": [],
-                                        "epoch_durations": []}},
-                      "shortData": {"wake": {"start_times": [],
-                                             "epoch_durations": []}}}
+            series = series_template
+            series["dateOfSleep"] = raw_log["dateOfSleep"]
             for epoch in raw_log["levels"]["data"]:
                     series["data"][epoch["level"]]["start_times"].append(epoch["datetime"])
                     series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
@@ -273,7 +243,6 @@ class Sleep(object):
                     series["shortData"][epoch["level"]]["start_times"].append(epoch["datetime"])
                     series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
             sleep_series["sleep"].append(series)
-
 
         return sleep_series
 
