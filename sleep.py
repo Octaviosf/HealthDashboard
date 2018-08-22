@@ -475,7 +475,7 @@ class Sleep(object):
         ax.set_xticklabels(range(0, 24))
 
         ax.set_rlabel_position(0)
-        ax.set_rgrids([2, 3, 4, 5], labels=labels_stages, color='k',
+        ax.set_rgrids([2, 3, 4, 5], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
 
         # plt.legend(loc='upper right')
