@@ -15,7 +15,7 @@ import copy
 
 def time2radian(time_list):
     """
-    :param time_list: list of dateTimes
+    :param time_list: list of date_times or seconds strings
     :return: list of radians
     """
     minutes_per_day = 24*60
@@ -24,7 +24,8 @@ def time2radian(time_list):
     radians = []
 
     for time in time_list:
-        if isinstance(time, (dt,)):
+        if isinstance(time, (str,)):
+            time = dt.strptime(time[:10] + ' ' + time[11:], "%Y-%m-%d %H:%M:%S.%f")
             proportion_of_day = time.hour/24
             proportion_of_day += time.minute/minutes_per_day
             proportion_of_day += time.second/seconds_per_day
