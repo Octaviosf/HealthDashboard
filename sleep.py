@@ -263,7 +263,7 @@ class Sleep(object):
         sleep_series["sleep"].reverse()
         return sleep_series
 
-    def plot_efficiency(self, grid_shape, position, rowspan):
+    def plot_efficiency(self, grid_shape, position, rowspan, colspan):
         """
         plot sleep efficiency
 
@@ -287,7 +287,7 @@ class Sleep(object):
         dateformat = "%a-%b-%d"
 
         # set parameters
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
         ax.grid()
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
@@ -307,7 +307,7 @@ class Sleep(object):
 
         return plt
 
-    def plot_stages_percent(self, grid_shape, position, rowspan):
+    def plot_stages_percent(self, grid_shape, position, rowspan, colspan):
 
         # initialize graph params
         plt.rc('xtick', labelsize=18)
@@ -359,7 +359,7 @@ class Sleep(object):
 
 
         # set graph params
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan)
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
         ax.grid()
         ax.set_title('Sleep Stages', fontsize=30, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
@@ -417,16 +417,16 @@ class Sleep(object):
         :return:
         """
 
-        today = dt.strptime(self.today, "%Y-%m-%d")
-        days = [today - timedelta(days=d) for d in range(0, 7)].reverse()
+        #today = dt.strptime(self.today, "%Y-%m-%d")
+        #days = [today - timedelta(days=d) for d in range(0, 7)].reverse()
 
-        plt0 = self.polar_hypnogram(self.sleep_series[days[0]], shape, (3,0))
-        plt1 = self.polar_hypnogram(self.sleep_series[days[1]], shape, (3,1))
-        plt2 = self.polar_hypnogram(self.sleep_series[days[2]], shape, (3,2))
-        plt3 = self.polar_hypnogram(self.sleep_series[days[3]], shape, (3,3))
-        plt4 = self.polar_hypnogram(self.sleep_series[days[4]], shape, (3,4))
-        plt5 = self.polar_hypnogram(self.sleep_series[days[5]], shape, (3,5))
-        plt6 = self.polar_hypnogram(self.sleep_series[days[6]], shape, (3,6))
+        plt0 = self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3,0))
+        plt1 = self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3,1))
+        plt2 = self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (3,2))
+        plt3 = self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (3,3))
+        plt4 = self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (3,4))
+        plt5 = self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (3,5))
+        plt6 = self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (3,6))
 
         plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6]
 
@@ -490,10 +490,9 @@ sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
 sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
 
 # fig parameters
-grid_shape = (4, 1)
+grid_shape = (4, 7)
 eff_plt_pos = (2, 0)
 stages_plt_pos = (0, 0)
-rowspan = 2
 
 # capture sleep data
 sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
@@ -506,13 +505,13 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
 
 # set fig shape and show
 plt.figure(figsize=(30,20))
-efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan)
-stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan)
+stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=6)
+efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=6)
+polar_hypnograms = sleep.plot_polar_hypnograms(grid_shape)
 stages_plot.show()
 efficiency_plot.show()
-
-
-
+for plt in polar_hypnograms:
+    plt.show()
 
 
 # TODO Dev
