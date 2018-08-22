@@ -248,7 +248,7 @@ class Sleep(object):
                                     "wake": {"start_times": [],
                                              "epoch_durations": []}},
                            "shortData": {"wake": {"start_times": [],
-                                         "epoch_durations": []}}}
+                                                  "epoch_durations": []}}}
 
         for raw_log in sleep_raw_logs["sleep"]:
             series = copy.deepcopy(series_template)
@@ -459,6 +459,13 @@ class Sleep(object):
         for stage in stages:
             start_times[stage] = time2radian(sleep_series['data'][stage]['start_times'])
             epoch_durations[stage] = time2radian(sleep_series['data'][stage]['epoch_durations'])
+
+        start_times["wake"] = start_times["wake"] + \
+                              time2radian(sleep_series["shortData"]["wake"]["start_times"])
+
+        epoch_durations["wake"] = epoch_durations["wake"] + \
+                                  time2radian(sleep_series["shortData"]["wake"]["epoch_durations"])
+
 
         ax = plt.subplot2grid(shape, position, polar=True)
         ax.barh(0, width=0)
