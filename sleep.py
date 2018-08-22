@@ -65,7 +65,6 @@ class Sleep(object):
         else:
             self.sleep_logs = self.initialize_csv()
 
-
         # capture up-to-date sleep time series
         if os.path.isfile(sleep_series_file_path) and os.access(self.sleep_series_file_path, os.R_OK):
             self.sleep_series = self.update_local_series()
@@ -96,8 +95,6 @@ class Sleep(object):
             fitbit = Fitbit(self.tokens_file_path)
             raw_logs = fitbit.sleep_logs_range(date_range)
 
-            print(raw_logs) # TODO test
-
             # update sleep_logs and sleep.csv, depending on logs returned from Fitbit
             if not raw_logs['sleep']:
                 sleep_logs = local_logs
@@ -111,23 +108,40 @@ class Sleep(object):
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
 
         sleep_logs.index = pd.to_datetime(sleep_logs.index)
-        # sleep_logs = sleep_logs.index.astype('datetime64[ns]')
 
         return sleep_logs
 
     def update_local_series(self):
 
+        # read sleep_series.json and capture data
+        with open(self.sleep_series_file_path) as series_file:
+            local_series = json.load(series_file)
 
+        latest_date_local = local_series["sleep"][-1]["dateOfSleep"]
 
+        # update sleep_series, depending on latest local entry
+        if latest_date_local == self.today:
+            sleep_series = local_series
+        else:
+            # request missing logs from Fitbit
+            latest_date_local = dt.strptime(latest_date_local, "%Y-%m-%d")
+            next_date_local = (latest_date_local + timedelta(days=1)).strftime("%Y-%m-%d")
+            date_range = (next_date_local, self.today)
+            fitbit = Fitbit(self.tokens_file_path)
+            raw_logs = fitbit.sleep_logs_range(date_range)
 
+            # update sleep_series and sleep_series.json, depending on logs returned from Fitbit
+            if not raw_logs["sleep"]:
+                sleep_series = local_series
+            else:
+                # capture series data from raw logs and append to local_series
+                api_series = self.capture_series_data(raw_logs)
+                local_series["sleep"].append(api_series["sleep"])
+                sleep_series = local_series
 
-
-
-
-
-
-
-
+                # update sleep_series.json
+                with open(self.sleep_series_file_path, 'w') as series_file:
+                    json.dump(sleep_series, series_file)
 
         return sleep_series
 
