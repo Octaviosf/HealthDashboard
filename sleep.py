@@ -253,13 +253,10 @@ class Sleep(object):
             series = copy.deepcopy(series_template)
             series["dateOfSleep"] = raw_log["dateOfSleep"]
             for epoch in raw_log["levels"]["data"]:
-                datetime = dt.strptime(epoch["dateTime"], "%Y-%m-%d")
-                seconds = int(epoch["seconds"])
-                series["data"][epoch["level"]]["start_times"].append(datetime)
+                series["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
                 series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
             for epoch in raw_log["levels"]["shortData"]:
-                datetime = dt.strptime(epoch["dateTime"], "%Y-%m-%d")
-                series["shortData"][epoch["level"]]["start_times"].append(datetime)
+                series["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
                 series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
             sleep_series["sleep"].append(series)
 
