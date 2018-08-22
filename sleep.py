@@ -255,18 +255,24 @@ class Sleep(object):
         stages_labels = ["deep", "light", "rem", "wake"]
 
         for raw_log in sleep_raw_logs["sleep"]:
-            sleep_series["sleep"].append({"dateOfSleep": raw_log["dateOfSleep"],
-                                          "data": {"deep": {"start_times": [],
-                                                            "epoch_durations": []},
-                                                   "light": {"start_times": [],
-                                                             "epoch_durations": []},
-                                                   "rem": {"start_times": [],
-                                                           "epoch_durations": []},
-                                                   "wake": {"start_times": [],
-                                                            "epoch_durations": []}},
-                                          "shortData": {"wake": {"start_times": [],
-                                                                 "epoch_durations": []}}})
-            sleep_series
+            series = {"dateOfSleep": raw_log["dateOfSleep"],
+                      "data": {"deep": {"start_times": [],
+                                        "epoch_durations": []},
+                               "light": {"start_times": [],
+                                         "epoch_durations": []},
+                               "rem": {"start_times": [],
+                                       "epoch_durations": []},
+                               "wake": {"start_times": [],
+                                        "epoch_durations": []}},
+                      "shortData": {"wake": {"start_times": [],
+                                             "epoch_durations": []}}}
+            for epoch in raw_log["levels"]["data"]:
+                    series["data"][epoch["level"]]["start_times"].append(epoch["datetime"])
+                    series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+            for epoch in raw_log["levels"]["shortData"]:
+                    series["shortData"][epoch["level"]]["start_times"].append(epoch["datetime"])
+                    series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+            sleep_series["sleep"].append(series)
 
 
         return sleep_series
