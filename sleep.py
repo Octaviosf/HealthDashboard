@@ -12,6 +12,7 @@ from numpy import pi
 import json
 import copy
 
+
 def time2radian(time_list):
     """
     :param time_list: list of dateTimes
@@ -138,7 +139,7 @@ class Sleep(object):
                 api_series = self.capture_series_data(raw_logs)
                 for series in api_series["sleep"]:
                     local_series["sleep"].append(series)
-                sleep_series = local_series
+                sleep_series = copy.deepcopy(local_series)
 
                 # update sleep_series.json
                 with open(self.sleep_series_file_path, 'w') as series_file:
@@ -250,7 +251,6 @@ class Sleep(object):
 
         for raw_log in sleep_raw_logs["sleep"]:
             series = copy.deepcopy(series_template)
-            # print("series:", series)
             series["dateOfSleep"] = raw_log["dateOfSleep"]
             for epoch in raw_log["levels"]["data"]:
                 series["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
