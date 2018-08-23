@@ -280,8 +280,8 @@ class Sleep(object):
         plt.rc("ytick", labelsize=18)
 
         # initialize parameter values
-        x = self.sleep_logs.index
-        y = self.sleep_logs['efficiency'].tolist()
+        x = self.sleep_logs.index.tolist()[-7:]
+        y = self.sleep_logs['efficiency'].tolist()[-7:]
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         labelpad = 25
@@ -293,7 +293,7 @@ class Sleep(object):
         ax.grid()
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
-        ax.set_xlim(xmin, xmax)
+        #ax.set_xlim(xmin, xmax)
         ax.set_ylim(0, 1.0)
         ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
