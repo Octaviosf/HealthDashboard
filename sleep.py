@@ -314,13 +314,13 @@ class Sleep(object):
         # initialize graph params
         plt.rc('xtick', labelsize=18)
         plt.rc('ytick', labelsize=18)
-        x = self.sleep_logs.index
+        x = self.sleep_logs.index.tolist()[-7:]
         x = date2num(x)
-        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
-        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
+        xmin = self.sleep_logs.index.tolist()[-7]
+        xmax = self.sleep_logs.index.tolist()[-1]
         numdays = xmax-xmin
         median_array_shape = (1, len(x))
-        xticks = [xmin + timedelta(days=d) for d in range(1, numdays.days)]
+        xticks = [xmin + timedelta(days=d) for d in range(0, numdays.days+1)]
         bar_width = 0.2
         labelpad = 25
         labelfontsize = 20
@@ -333,16 +333,24 @@ class Sleep(object):
         annotate_align = 'center'
         annotate_color = 'w'
 
-        # initialize graph data
-        durations = self.sleep_logs['duration'].values
-        awake_perc = np.around(self.sleep_logs['wake'].values / durations, 3) * 100
-        rem_perc = np.around(self.sleep_logs['rem'].values / durations, 3) * 100
-        light_perc = np.around(self.sleep_logs['light'].values / durations, 3) * 100
-        deep_perc = np.around(self.sleep_logs['deep'].values / durations, 3) * 100
-        awake_median = float(np.around(np.median(awake_perc), 3))
-        rem_median = float(np.around(np.median(rem_perc), 3))
-        light_median = float(np.around(np.median(light_perc), 3))
-        deep_median = float(np.around(np.median(deep_perc), 3))
+        # initialize y-axis data
+        durations = self.sleep_logs.loc[xmin:xmax]['duration'].values
+        durations_lifetime = self.sleep_logs['duration'].values
+        awake_perc = np.around(self.sleep_logs.loc[xmin:xmax]['wake'].values / durations, 3) * 100
+        rem_perc = np.around(self.sleep_logs.loc[xmin:xmax]['rem'].values / durations, 3) * 100
+        light_perc = np.around(self.sleep_logs.loc[xmin:xmax]['light'].values / durations, 3) * 100
+        deep_perc = np.around(self.sleep_logs.loc[xmin:xmax]['deep'].values / durations, 3) * 100
+
+        awake_perc_lifetime = np.around(self.sleep_logs['wake'].values / durations_lifetime, 3) * 100
+        rem_perc_lifetime = np.around(self.sleep_logs['rem'].values / durations_lifetime, 3) * 100
+        light_perc_lifetime = np.around(self.sleep_logs['light'].values / durations_lifetime, 3) * 100
+        deep_perc_lifetime = np.around(self.sleep_logs['deep'].values / durations_lifetime, 3) * 100
+
+        awake_median = float(np.around(np.median(awake_perc_lifetime), 3))
+        rem_median = float(np.around(np.median(rem_perc_lifetime), 3))
+        light_median = float(np.around(np.median(light_perc_lifetime), 3))
+        deep_median = float(np.around(np.median(deep_perc_lifetime), 3))
+
         awake_median_array = np.full(median_array_shape, awake_median)[0]
         rem_median_array = np.full(median_array_shape, rem_median)[0]
         light_median_array = np.full(median_array_shape, light_median)[0]
