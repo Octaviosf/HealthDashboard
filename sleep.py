@@ -303,7 +303,7 @@ class Sleep(object):
             ax.text(date, height+0.02, height, fontsize=18,
                     fontweight='bold', horizontalalignment='center')
 
-        ax.plot(x, y, '--co', linewidth=2)
+        ax.bar(x, y, edgecolor='k', width=0.2, linewidth=1.5)
 
         plt.tight_layout()
 
