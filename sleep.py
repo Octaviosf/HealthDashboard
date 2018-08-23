@@ -363,7 +363,7 @@ class Sleep(object):
         # set graph params
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
         ax.grid()
-        ax.set_title('Sleep Stages', fontsize=30, pad=30)
+        ax.set_title('Sleep Stage Percentage', fontsize=30, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
         plt.setp(ax.xaxis.get_majorticklabels(), rotation = -45, ha='left', rotation_mode='anchor')
         ax.set_xticks(xticks)
@@ -432,6 +432,8 @@ class Sleep(object):
 
         plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6]
 
+        plt.figtext(0.49, 0.225, "Polar Hypnograms", fontsize=30, horizontalalignment='center')
+
         return plots
 
     def polar_hypnogram(self, sleep_series, shape, position):
@@ -480,10 +482,11 @@ class Sleep(object):
         ax = plt.subplot2grid(shape, position, polar=True)
         ax.barh(0, width=0)
         ax.barh(1, width=0)
-        ax.barh(5, left=start_times['wake'], width=epoch_durations['wake'], color='m', label='Awake', height=bar_height)
+        #ax.barh(2, width=0)
+        ax.barh(2, left=start_times['wake'], width=epoch_durations['wake'], color='m', label='Awake', height=bar_height)
         ax.barh(4, left=start_times['rem'], width=epoch_durations['rem'], color='c', label='REM', height=bar_height)
         ax.barh(3, left=start_times['light'], width=epoch_durations['light'], color='C0', label='Light', height=bar_height)
-        ax.barh(2, left=start_times['deep'], width=epoch_durations['deep'], color='b', label='Deep', height=bar_height)
+        ax.barh(4, left=start_times['deep'], width=epoch_durations['deep'], color='b', label='Deep', height=bar_height)
         # ax.barh(2, left=median_start, width=median_duration, color='k', alpha=0.3, label='Median', height=bar_height)
 
         ax.set_theta_zero_location('N')
@@ -492,15 +495,15 @@ class Sleep(object):
         ax.set_xticklabels(range(0, 24))
 
         ax.set_rlabel_position(0)
-        ax.set_rgrids([2, 3, 4, 5], labels=["", "", "", ""], color='k',
+        ax.set_rgrids([2, 3, 4], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
-        ax.set_title(label=title, pad=30, fontsize=18, fontweight='bold')
-        ax.set_xlabel(xlabel=duration, labelpad=15, fontsize=18, fontweight='bold')
+        ax.set_title(label=title, pad=-265, fontsize=18)
+        ax.set_xlabel(xlabel=duration, labelpad=-138.5, fontsize=18)
         plt.tight_layout()
 
         # plt.legend(loc='upper right')
 
-        ax.grid(True)
+        ax.grid(False)
 
         return plt
 
