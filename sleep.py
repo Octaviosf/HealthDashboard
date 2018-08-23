@@ -529,8 +529,8 @@ with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
 
 # set fig shape and show
 plt.figure(figsize=(30,20))
-stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=6)
-efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=6)
+stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=7)
+efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=7)
 polar_hypnograms = sleep.plot_polar_hypnograms(grid_shape)
 stages_plot.show()
 efficiency_plot.show()
