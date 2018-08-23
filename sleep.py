@@ -1,5 +1,6 @@
 from IoTHealth.fitbit import Fitbit
 from datetime import datetime as dt
+from datetime import time
 from datetime import timedelta
 import os
 import pandas as pd
@@ -454,7 +455,16 @@ class Sleep(object):
         start_times = {}
         epoch_durations = {}
         bar_height = 1
-        date = dt.strptime(sleep_series["dateOfSleep"], "%Y-%m-%d").strftime("%a-%b-%d")
+        date_datetime = dt.strptime(sleep_series["dateOfSleep"], "%Y-%m-%d")
+        date_str = date_datetime.strftime("%a-%b-%d")
+        sleep_logs = self.sleep_logs.copy(deep=True)
+        sleep_logs.index = sleep_logs.index.strftime("%Y-%m-%d")
+        total_min = sleep_logs.loc[sleep_series["dateOfSleep"]]["duration"]
+        hours = int(total_min/60)
+        minutes = int(round((total_min/60 - hours)*60, 2))
+        duration = time(hours, minutes).strftime("%H:%M")
+
+        title = date_str
 
         for stage in stages:
             start_times[stage] = time2radian(sleep_series['data'][stage]['start_times'])
@@ -484,7 +494,9 @@ class Sleep(object):
         ax.set_rlabel_position(0)
         ax.set_rgrids([2, 3, 4, 5], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
-        ax.set_title(label=date, pad=30, fontsize=18, fontweight='bold')
+        ax.set_title(label=title, pad=30, fontsize=18, fontweight='bold')
+        ax.set_xlabel(xlabel=duration, labelpad=15, fontsize=18, fontweight='bold')
+        plt.tight_layout()
 
         # plt.legend(loc='upper right')
 
