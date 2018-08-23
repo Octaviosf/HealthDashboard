@@ -280,8 +280,8 @@ class Sleep(object):
         plt.rc("ytick", labelsize=18)
 
         # initialize parameter values
-        x = self.sleep_logs.index.tolist()[-7:]
-        y = self.sleep_logs['efficiency'].tolist()[-7:]
+        x = self.sleep_logs.index.tolist()[-6:]
+        y = self.sleep_logs['efficiency'].tolist()[-6:]
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         labelpad = 25
@@ -294,8 +294,8 @@ class Sleep(object):
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         #ax.set_xlim(xmin, xmax)
-        ax.set_ylim(0, 1.0)
-        ax.set_yticks(np.arange(0, 1.1, 0.1))
+        ax.set_ylim(min(y) - 0.1, 1.0)
+        #ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
         # annotate bars
@@ -303,7 +303,7 @@ class Sleep(object):
             ax.text(date, height+0.02, height, fontsize=18,
                     fontweight='bold', horizontalalignment='center')
 
-        ax.bar(x, y, edgecolor='k', width=0.5, linewidth=1.5)
+        ax.plot(x, y, '--co', linewidth=2)
 
         plt.tight_layout()
 
