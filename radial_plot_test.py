@@ -66,4 +66,3 @@ ax.set_rgrids([2, 3, 4, 5, 6], labels=['Med', 'Deep', 'Light', 'REM', 'Awake'], 
 ax.grid(axis='x')
 
 plt.show()
-
