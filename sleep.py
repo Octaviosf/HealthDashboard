@@ -280,8 +280,8 @@ class Sleep(object):
         plt.rc("ytick", labelsize=18)
 
         # initialize parameter values
-        x = self.sleep_logs.index.tolist()[-6:]
-        y = self.sleep_logs['efficiency'].tolist()[-6:]
+        x = self.sleep_logs.index.tolist()[-7:]
+        y = self.sleep_logs['efficiency'].tolist()[-7:]
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         labelpad = 25
