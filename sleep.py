@@ -171,7 +171,7 @@ class Sleep(object):
 
     def initialize_json(self):
         """
-        intialize sleep_series.json with up-to-date time series
+        initialize sleep_series.json with up-to-date time series
         :return sleep_series:  up-to-date sleep series
         """
 
@@ -356,7 +356,6 @@ class Sleep(object):
         light_median_array = np.full(median_array_shape, light_median)[0]
         deep_median_array = np.full(median_array_shape, deep_median)[0]
 
-
         # initialize masks
         mask_awake_perc = ma.where(awake_perc>=awake_median_array)
         mask_awake_median = ma.where(awake_median_array>=awake_perc)
@@ -366,7 +365,6 @@ class Sleep(object):
         mask_light_median = ma.where(light_median_array>=light_perc)
         mask_deep_perc = ma.where(deep_perc>=deep_median_array)
         mask_deep_median = ma.where(deep_median_array>=deep_perc)
-
 
         # set graph params
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
@@ -430,6 +428,16 @@ class Sleep(object):
         #today = dt.strptime(self.today, "%Y-%m-%d")
         #days = [today - timedelta(days=d) for d in range(0, 7)].reverse()
 
+        """
+        for index in range(-8, -2):
+            initial_day = dt.strptime(self.sleep_series["sleep"][index]["dateOfSleep"], "%Y-%m-%d")
+            next_day = dt.strptime(self.sleep_series["sleep"][index+1]["dateOfSleep"], "%Y-%m-%d")
+
+            num_blank_plots = next_day - initial_day + 1
+            blank_plots = plot_blank_hypnogram(num_blank_plots)
+        """
+
+
         plt0 = self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (3,0))
         plt1 = self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3,1))
         plt2 = self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3,2))
@@ -439,7 +447,7 @@ class Sleep(object):
         plt6 = self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (3,6))
         plt7 = self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (3,7))
 
-        plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6]
+        plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
 
         plt.figtext(0.49, 0.225, "Polar Hypnograms", fontsize=30, horizontalalignment='center')
 
