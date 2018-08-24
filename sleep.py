@@ -138,7 +138,7 @@ class Sleep(object):
                 sleep_series = local_series
             else:
                 # capture series data from raw logs and append to local_series
-                api_series = self.capture_series_data(raw_logs)
+                api_series = self.capture_series_data(raw_logs, date_range)
                 for series in api_series["sleep"]:
                     local_series["sleep"].append(series)
                 sleep_series = copy.deepcopy(local_series)
@@ -230,13 +230,19 @@ class Sleep(object):
 
         return sleep_logs
 
-    def capture_series_data(self, sleep_raw_logs):
+    def capture_series_data(self, sleep_raw_logs, date_range):
         """
         capture series data from raw sleep logs
 
         :param sleep_raw_logs: raw sleep data from Fitbit request
         :return sleep_series: sleep series data captured from raw logs
         """
+
+        start_date = dt.strptime(date_range[0], "%Y-%m-%d")
+        end_date = dt.strptime(date_range[1], "%Y-%m-%d")
+        num_days = end_date - start_date
+
+        dates = [(start_date + timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
 
         sleep_series = {"sleep": []}
         series_template = {"dateOfSleep": None,
@@ -251,16 +257,22 @@ class Sleep(object):
                            "shortData": {"wake": {"start_times": [],
                                                   "epoch_durations": []}}}
 
-        for raw_log in sleep_raw_logs["sleep"]:
+        for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
             series = copy.deepcopy(series_template)
-            series["dateOfSleep"] = raw_log["dateOfSleep"]
-            for epoch in raw_log["levels"]["data"]:
-                series["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
-                series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
-            for epoch in raw_log["levels"]["shortData"]:
-                series["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
-                series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
-            sleep_series["sleep"].append(series)
+            if date == raw_log["dateOfSleep"]:
+                series["dateOfSleep"] = raw_log["dateOfSleep"]
+                for epoch in raw_log["levels"]["data"]:
+                    series["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
+                    series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+                for epoch in raw_log["levels"]["shortData"]:
+                    series["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
+                    series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+                sleep_series["sleep"].append(series)
+            else:
+                series["dateOfSleep"] = date
+                for stage in stages:
+                    series["data"][stage]["start_times"].append(0)
+                    series["data"][stage]["epoch_durations"].append(0)
 
         sleep_series["sleep"].reverse()
         return sleep_series
