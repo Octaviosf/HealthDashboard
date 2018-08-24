@@ -373,7 +373,7 @@ class Sleep(object):
         ax.grid()
         ax.set_title('Sleep Stage Percentage', fontsize=30, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
-        plt.setp(ax.xaxis.get_majorticklabels(), rotation = -45, ha='left', rotation_mode='anchor')
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation = 0, ha='center', rotation_mode='anchor')
         ax.set_xticks(xticks)
         ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
