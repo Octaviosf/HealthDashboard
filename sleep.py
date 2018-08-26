@@ -377,7 +377,8 @@ class Sleep(object):
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         #ax.set_xlim(xmin, xmax)
-        ax.set_ylim(min(y) - 0.1, 1.0)
+        print('np.nanmin(np.asarray(y)):', np.nanmin(np.asarray(y)))
+        ax.set_ylim(np.nanmin(np.asarray(y)) - 0.1, 1.0)
         #ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
@@ -418,35 +419,30 @@ class Sleep(object):
 
         # initialize y-axis data
         durations = self.sleep_logs.loc[xmin:xmax]['duration'].values
-        print('durations:', durations)
         durations_lifetime = self.sleep_logs['duration'].values
-        print('durations_lifetime:', durations_lifetime)
 
         awake_perc = np.around(self.sleep_logs.loc[xmin:xmax]['wake'].values / durations, 3) * 100
         rem_perc = np.around(self.sleep_logs.loc[xmin:xmax]['rem'].values / durations, 3) * 100
         light_perc = np.around(self.sleep_logs.loc[xmin:xmax]['light'].values / durations, 3) * 100
         deep_perc = np.around(self.sleep_logs.loc[xmin:xmax]['deep'].values / durations, 3) * 100
 
+        # convert nan to 0
         awake_perc = np.nan_to_num(awake_perc)
-        print('awake_perc:', awake_perc)
         rem_perc = np.nan_to_num(rem_perc)
         light_perc = np.nan_to_num(light_perc)
         deep_perc = np.nan_to_num(deep_perc)
 
         awake_perc_lifetime = np.around(self.sleep_logs['wake'].values / durations_lifetime, 3) * 100
-        print('awake_perc_lifetime:', awake_perc_lifetime)
         rem_perc_lifetime = np.around(self.sleep_logs['rem'].values / durations_lifetime, 3) * 100
         light_perc_lifetime = np.around(self.sleep_logs['light'].values / durations_lifetime, 3) * 100
         deep_perc_lifetime = np.around(self.sleep_logs['deep'].values / durations_lifetime, 3) * 100
 
         awake_median = float(np.around(np.nanmedian(awake_perc_lifetime), 3))
-        print('awake_median:', awake_median)
         rem_median = float(np.around(np.nanmedian(rem_perc_lifetime), 3))
         light_median = float(np.around(np.nanmedian(light_perc_lifetime), 3))
         deep_median = float(np.around(np.nanmedian(deep_perc_lifetime), 3))
 
         awake_median_array = np.full(median_array_shape, awake_median)[0]
-        print('awake_median_array:', awake_median_array)
         rem_median_array = np.full(median_array_shape, rem_median)[0]
         light_median_array = np.full(median_array_shape, light_median)[0]
         deep_median_array = np.full(median_array_shape, deep_median)[0]
