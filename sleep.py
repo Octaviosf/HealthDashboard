@@ -181,7 +181,7 @@ class Sleep(object):
         raw_logs = fitbit.sleep_logs_range(date_range)
 
         # capture explicit data from raw series
-        sleep_series = self.capture_series_data(raw_logs)
+        sleep_series = self.capture_series_data(raw_logs, date_range)
         with open(self.sleep_series_file_path, 'w+') as series_file:
             json.dump(sleep_series, series_file)
 
@@ -235,12 +235,14 @@ class Sleep(object):
         capture series data from raw sleep logs
 
         :param sleep_raw_logs: raw sleep data from Fitbit request
+        :param date_range: tuple of a start and end date, respectively
         :return sleep_series: sleep series data captured from raw logs
         """
 
         start_date = dt.strptime(date_range[0], "%Y-%m-%d")
         end_date = dt.strptime(date_range[1], "%Y-%m-%d")
         num_days = end_date - start_date
+        stages = ['deep', 'light', 'rem', 'wake']
 
         dates = [(start_date + timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
 
@@ -273,6 +275,9 @@ class Sleep(object):
                 for stage in stages:
                     series["data"][stage]["start_times"].append(0)
                     series["data"][stage]["epoch_durations"].append(0)
+                series["shortData"]["wake"]["start_times"].append(0)
+                series["shortData"]["wake"]["epoch_durations"].append(0)
+                sleep_series["sleep"].append(series)
 
         sleep_series["sleep"].reverse()
         return sleep_series
