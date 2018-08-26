@@ -243,6 +243,7 @@ class Sleep(object):
         end_date = dt.strptime(date_range[1], "%Y-%m-%d")
         num_days = end_date - start_date
         stages = ['deep', 'light', 'rem', 'wake']
+        index = 0
 
         dates = [(end_date - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
 
@@ -259,6 +260,34 @@ class Sleep(object):
                            "shortData": {"wake": {"start_times": [],
                                                   "epoch_durations": []}}}
 
+        for raw_log in sleep_raw_logs["sleep"]:
+            series = copy.deepcopy(series_template)
+            series["dateOfSleep"] = raw_log["dateOfSleep"]
+            for epoch in raw_log["levels"]["data"]:
+                series["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
+                series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+            for epoch in raw_log["levels"]["shortData"]:
+                series["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
+                series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
+            sleep_series["sleep"].append(series)
+
+        for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
+            if date == raw_log["dateOfSleep"]:
+                index += 1
+                continue
+            else:
+                series = copy.deepcopy(series_template)
+                series["dateOfSleep"] = date
+                for stage in stages:
+                    series["data"][stage]["start_times"].append(0)
+                    series["data"][stage]["epoch_durations"].append(0)
+                series["shortData"]["wake"]["start_times"].append(0)
+                series["shortData"]["wake"]["epoch_durations"].append(0)
+                sleep_series["sleep"].insert(index, series)
+                dates.remove(date)
+                index += 1
+
+        """
         for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
             series = copy.deepcopy(series_template)
             print("'date' == 'raw_log['dateOfSleep']:", date + ' == ' + raw_log["dateOfSleep"])
@@ -289,8 +318,7 @@ class Sleep(object):
                     series_next["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
                     series_next["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
                 sleep_series["sleep"].append(series_next)
-
-
+        """
 
         sleep_series["sleep"].reverse()
         return sleep_series
