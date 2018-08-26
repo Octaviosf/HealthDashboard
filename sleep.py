@@ -233,11 +233,11 @@ class Sleep(object):
                 sleep_log = dict()
                 sleep_log["dateOfSleep"] = [date]
                 for label in dict_labels[1:]:
-                    sleep_log[label] = [None]
+                    sleep_log[label] = [float('nan')]
                 for label in stages_labels:
-                    sleep_log[label] = [0]
-                sleep_log["efficiency"] = [0]
-                sleep_log["duration"] = [0]
+                    sleep_log[label] = [float('nan')]
+                sleep_log["efficiency"] = [float('nan')]
+                sleep_log["duration"] = [float('nan')]
                 sleep_logs.insert(index, sleep_log)
                 dates.remove(date)
                 index += 1
