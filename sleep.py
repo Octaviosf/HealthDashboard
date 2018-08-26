@@ -103,7 +103,7 @@ class Sleep(object):
                 sleep_logs = local_logs
             else:
                 # capture explicit data from raw logs and append to local_logs
-                api_logs = self.capture_explicit_data(raw_logs)
+                api_logs = self.capture_log_data(raw_logs, date_range)
                 frames = [local_logs, api_logs]
                 sleep_logs = pd.concat(frames)
 
@@ -162,7 +162,7 @@ class Sleep(object):
         raw_logs = fitbit.sleep_logs_range(date_range)
 
         # capture explicit data from raw logs
-        sleep_logs = self.capture_explicit_data(raw_logs)
+        sleep_logs = self.capture_log_data(raw_logs, date_range)
         sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w+', date_format="%Y-%m-%d")
 
         sleep_logs.index = pd.to_datetime(sleep_logs.index)
@@ -187,7 +187,7 @@ class Sleep(object):
 
         return sleep_series
 
-    def capture_explicit_data(self, sleep_raw_logs):
+    def capture_log_data(self, sleep_raw_logs, date_range):
         """
         capture explicit data from raw sleep logs
 
@@ -202,9 +202,16 @@ class Sleep(object):
         sleep_logs = []
         frames = []
 
+        start_date = dt.strptime(date_range[0], "%Y-%m-%d")
+        end_date = dt.strptime(date_range[1], "%Y-%m-%d")
+        num_days = end_date - start_date
+        index = 0
+
+        dates = [(end_date - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
+
         # create dictionary list to capture explicit data
         for raw_log in sleep_raw_logs["sleep"]:
-            sleep_log = {}
+            sleep_log = dict()
             duration_sleep = 0
             duration_total = 0
             for label in dict_labels:
@@ -217,6 +224,24 @@ class Sleep(object):
             sleep_log["efficiency"] = [round(duration_sleep / duration_total, 2)]
             sleep_log["duration"] = [duration_total]
             sleep_logs.append(sleep_log)
+
+        for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
+            if date == raw_log["dateOfSleep"]:
+                index += 1
+                continue
+            else:
+                sleep_log = dict()
+                sleep_log["dateOfSleep"] = [date]
+                for label in dict_labels[1:]:
+                    sleep_log[label] = [None]
+                for label in stages_labels:
+                    sleep_log[label] = [0]
+                sleep_log["efficiency"] = [0]
+                sleep_log["duration"] = [0]
+                sleep_logs.insert(index, sleep_log)
+                dates.remove(date)
+                index += 1
+
         sleep_logs.reverse()
 
         # create DataFrame list from dictionary list
@@ -617,7 +642,7 @@ for plt in polar_hypnograms:
 
 """
     1. Create Sleep() class with attributes:
-       DONE a. capture_explicit_data() returns pandas df
+       DONE a. capture_log_data() returns pandas df
        DONE b. create are_logs_uptodate boolean
        DONE c. write sleep.csv file if nonexistent
        DONE d. update sleep.csv
