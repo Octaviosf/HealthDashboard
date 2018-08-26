@@ -12,6 +12,7 @@ import numpy.ma as ma
 from numpy import pi
 import json
 import copy
+from math import isnan
 
 
 def time2radian(time_list):
@@ -377,7 +378,6 @@ class Sleep(object):
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         #ax.set_xlim(xmin, xmax)
-        print('np.nanmin(np.asarray(y)):', np.nanmin(np.asarray(y)))
         ax.set_ylim(np.nanmin(np.asarray(y)) - 0.1, 1.0)
         #ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
@@ -570,9 +570,12 @@ class Sleep(object):
         sleep_logs = self.sleep_logs.copy(deep=True)
         sleep_logs.index = sleep_logs.index.strftime("%Y-%m-%d")
         total_min = sleep_logs.loc[sleep_series["dateOfSleep"]]["duration"]
-        hours = int(total_min/60)
-        minutes = int(round((total_min/60 - hours)*60, 2))
-        duration = time(hours, minutes).strftime("%H:%M")
+        if isnan(total_min):
+            duration = 'NaN'
+        else:
+            hours = int(total_min/60)
+            minutes = int(round((total_min/60 - hours)*60, 2))
+            duration = time(hours, minutes).strftime("%H:%M")
 
         title = date_str
 
