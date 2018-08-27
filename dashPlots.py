@@ -195,121 +195,6 @@ def bodycomp_plots(df):
     return fig
 
 
-
-def sleep_plots():
-
-    from IoTHealth.fitbit import Fitbit
-    from datetime import datetime as dt
-    from datetime import timedelta
-
-    def sleep_data_essentials(sleep_data):
-        """
-        :param sleep_data: original sleep data from Fitbit request
-        :return: list of sleep logs with essential data
-        """
-
-        dict_labels = ["dateOfSleep", "minutesAfterWakeup",
-                       "minutesToFallAsleep", "startTime"]
-
-        stages_labels = ["deep", "light", "rem", "wake"]
-
-        sleep_data_list = []
-
-        for sleep in sleep_data:
-            sleep_essentials = {}
-            duration_sleep = 0
-            duration_total = 0
-
-            for label in dict_labels:
-                sleep_essentials[label] = sleep[label]
-
-            for label in stages_labels:
-                sleep_essentials[label] = sleep["levels"]["summary"][label]["minutes"]
-                duration_total += sleep_essentials[label]
-
-            for label in stages_labels[:-1]:
-                duration_sleep += sleep_essentials[label]
-
-            sleep_essentials["efficiency"] = round(duration_sleep / duration_total, 2)
-
-            sleep_essentials["duration"] = duration_total
-            sleep_data_list.append(sleep_essentials)
-
-        sleep_data_list.reverse()
-
-        return sleep_data_list
-
-    # assignments
-    tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
-    sleep_data_fp = '/home/sosa/Documents/IoTHealth/sleep_data_fp.txt'
-    date_range = ('2018-08-07', '2018-08-15')
-
-    # create interaction object with Fitbit API
-    fitbit = Fitbit(tokens_fp)
-
-    # recieve sleep data
-    sleep_data = fitbit.sleeplogs_range(date_range)['sleep']
-
-    # capture data for sleep plots
-    sleep_plot_data = sleep_data_essentials(sleep_data)
-
-    if os.path.isfile(sleep_data_fp) and os.access(sleep_data_fp, os.R_OK):
-        with open(sleep_data_fp, 'r') as sleep_file:
-            sleep_data_local = exec(sleep_file.readline())
-
-        # update sleep_data_local using fitbit request
-
-    else:
-        sleep_data = fitbit.sleeplogs_range(date_range)['sleep']
-        with open(sleep_data_fp, 'w+') as sleep_file:
-            sleep_file.write(sleep_data)
-
-    print(sleep_plot_data)
-
-    # TODO Dev
-    """
-        1. Create Sleep() class with attributes:
-                a. write sleep.txt file if nonexistent
-                b. update sleep.txt
-                c. create sleep_data_dataframe
-                d. create fig, capturing plots, using sleep_data_dataframe
-                etc ...
-        
-        --
-        
-        Future TODO
-        
-        1. Create Body() class with attributes:
-                a. write body.txt file if nonexistent
-                b. update body.txt
-                etc ...
-                
-        2. Create IotHealth() class with attributes:
-                a. write all .txt files if nonexistent
-                b. update all .txt files
-                etc ...
-    
-    """
-
-    # create csv file with sleep data if not already in existence
-
-    # sleep efficiency plot: (rem+light+deep) / (awake+rem+light+deep)
-
-    # sleep total_duration plot w/ superimposed lifetime median
-
-    # sleep stages % grouped bar plot for current week (4 stages per day = 4 bars per day) w/ last weeks avg at end
-        # lifetime medians for each stage is superimposed in lighter colors on each daily stage plot
-
-        # duration label above each stage
-
-        # total duration label above each night
-
-    # minutes to fall asleep plot (type: stages)
-
-    # minutes after wakeup plot (type: stages)
-
-    return None
-
 class SmartMirror(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -337,6 +222,7 @@ class SmartMirror(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+
 class MainMenu(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -347,6 +233,7 @@ class MainMenu(tk.Frame):
         button1 = ttk.Button(self, text="Health Dashboard",
                              command=lambda: controller.show_frame(HealthDashboard))
         button1.pack()
+
 
 class HealthDashboard(tk.Frame):
 
@@ -377,4 +264,29 @@ class HealthDashboard(tk.Frame):
 app = SmartMirror()
 app.mainloop()
 
+
+# TODO Dev
+"""
+    1. Create Sleep() class with attributes:
+            a. write sleep.txt file if nonexistent
+            b. update sleep.txt
+            c. create sleep_data_dataframe
+            d. create fig, capturing plots, using sleep_data_dataframe
+            etc ...
+    
+    --
+    
+    Future TODO
+    
+    1. Create Body() class with attributes:
+            a. write body.txt file if nonexistent
+            b. update body.txt
+            etc ...
+            
+    2. Create IotHealth() class with attributes:
+            a. write all .txt files if nonexistent
+            b. update all .txt files
+            etc ...
+
+"""
 
