@@ -468,7 +468,6 @@ class Sleep(object):
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
         plt.tight_layout()
 
-
         # annotate each stage with percentage
         for x_pos, awake_p in zip(x, awake_perc):
             ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
@@ -484,26 +483,26 @@ class Sleep(object):
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
 
         # plot stages with masks
-        ax.bar((x-0.3)[mask_awake_median], awake_median_array[mask_awake_median], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
+        #ax.bar((x-0.3)[mask_awake_median], awake_median_array[mask_awake_median], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center')
         ax.bar(x-0.3, awake_perc, color='m', width=bar_width, align='center', label='Awake')
-        ax.bar((x-0.3)[mask_awake_perc], awake_median_array[mask_awake_perc], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
-        ax.bar((x-0.1)[mask_rem_median], rem_median_array[mask_rem_median], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
+        #ax.bar((x-0.3)[mask_awake_perc], awake_median_array[mask_awake_perc], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center')
+        #ax.bar((x-0.1)[mask_rem_median], rem_median_array[mask_rem_median], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center')
         ax.bar(x-0.1, rem_perc, color='c', width=bar_width, align='center', label='REM')
-        ax.bar((x-0.1)[mask_rem_perc], rem_median_array[mask_rem_perc], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
-        ax.bar((x+0.1)[mask_light_median], light_median_array[mask_light_median], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
+        #ax.bar((x-0.1)[mask_rem_perc], rem_median_array[mask_rem_perc], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center')
+        #ax.bar((x+0.1)[mask_light_median], light_median_array[mask_light_median], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center')
         ax.bar(x+0.1, light_perc, width=bar_width, align='center', label='Light')
-        ax.bar((x+0.1)[mask_light_perc], light_median_array[mask_light_perc], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
-        ax.bar((x+0.3)[mask_deep_median], deep_median_array[mask_deep_median], alpha=alpha,
-               color=medians_color, width=bar_width, align='center')
+        #ax.bar((x+0.1)[mask_light_perc], light_median_array[mask_light_perc], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center')
+        #ax.bar((x+0.3)[mask_deep_median], deep_median_array[mask_deep_median], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center')
         ax.bar(x+0.3, deep_perc, color='b', width=bar_width, align='center', label='Deep')
-        ax.bar((x+0.3)[mask_deep_perc], deep_median_array[mask_deep_perc], alpha=alpha,
-               color=medians_color, width=bar_width, align='center', label='Median')
+        #ax.bar((x+0.3)[mask_deep_perc], deep_median_array[mask_deep_perc], alpha=alpha,
+        #       color=medians_color, width=bar_width, align='center', label='Median')
 
         plt.legend(prop={'size': 15}, loc='upper right')
 
