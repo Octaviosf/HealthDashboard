@@ -3,13 +3,10 @@ from tkinter import ttk
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-from matplotlib.figure import Figure
 import datetime as dt
-from IoTHealth.fitbit import Fitbit
-
+from IoTHealth.sleep import Sleep
 import matplotlib.pyplot as plt
 import pandas as pd
-from pprint import pprint
 
 def access_sheet(spreadsheet_id, range_):
     """
@@ -102,9 +99,10 @@ def bodycomp_plots(df):
     linewidth = 2
     rotation = 0
     dateformat = '%a-%b-%d'
+    colspan=8
 
     # Total Mass plot
-    ax0 = plt.subplot2grid((8,2), (4,0), rowspan=2, colspan=2)
+    ax0 = plt.subplot2grid((8, 16), (4, 0), rowspan=2, colspan=colspan)
     ax0.grid()
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
@@ -114,7 +112,7 @@ def bodycomp_plots(df):
     ax0.plot(x, df[['weight_lb']], '--ko', label='Total Mass', linewidth=linewidth)
 
     # Muscle Mass plot
-    ax1 = plt.subplot2grid((8,2), (0,0), rowspan=2, colspan=2)
+    ax1 = plt.subplot2grid((8, 16), (0, 0), rowspan=2, colspan=colspan)
     ax1.grid()
     ax1.set_title('Body Composition', fontsize=30, pad=30)
     ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
@@ -135,7 +133,7 @@ def bodycomp_plots(df):
     ax2.legend(lns0, labels0, prop={'size': 20})
 
     # Fat Mass plot
-    ax3 = plt.subplot2grid((8,2), (2,0), rowspan=2, colspan=2)
+    ax3 = plt.subplot2grid((8, 16), (2, 0), rowspan=2, colspan=colspan)
     ax3.grid()
     ax3.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_ylim(y_f_min, y_f_max)
@@ -155,7 +153,7 @@ def bodycomp_plots(df):
     ax4.legend(lns1, labels1, prop={'size': 20})
 
     # Bone Mass plot
-    ax5 = plt.subplot2grid((8,2), (6,0), rowspan=1, colspan=2)
+    ax5 = plt.subplot2grid((8, 16), (6, 0), rowspan=1, colspan=colspan)
     ax5.grid()
     ax5.set_ylabel('Bone Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax5.set_ylim(y_b_min, y_b_max)
@@ -173,7 +171,7 @@ def bodycomp_plots(df):
     ax6.legend(lns2, labels2, prop={'size': 20})
 
     # Water % plot
-    ax7 = plt.subplot2grid((8,2), (7,0), rowspan=1, colspan=1)
+    ax7 = plt.subplot2grid((8, 16), (7, 0), rowspan=1, colspan=4)
     ax7.grid()
     ax7.set_ylabel('Water %', fontsize=labelfontsize, labelpad=labelpad)
     ax7.set_xlim(xmin, xmax)
@@ -182,7 +180,7 @@ def bodycomp_plots(df):
     ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
 
     # BMI plot
-    ax8 = plt.subplot2grid((8,2), (7,1), rowspan=1, colspan=1)
+    ax8 = plt.subplot2grid((8, 16), (7, 1), rowspan=1, colspan=4)
     ax8.grid()
     ax8.set_ylabel('BMI', fontsize=labelfontsize, labelpad=labelpad)
     ax8.set_xlim(xmin, xmax)
@@ -249,13 +247,31 @@ class HealthDashboard(tk.Frame):
         spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
         range_ = 'Sheet1'
         sheet_obj = access_sheet(spreadsheet_id, range_)
-
         df = sheet_to_df(sheet_obj)
-
         fig = bodycomp_plots(df)
 
+        # sleep plots
+
+        tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
+        sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
+        sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
+
+        # fig parameters
+        grid_shape = (8, 16)
+        eff_plt_pos = (4, 8)
+        stages_plt_pos = (0, 8)
+
+        # capture sleep data
+        sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
+
+        # set fig shape and show
+        plt.figure(figsize=(30, 20))
+        stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
+        efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
+        polar_hypnograms = sleep.plot_polar_hypnograms(grid_shape)
+
         # embed plot into SmartMirror gui
-        canvas = FigureCanvasTkAgg(fig, self)
+        canvas = FigureCanvasTkAgg(plt, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
