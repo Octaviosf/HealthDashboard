@@ -364,8 +364,8 @@ class Sleep(object):
         plt.rc("ytick", labelsize=18)
 
         # initialize parameter values
-        x = self.sleep_logs.index.tolist()[-7:]
-        y = self.sleep_logs['efficiency'].tolist()[-7:]
+        x = self.sleep_logs.index.tolist()[-8:]
+        y = self.sleep_logs['efficiency'].tolist()[-8:]
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         labelpad = 25
@@ -398,9 +398,9 @@ class Sleep(object):
         # initialize graph params
         plt.rc('xtick', labelsize=18)
         plt.rc('ytick', labelsize=18)
-        x = self.sleep_logs.index.tolist()[-7:]
+        x = self.sleep_logs.index.tolist()[-8:]
         x = date2num(x)
-        xmin = self.sleep_logs.index.tolist()[-7]
+        xmin = self.sleep_logs.index.tolist()[-8]
         xmax = self.sleep_logs.index.tolist()[-1]
         numdays = xmax-xmin
         median_array_shape = (1, len(x))
@@ -528,7 +528,6 @@ class Sleep(object):
             blank_plots = plot_blank_hypnogram(num_blank_plots)
         """
 
-
         plt0 = self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (3,0))
         plt1 = self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3,1))
         plt2 = self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3,2))
@@ -643,7 +642,9 @@ plt.figure(figsize=(30,20))
 stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=8)
 efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=8)
 polar_hypnograms = sleep.plot_polar_hypnograms(grid_shape)
+print('posx')
 stages_plot.show()
+print('posx')
 efficiency_plot.show()
 for plt in polar_hypnograms:
     plt.show()
