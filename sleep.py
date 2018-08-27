@@ -468,6 +468,7 @@ class Sleep(object):
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
         plt.tight_layout()
 
+
         # annotate each stage with percentage
         for x_pos, awake_p in zip(x, awake_perc):
             ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
@@ -642,9 +643,9 @@ plt.figure(figsize=(30,20))
 stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=8)
 efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=8)
 polar_hypnograms = sleep.plot_polar_hypnograms(grid_shape)
-print('posx')
+print('posx and posy error:')
 stages_plot.show()
-print('posx')
+print('end of error')
 efficiency_plot.show()
 for plt in polar_hypnograms:
     plt.show()
