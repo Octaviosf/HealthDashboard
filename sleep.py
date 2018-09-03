@@ -538,6 +538,7 @@ class Sleep(object):
         self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (6, 15))
 
         #plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
+        plt.tight_layout()
 
         plt.figtext(0.49, 0.225, "Polar Hypnograms", fontsize=30, horizontalalignment='center')
 
