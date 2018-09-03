@@ -188,9 +188,9 @@ def bodycomp_plots(df):
     ax8.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax8.plot(x, df[['BMI']], '-ko', label='BMI', linewidth=linewidth)
 
-    #plt.tight_layout()
+    plt.tight_layout()
 
-    #return plt
+    return plt
 
 class SmartMirror(tk.Tk):
 
@@ -236,7 +236,6 @@ class MainMenu(tk.Frame):
         button2.pack()
 
 
-
 class BodyComposition(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -256,7 +255,13 @@ class BodyComposition(tk.Frame):
         range_ = 'Sheet1'
         sheet_obj = access_sheet(spreadsheet_id, range_)
         df = sheet_to_df(sheet_obj)
-        bodycomp_plots(df)
+        fig = bodycomp_plots(df)
+
+        # embed plot into frame
+        canvas = FigureCanvasTkAgg(fig, self)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
 
 class Sleep(tk.Frame):
 
