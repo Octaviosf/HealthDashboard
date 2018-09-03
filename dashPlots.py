@@ -313,13 +313,7 @@ plt.show()
 
 # TODO Dev
 """
-    1. Create Sleep() class with attributes:
-            a. write sleep.txt file if nonexistent
-            b. update sleep.txt
-            c. create sleep_data_dataframe
-            d. create fig, capturing plots, using sleep_data_dataframe
-            etc ...
-    
+    1. Align bodycomp_plots leftwise and sleep_plots rightwise using align= kwarg
     --
     
     Future TODO
