@@ -365,7 +365,7 @@ class Sleep(object):
 
         # initialize parameter values
         x = self.sleep_logs.index.tolist()[-8:]
-        y = self.sleep_logs['efficiency'].tolist()[-8:]
+        y = np.nan_to_num(self.sleep_logs['efficiency'].values[-8:])
         xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
         labelpad = 25
