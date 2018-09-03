@@ -307,6 +307,7 @@ sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
 sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
 sleep.plot_polar_hypnograms(grid_shape)
 
+plt.tight_layout()
 plt.show()
 
 
