@@ -227,27 +227,51 @@ class MainMenu(tk.Frame):
         label = tk.Label(self, text="Smart Mirror", font=("Verdana", 12))
         label.pack(pady=10, padx=10)
 
-        button1 = ttk.Button(self, text="Health Dashboard",
-                             command=lambda: controller.show_frame(HealthDashboard))
+        button1 = ttk.Button(self, text="Body Composition",
+                             command=lambda: controller.show_frame(BodyComposition))
         button1.pack()
 
+        button2 = ttk.Button(self, text="Sleep",
+                             command=lambda: controller.show_frame(Sleep))
+        button2.pack()
 
-class HealthDashboard(tk.Frame):
+
+
+class BodyComposition(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Health Dashboard", font=("Verdana", 12))
+        label = tk.Label(self, text="Body Composition", font=("Verdana", 12))
         label.pack(pady=10, padx=10)
 
         button1 = ttk.Button(self, text="Main Menu",
                              command=lambda: controller.show_frame(MainMenu))
         button1.pack()
 
+        button2 = ttk.Button(self, text="Sleep",
+                             command=lambda: controller.show_frame(Sleep))
+        button2.pack()
+
         spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
         range_ = 'Sheet1'
         sheet_obj = access_sheet(spreadsheet_id, range_)
         df = sheet_to_df(sheet_obj)
         bodycomp_plots(df)
+
+class Sleep(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Sleep", font=("verdana", 12))
+        label.pack(pady=10, padx=10)
+
+        button1 = ttk.Button(self, text="Main Menu",
+                             command=lambda: controller.show_frame(MainMenu))
+        button1.pack()
+        button2 = ttk.Button(self, text="Body Composition",
+                             command=lambda: controller.show_frame(BodyComposition))
+        button2.pack2()
+
 
         # sleep plots
 
