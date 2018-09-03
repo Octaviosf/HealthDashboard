@@ -272,6 +272,7 @@ class Sleep(object):
         index = 0
 
         dates = [(end_date - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
+        print('dates:', dates)
 
         sleep_series = {"sleep": []}
         series_template = {"dateOfSleep": None,
@@ -298,7 +299,9 @@ class Sleep(object):
             sleep_series["sleep"].append(series)
 
         for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
+            print('raw_log["dateOfSleep"]/date:', raw_log["dateOfSleep"] + '/' + date)
             if date == raw_log["dateOfSleep"]:
+                print('index/date/raw_log["dateOfSleep"]:,', str(index) + '/' + date + '/' + raw_log["dateOfSleep"])
                 index += 1
                 continue
             else:
@@ -310,6 +313,7 @@ class Sleep(object):
                 series["shortData"]["wake"]["start_times"].append(0)
                 series["shortData"]["wake"]["epoch_durations"].append(0)
                 sleep_series["sleep"].insert(index, series)
+                print('index/date/raw_log["dateOfSleep"]:,', str(index) + '/' + date + '/' + raw_log["dateOfSleep"])
                 dates.remove(date)
                 index += 1
 
@@ -378,7 +382,7 @@ class Sleep(object):
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         #ax.set_xlim(xmin, xmax)
-        ax.set_ylim(np.nanmin(np.asarray(y)) - 0.1, 1.0)
+        ax.set_ylim(np.nanmin(np.asarray(y)), 1.0)
         #ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
