@@ -188,9 +188,9 @@ def bodycomp_plots(df):
     ax8.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax8.plot(x, df[['BMI']], '-ko', label='BMI', linewidth=linewidth)
 
-    plt.tight_layout()
+    #plt.tight_layout()
 
-    return fig
+    #return plt
 
 
 class SmartMirror(tk.Tk):
@@ -248,7 +248,7 @@ class HealthDashboard(tk.Frame):
         range_ = 'Sheet1'
         sheet_obj = access_sheet(spreadsheet_id, range_)
         df = sheet_to_df(sheet_obj)
-        fig = bodycomp_plots(df)
+        bodycomp_plots(df)
 
         # sleep plots
 
@@ -265,10 +265,10 @@ class HealthDashboard(tk.Frame):
         sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
 
         # set fig shape and show
-        plt.figure(figsize=(30, 20))
-        stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
-        efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
-        polar_hypnograms = sleep.plot_polar_hypnograms(grid_shape)
+        #plt.figure(figsize=(30, 20))
+        sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
+        sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
+        sleep.plot_polar_hypnograms(grid_shape)
 
         # embed plot into SmartMirror gui
         canvas = FigureCanvasTkAgg(plt, self)
