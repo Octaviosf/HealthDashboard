@@ -299,9 +299,7 @@ class Sleep(object):
             sleep_series["sleep"].append(series)
 
         for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
-            print('raw_log["dateOfSleep"]/date:', raw_log["dateOfSleep"] + '/' + date)
             if date == raw_log["dateOfSleep"]:
-                print('index/date/raw_log["dateOfSleep"]:,', str(index) + '/' + date + '/' + raw_log["dateOfSleep"])
                 index += 1
                 continue
             else:
@@ -313,9 +311,8 @@ class Sleep(object):
                 series["shortData"]["wake"]["start_times"].append(0)
                 series["shortData"]["wake"]["epoch_durations"].append(0)
                 sleep_series["sleep"].insert(index, series)
-                print('index/date/raw_log["dateOfSleep"]:,', str(index) + '/' + date + '/' + raw_log["dateOfSleep"])
                 dates.remove(date)
-                index += 1
+                index += 2
 
         """
         for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
