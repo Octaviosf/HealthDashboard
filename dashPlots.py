@@ -180,7 +180,7 @@ def bodycomp_plots(df):
     ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
 
     # BMI plot
-    ax8 = plt.subplot2grid((8, 16), (7, 1), rowspan=1, colspan=4)
+    ax8 = plt.subplot2grid((8, 16), (7, 4), rowspan=1, colspan=4)
     ax8.grid()
     ax8.set_ylabel('BMI', fontsize=labelfontsize, labelpad=labelpad)
     ax8.set_xlim(xmin, xmax)
@@ -306,6 +306,8 @@ sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
 sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
 sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
 sleep.plot_polar_hypnograms(grid_shape)
+
+plt.show()
 
 
 # TODO Dev
