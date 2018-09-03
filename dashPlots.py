@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 import matplotlib
 matplotlib.use("TkAgg")
-matplotlib.rcParams.update({'figure.autolayout': True})
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 import datetime as dt
 from IoTHealth.sleep import Sleep
