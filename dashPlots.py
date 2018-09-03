@@ -207,7 +207,7 @@ class SmartMirror(tk.Tk):
 
         self.frames = {}
 
-        for F in (MainMenu, HealthDashboard):
+        for F in (MainMenu, BodyComposition, SleepMetrics):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
