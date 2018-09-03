@@ -232,7 +232,7 @@ class MainMenu(tk.Frame):
         button1.pack()
 
         button2 = ttk.Button(self, text="Sleep",
-                             command=lambda: controller.show_frame(Sleep))
+                             command=lambda: controller.show_frame(SleepMetrics))
         button2.pack()
 
 
@@ -248,7 +248,7 @@ class BodyComposition(tk.Frame):
         button1.pack()
 
         button2 = ttk.Button(self, text="Sleep",
-                             command=lambda: controller.show_frame(Sleep))
+                             command=lambda: controller.show_frame(SleepMetrics))
         button2.pack()
 
         spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
@@ -263,7 +263,7 @@ class BodyComposition(tk.Frame):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
-class Sleep(tk.Frame):
+class SleepMetrics(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -273,13 +273,12 @@ class Sleep(tk.Frame):
         button1 = ttk.Button(self, text="Main Menu",
                              command=lambda: controller.show_frame(MainMenu))
         button1.pack()
+
         button2 = ttk.Button(self, text="Body Composition",
                              command=lambda: controller.show_frame(BodyComposition))
-        button2.pack2()
-
+        button2.pack()
 
         # sleep plots
-
         tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
         sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
         sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
