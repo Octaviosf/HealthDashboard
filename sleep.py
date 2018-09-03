@@ -466,7 +466,7 @@ class Sleep(object):
         ax.set_xticks(xticks)
         ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-        plt.tight_layout()
+        #plt.tight_layout()
 
         # annotate each stage with percentage
         for x_pos, awake_p in zip(x, awake_perc):
