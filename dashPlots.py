@@ -314,6 +314,7 @@ plt.show()
 # TODO Dev
 """
     1. Align bodycomp_plots leftwise and sleep_plots rightwise using align= kwarg
+    2. Use fig arg in subplot2grid() to add axes to single fig and pass fig to Tkinter
     --
     
     Future TODO
