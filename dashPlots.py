@@ -192,7 +192,6 @@ def bodycomp_plots(df):
 
     #return plt
 
-"""
 class SmartMirror(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -309,7 +308,7 @@ sleep.plot_polar_hypnograms(grid_shape)
 
 plt.tight_layout()
 plt.show()
-
+"""
 
 # TODO Dev
 """
