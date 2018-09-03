@@ -389,9 +389,8 @@ class Sleep(object):
 
         ax.bar(x, y, edgecolor='k', width=0.2, linewidth=1.5)
 
-        plt.tight_layout()
-
-        return plt
+        #plt.tight_layout()
+        #return plt
 
     def plot_stages_percent(self, grid_shape, position, rowspan, colspan):
 
@@ -506,7 +505,7 @@ class Sleep(object):
 
         plt.legend(prop={'size': 15}, loc='upper right')
 
-        return plt
+        #return plt
 
     def plot_polar_hypnograms(self, shape):
         """
@@ -528,20 +527,20 @@ class Sleep(object):
             blank_plots = plot_blank_hypnogram(num_blank_plots)
         """
 
-        plt0 = self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (3,0))
-        plt1 = self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3,1))
-        plt2 = self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3,2))
-        plt3 = self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (3,3))
-        plt4 = self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (3,4))
-        plt5 = self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (3,5))
-        plt6 = self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (3,6))
-        plt7 = self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (3,7))
+        self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (6, 8))
+        self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (6, 9))
+        self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (6, 10))
+        self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (6, 11))
+        self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (6, 12))
+        self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (6, 13))
+        self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (6, 14))
+        self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (6, 15))
 
-        plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
+        #plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
 
         plt.figtext(0.49, 0.225, "Polar Hypnograms", fontsize=30, horizontalalignment='center')
 
-        return plots
+        #return plots
 
     def polar_hypnogram(self, sleep_series, shape, position):
         """
@@ -609,15 +608,15 @@ class Sleep(object):
                       fontsize=12, fontweight='bold', verticalalignment='center')
         ax.set_title(label=title, pad=-265, fontsize=18)
         ax.set_xlabel(xlabel=duration, labelpad=-138.5, fontsize=18)
-        plt.tight_layout()
+        #plt.tight_layout()
 
         # plt.legend(loc='upper right')
 
         ax.grid(False)
 
-        return plt
+        #return plt
 
-
+"""
 # assignments
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
@@ -633,8 +632,10 @@ sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
 #print(sleep.sleep_series["sleep"][0])
 
 """
-with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
-    print(sleep.sleep_logs)
+"""
+    with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
+        print(sleep.sleep_logs)
+"""
 """
 
 # set fig shape and show
@@ -648,6 +649,8 @@ print('end of error')
 efficiency_plot.show()
 for plt in polar_hypnograms:
     plt.show()
+"""
+
 
 
 # TODO Dev
