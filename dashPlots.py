@@ -192,7 +192,7 @@ def bodycomp_plots(df):
 
     #return plt
 
-
+"""
 class SmartMirror(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -279,6 +279,33 @@ class HealthDashboard(tk.Frame):
 #draw gui
 app = SmartMirror()
 app.mainloop()
+
+"""
+spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
+range_ = 'Sheet1'
+sheet_obj = access_sheet(spreadsheet_id, range_)
+df = sheet_to_df(sheet_obj)
+bodycomp_plots(df)
+
+# sleep plots
+
+tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
+sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
+sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
+
+# fig parameters
+grid_shape = (8, 16)
+eff_plt_pos = (4, 8)
+stages_plt_pos = (0, 8)
+
+# capture sleep data
+sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
+
+# set fig shape and show
+#plt.figure(figsize=(30, 20))
+sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
+sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
+sleep.plot_polar_hypnograms(grid_shape)
 
 
 # TODO Dev
