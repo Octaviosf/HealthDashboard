@@ -256,10 +256,10 @@ class BodyComposition(tk.Frame):
         range_ = 'Sheet1'
         sheet_obj = access_sheet(spreadsheet_id, range_)
         df = sheet_to_df(sheet_obj)
-        fig = bodycomp_plots(df)
+        body_fig = bodycomp_plots(df)
 
         # embed plot into frame
-        canvas = FigureCanvasTkAgg(fig, self)
+        canvas = FigureCanvasTkAgg(body_fig, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
@@ -299,7 +299,7 @@ class SleepMetrics(tk.Frame):
         sleep.plot_polar_hypnograms(grid_shape)
 
         # embed plot into SmartMirror gui
-        canvas = FigureCanvasTkAgg(plt, self)
+        canvas = FigureCanvasTkAgg(sleep_fig, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
