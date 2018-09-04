@@ -374,7 +374,7 @@ class Sleep(object):
         dateformat = "%a-%b-%d"
 
         # set parameters
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
+        sleep_fig, ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
         ax.grid()
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
@@ -391,7 +391,7 @@ class Sleep(object):
         ax.bar(x, y, edgecolor='k', width=0.2, linewidth=1.5)
 
         #plt.tight_layout()
-        #return plt
+        return sleep_fig
 
     def plot_stages_percent(self, grid_shape, position, rowspan, colspan):
 
@@ -458,7 +458,7 @@ class Sleep(object):
         mask_deep_median = ma.where(deep_median_array>=deep_perc)
 
         # set graph params
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
+        sleep_fig, ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
         ax.grid()
         ax.set_title('Sleep Stage Percentage', fontsize=30, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
@@ -506,7 +506,7 @@ class Sleep(object):
 
         plt.legend(prop={'size': 15}, loc='upper right')
 
-        #return plt
+        return sleep_fig
 
     def plot_polar_hypnograms(self, shape):
         """
@@ -528,21 +528,23 @@ class Sleep(object):
             blank_plots = plot_blank_hypnogram(num_blank_plots)
         """
 
-        self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (6, 8))
-        self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (6, 9))
-        self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (6, 10))
-        self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (6, 11))
-        self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (6, 12))
-        self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (6, 13))
-        self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (6, 14))
-        self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (6, 15))
+        sleep_fig0 = self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (6, 8))
+        sleep_fig1 = self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (6, 9))
+        sleep_fig2 = self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (6, 10))
+        sleep_fig3 = self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (6, 11))
+        sleep_fig4 = self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (6, 12))
+        sleep_fig5 = self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (6, 13))
+        sleep_fig6 = self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (6, 14))
+        sleep_fig7 = self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (6, 15))
 
         #plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
-        plt.tight_layout()
+        sleep_figs = [sleep_fig0, sleep_fig1, sleep_fig2, sleep_fig3, sleep_fig4, sleep_fig5,
+                      sleep_fig6, sleep_fig7]
+        #plt.tight_layout()
 
         plt.figtext(0.49, 0.225, "Polar Hypnograms", fontsize=30, horizontalalignment='center')
 
-        #return plots
+        return sleep_figs
 
     def polar_hypnogram(self, sleep_series, shape, position):
         """
@@ -589,8 +591,7 @@ class Sleep(object):
         epoch_durations["wake"] = epoch_durations["wake"] + \
                                   time2radian(sleep_series["shortData"]["wake"]["epoch_durations"])
 
-
-        ax = plt.subplot2grid(shape, position, polar=True)
+        sleep_fig, ax = plt.subplot2grid(shape, position, polar=True)
         ax.barh(0, width=0)
         ax.barh(1, width=0)
         #ax.barh(2, width=0)
@@ -616,7 +617,7 @@ class Sleep(object):
 
         ax.grid(False)
 
-        #return plt
+        return sleep_fig
 
 """
 # assignments
