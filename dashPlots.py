@@ -190,7 +190,8 @@ def bodycomp_plots(df):
 
     plt.tight_layout()
 
-    return plt
+    return fig
+
 
 class SmartMirror(tk.Tk):
 
@@ -303,7 +304,7 @@ class SleepMetrics(tk.Frame):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
-#draw gui
+# draw gui
 app = SmartMirror()
 app.mainloop()
 
