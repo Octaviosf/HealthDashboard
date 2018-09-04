@@ -458,7 +458,8 @@ class Sleep(object):
         mask_deep_median = ma.where(deep_median_array>=deep_perc)
 
         # set graph params
-        sleep_fig, ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
+        fig = plt.figure(figsize=(17, 12), dpi=100)
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
         ax.grid()
         ax.set_title('Sleep Stage Percentage', fontsize=30, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
@@ -506,7 +507,7 @@ class Sleep(object):
 
         plt.legend(prop={'size': 15}, loc='upper right')
 
-        return sleep_fig
+        return fig
 
     def plot_polar_hypnograms(self, shape):
         """
