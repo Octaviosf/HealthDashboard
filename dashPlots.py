@@ -99,10 +99,19 @@ def bodycomp_plots(df):
     linewidth = 2
     rotation = 0
     dateformat = '%a-%b-%d'
-    colspan=8
+    colspan=2
+
+    # Muscle Mass plot
+    ax1 = plt.subplot2grid((1, 2), (0, 0), colspan=colspan)
+    ax1.grid()
+    ax1.set_title('Body Composition', fontsize=30, pad=30)
+    ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
+    ax1.set_ylim(y_m_min, y_m_max)
+    ax1.tick_params(axis='x', rotation=rotation)
+    lin0 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Muscle Mass', linewidth=linewidth)
 
     # Total Mass plot
-    ax0 = plt.subplot2grid((8, 16), (4, 0), rowspan=2, colspan=colspan)
+    ax0 = plt.subplot2grid((1, 2), (1, 0), colspan=colspan)
     ax0.grid()
     ax0.set_ylabel('Total Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
@@ -110,15 +119,6 @@ def bodycomp_plots(df):
     ax0.tick_params(axis='x', rotation=rotation)
     ax0.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax0.plot(x, df[['weight_lb']], '--ko', label='Total Mass', linewidth=linewidth)
-
-    # Muscle Mass plot
-    ax1 = plt.subplot2grid((8, 16), (0, 0), rowspan=2, colspan=colspan)
-    ax1.grid()
-    ax1.set_title('Body Composition', fontsize=30, pad=30)
-    ax1.set_ylabel('Muscle Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
-    ax1.set_ylim(y_m_min, y_m_max)
-    ax1.tick_params(axis='x', rotation=rotation)
-    lin0 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Muscle Mass', linewidth=linewidth)
 
     # Muscle % plot
     ax2 = ax1.twinx()
@@ -133,7 +133,7 @@ def bodycomp_plots(df):
     ax2.legend(lns0, labels0, prop={'size': 20})
 
     # Fat Mass plot
-    ax3 = plt.subplot2grid((8, 16), (2, 0), rowspan=2, colspan=colspan)
+    ax3 = plt.subplot2grid((1, 2), (2, 0), colspan=colspan)
     ax3.grid()
     ax3.set_ylabel('Fat Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_ylim(y_f_min, y_f_max)
@@ -153,7 +153,7 @@ def bodycomp_plots(df):
     ax4.legend(lns1, labels1, prop={'size': 20})
 
     # Bone Mass plot
-    ax5 = plt.subplot2grid((8, 16), (6, 0), rowspan=1, colspan=colspan)
+    ax5 = plt.subplot2grid((1, 2), (3, 0), colspan=colspan)
     ax5.grid()
     ax5.set_ylabel('Bone Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax5.set_ylim(y_b_min, y_b_max)
@@ -171,7 +171,7 @@ def bodycomp_plots(df):
     ax6.legend(lns2, labels2, prop={'size': 20})
 
     # Water % plot
-    ax7 = plt.subplot2grid((8, 16), (7, 0), rowspan=1, colspan=4)
+    ax7 = plt.subplot2grid((1, 2), (4, 0), colspan=1)
     ax7.grid()
     ax7.set_ylabel('Water %', fontsize=labelfontsize, labelpad=labelpad)
     ax7.set_xlim(xmin, xmax)
@@ -180,7 +180,7 @@ def bodycomp_plots(df):
     ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
 
     # BMI plot
-    ax8 = plt.subplot2grid((8, 16), (7, 4), rowspan=1, colspan=4)
+    ax8 = plt.subplot2grid((1, 2), (4, 1), colspan=1)
     ax8.grid()
     ax8.set_ylabel('BMI', fontsize=labelfontsize, labelpad=labelpad)
     ax8.set_xlim(xmin, xmax)
