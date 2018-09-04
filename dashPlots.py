@@ -345,8 +345,11 @@ plt.show()
 
 # TODO Dev
 """
-    1. Create buttons for body comp and sleep data
-    2. Display all available data in plots
+    DONE 1. Create buttons for body comp and sleep data
+         2. Use self.sleep_fig.axes.append(ax) or self.sleep_fig.add_axes(ax) to
+            add axes and their subplot2grid positions to global sleep_fig variable, then
+            pass sleep_fig to tk canvas
+         3. Display all available data in plots
     --
     
     Future TODO
