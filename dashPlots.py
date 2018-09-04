@@ -294,9 +294,13 @@ class SleepMetrics(tk.Frame):
 
         # set fig shape and show
         #plt.figure(figsize=(30, 20))
-        sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
-        sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
-        sleep.plot_polar_hypnograms(grid_shape)
+        sleep_fig = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
+        """
+        sleep_fig = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
+        sleep_figs = sleep.plot_polar_hypnograms(grid_shape)
+        for fig in sleep_figs:
+            sleep_fig = fig
+        """
 
         # embed plot into SmartMirror gui
         canvas = FigureCanvasTkAgg(sleep_fig, self)
