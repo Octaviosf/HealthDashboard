@@ -390,7 +390,7 @@ class Sleep(object):
 
         ax.bar(x, y, edgecolor='k', width=0.2, linewidth=1.5)
 
-        self.sleep_fig.add_axes(ax)
+        #self.sleep_fig.add_axes(ax)
 
         #plt.tight_layout()
         #return sleep_fig
@@ -508,7 +508,7 @@ class Sleep(object):
 
         plt.legend(prop={'size': 15}, loc='upper right')
 
-        self.sleep_fig.add_axes(ax)
+        #self.sleep_fig.add_axes(ax)
 
         #return fig
 
@@ -632,7 +632,7 @@ class Sleep(object):
 
         ax.grid(False)
 
-        self.sleep_fig.add_axes(ax)
+        #self.sleep_fig.add_axes(ax)
 
         #return sleep_fig
 
