@@ -400,9 +400,9 @@ class Sleep(object):
         # initialize graph params
         plt.rc('xtick', labelsize=18)
         plt.rc('ytick', labelsize=18)
-        x = self.sleep_logs.index.tolist()[-8:]
+        x = self.sleep_logs.index.tolist()[-15:]
         x = date2num(x)
-        xmin = self.sleep_logs.index.tolist()[-8]
+        xmin = self.sleep_logs.index.tolist()[-15]
         xmax = self.sleep_logs.index.tolist()[-1]
         numdays = xmax-xmin
         median_array_shape = (1, len(x))
