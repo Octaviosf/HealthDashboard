@@ -389,7 +389,7 @@ class Sleep(object):
             ax.text(date, height+0.02, height, fontsize=18,
                     fontweight='bold', horizontalalignment='center')
 
-        ax.bar(x, y, edgecolor='k', width=0.2, linewidth=1.5)
+        ax.bar(x, y, edgecolor='k', width=0.3, linewidth=1.5)
 
         #self.sleep_fig.add_axes(ax)
 
