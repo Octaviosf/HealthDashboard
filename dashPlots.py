@@ -285,17 +285,17 @@ class SleepMetrics(tk.Frame):
         sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
 
         # fig parameters
-        grid_shape = (8, 16)
-        eff_plt_pos = (4, 8)
-        stages_plt_pos = (0, 8)
+        grid_shape = (4, 8)
+        eff_plt_pos = (2, 0)
+        stages_plt_pos = (0, 0)
 
         # capture sleep data
         sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
 
         # set fig shape and show
         #plt.figure(figsize=(30, 20))
-        sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
-        sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
+        sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=8)
+        sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=8)
         sleep.plot_polar_hypnograms(grid_shape)
 
         #sleep.sleep_fig().show()

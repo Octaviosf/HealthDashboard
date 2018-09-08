@@ -543,14 +543,14 @@ class Sleep(object):
         sleep_fig7 = self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (6, 15))
         """
 
-        self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (6, 8))
-        self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (6, 9))
-        self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (6, 10))
-        self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (6, 11))
-        self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (6, 12))
-        self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (6, 13))
-        self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (6, 14))
-        self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (6, 15))
+        self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (3, 0))
+        self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3, 1))
+        self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3, 2))
+        self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (3, 3))
+        self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (3, 4))
+        self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (3, 5))
+        self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (3, 6))
+        self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (3, 7))
 
         #plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
         #sleep_figs = [sleep_fig0, sleep_fig1, sleep_fig2, sleep_fig3, sleep_fig4, sleep_fig5,
