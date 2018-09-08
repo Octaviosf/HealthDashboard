@@ -365,10 +365,10 @@ class Sleep(object):
         plt.rc("ytick", labelsize=18)
 
         # initialize parameter values
-        x = self.sleep_logs.index.tolist()[-8:]
-        y = np.nan_to_num(self.sleep_logs['efficiency'].values[-8:])
-        xmin = self.sleep_logs.index.tolist()[0] - timedelta(days=1)
-        xmax = self.sleep_logs.index.tolist()[-1] + timedelta(days=1)
+        x = self.sleep_logs.index.tolist()[-15:]
+        y = np.nan_to_num(self.sleep_logs['efficiency'].values[-15:])
+        xmin = self.sleep_logs.index.tolist()[-14] - timedelta(days=1)
+        xmax = self.sleep_logs.index.tolist()[-2] + timedelta(days=1)
         labelpad = 25
         labelfontsize = 20
         dateformat = "%a-%b-%d"
@@ -378,6 +378,7 @@ class Sleep(object):
         ax.grid()
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
+        ax.set_xticks(x)
         #ax.set_xlim(xmin, xmax)
         ax.set_ylim(np.nanmin(np.asarray(y)), 1.0)
         #ax.set_yticks(np.arange(0, 1.1, 0.1))
