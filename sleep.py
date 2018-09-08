@@ -219,7 +219,6 @@ class Sleep(object):
             for label in dict_labels:
                 sleep_log[label] = [raw_log[label]]
             for label in stages_labels:
-                print('raw_log["dateOfSleep"]:', raw_log["dateOfSleep"])
                 sleep_log[label] = [raw_log["levels"]["summary"][label]["minutes"]]
                 duration_total += sleep_log[label][0]
             for label in stages_labels[:-1]:
@@ -274,7 +273,6 @@ class Sleep(object):
         index = 0
 
         dates = [(end_date - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
-        print('dates:', dates)
 
         sleep_series = {"sleep": []}
         series_template = {"dateOfSleep": None,
