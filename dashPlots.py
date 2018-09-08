@@ -298,10 +298,10 @@ class SleepMetrics(tk.Frame):
         sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
         sleep.plot_polar_hypnograms(grid_shape)
 
-        sleep.sleep_fig().show()
+        #sleep.sleep_fig().show()
 
         # embed plot into SmartMirror gui
-        canvas = FigureCanvasTkAgg(sleep.sleep_fig(), self)
+        canvas = FigureCanvasTkAgg(sleep.sleep_fig, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
