@@ -219,6 +219,7 @@ class Sleep(object):
             for label in dict_labels:
                 sleep_log[label] = [raw_log[label]]
             for label in stages_labels:
+                print('raw_log["dateOfSleep"]:', raw_log["dateOfSleep"])
                 sleep_log[label] = [raw_log["levels"]["summary"][label]["minutes"]]
                 duration_total += sleep_log[label][0]
             for label in stages_labels[:-1]:
@@ -242,7 +243,7 @@ class Sleep(object):
                 sleep_log["duration"] = [float('nan')]
                 sleep_logs.insert(index, sleep_log)
                 dates.remove(date)
-                index += 1
+                index += 2
 
         sleep_logs.reverse()
 
