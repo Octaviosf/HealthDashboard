@@ -374,7 +374,7 @@ class Sleep(object):
         dateformat = "%a-%b-%d"
 
         # set parameters
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
         ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
@@ -460,7 +460,7 @@ class Sleep(object):
         mask_deep_median = ma.where(deep_median_array>=deep_perc)
 
         # set graph params
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan)
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
         ax.set_title('Sleep Stage Percentage', fontsize=30, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
@@ -606,7 +606,7 @@ class Sleep(object):
         epoch_durations["wake"] = epoch_durations["wake"] + \
                                   time2radian(sleep_series["shortData"]["wake"]["epoch_durations"])
 
-        ax = plt.subplot2grid(shape, position, polar=True)
+        ax = plt.subplot2grid(shape, position, polar=True, fig=self.sleep_fig)
         ax.barh(0, width=0)
         ax.barh(1, width=0)
         #ax.barh(2, width=0)
