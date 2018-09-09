@@ -1,13 +1,13 @@
 import tkinter as tk
 from tkinter import ttk
-import matplotlib
-matplotlib.use("TkAgg")
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
-import datetime as dt
-from IoTHealth.sleep import Sleep
-import matplotlib.pyplot as plt
-plt.rcParams.update({'figure.autolayout': True})
 import pandas as pd
+import datetime as dt
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
+import matplotlib.pyplot as plt
+from IoTHealth.sleep import Sleep
+plt.rcParams.update({'figure.autolayout': True})
+matplotlib.use("TkAgg")
 
 def access_sheet(spreadsheet_id, range_):
     """
@@ -255,13 +255,10 @@ class SleepMetrics(tk.Frame):
         sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
 
         # set fig shape and show
-        #plt.figure(figsize=(30, 20))
         sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=15)
         sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=15)
         plt.tight_layout()
         sleep.plot_polar_hypnograms(grid_shape)
-
-        #sleep.sleep_fig().show()
 
         # embed plot into SmartMirror gui
         canvas = FigureCanvasTkAgg(sleep.sleep_fig, self)
