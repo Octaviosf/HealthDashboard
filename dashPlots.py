@@ -121,19 +121,19 @@ def bodycomp_plots(df):
     ax1.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_ylim(y_m_min, y_m_max)
     ax1.tick_params(axis='x', rotation=rotation)
-    lin1 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Muscle Mass', linewidth=linewidth)
+    lin1 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Mass', linewidth=linewidth)
 
     # Muscle % plot
     ax2 = ax1.twinx()
-    ax2.set_ylabel('Muscle %', fontsize=labelfontsize, labelpad=labelpad)
+    ax2.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin2 = ax2.plot(x, df[['muscle_%']], '--mo', label='Muscle %', linewidth=linewidth)
+    lin2 = ax2.plot(x, df[['muscle_%']], '--mo', label='Percentage', linewidth=linewidth)
 
     # Muscle Mass / Percentage legend
     lns1 = lin1+lin2
     labels1 = [l.get_label() for l in lns1]
-    ax2.legend(lns1, labels1, prop={'size': 20})
+    ax2.legend(lns1, labels1, prop={'size': 20}, loc='upper right')
 
     # Fat Mass plot
     ax3 = plt.subplot2grid((5, 2), (2, 0), colspan=colspan)
@@ -142,19 +142,19 @@ def bodycomp_plots(df):
     ax3.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_ylim(y_f_min, y_f_max)
     ax3.tick_params(axis='x', rotation=rotation)
-    lin3 = ax3.plot(x, df[['fat_lb']], '--ko', alpha=1.0, label='Fat Mass', linewidth=linewidth)
+    lin3 = ax3.plot(x, df[['fat_lb']], '--ko', alpha=1.0, label='Mass', linewidth=linewidth)
 
     # Fat % plot
     ax4 = ax3.twinx()
-    ax4.set_ylabel('Fat %', fontsize=labelfontsize, labelpad=labelpad)
+    ax4.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
     ax4.set_xlim(xmin, xmax)
     ax4.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin4 = ax4.plot(x, df[['fat_%']], '--co', alpha=1.0, label='Fat %', linewidth=linewidth)
+    lin4 = ax4.plot(x, df[['fat_%']], '--co', alpha=1.0, label='Percentage', linewidth=linewidth)
 
     # Fat Mass / Percentage legend
     lns3 = lin3+lin4
     labels3 = [l.get_label() for l in lns3]
-    ax4.legend(lns3, labels3, prop={'size': 20})
+    ax4.legend(lns3, labels3, prop={'size': 20}, loc='upper right')
 
     # Bone Mass plot
     ax5 = plt.subplot2grid((5, 2), (3, 0), colspan=colspan)
@@ -162,18 +162,18 @@ def bodycomp_plots(df):
     ax5.set_title('Bone Mass and Percentage', fontsize=30, pad=titlepad)
     ax5.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax5.set_ylim(y_b_min, y_b_max)
-    lin5 = ax5.plot(x, df[['bone_lb']], '-ko', label='Bone Mass', linewidth=linewidth)
+    lin5 = ax5.plot(x, df[['bone_lb']], '-ko', label='Mass', linewidth=linewidth)
 
     ax6 = ax5.twinx()
-    ax6.set_ylabel('Bone %', fontsize=labelfontsize, labelpad=labelpad)
+    ax6.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
     ax6.set_xlim(xmin, xmax)
     ax6.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin6 = ax6.plot(x, df[['bone_%']], '-co', alpha=1.0, label='Bone %', linewidth=linewidth)
+    lin6 = ax6.plot(x, df[['bone_%']], '-co', alpha=1.0, label='Percentage', linewidth=linewidth)
 
     # Bone Mass / Percentage legend
     lns5 = lin5+lin6
     labels5 = [l.get_label() for l in lns5]
-    ax6.legend(lns5, labels5, prop={'size': 20})
+    ax6.legend(lns5, labels5, prop={'size': 20}, loc='upper right')
 
     # Water % plot
     ax7 = plt.subplot2grid((5, 2), (4, 0), colspan=1)
@@ -183,7 +183,7 @@ def bodycomp_plots(df):
     ax7.set_xlim(xmin, xmax)
     ax7.set_ylim(y_w_min, y_w_max)
     ax7.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    ax7.plot(x, df[['water_%']], '-bo', label='Water %', linewidth=linewidth)
+    ax7.plot(x, df[['water_%']], '-bo', label='Percentage', linewidth=linewidth)
 
     # BMI plot
     ax8 = plt.subplot2grid((5, 2), (4, 1), colspan=1)
