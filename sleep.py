@@ -354,8 +354,11 @@ class Sleep(object):
 
         # annotate bars
         for date, height in zip(x, y):
-            ax.text(date, height+0.02, height, fontsize=18,
-                    fontweight='bold', horizontalalignment='center')
+            if height == 0.0:
+                ax.text(date, height+0.02, 'nan', fontsize=18, horizontalalignment='center')
+            else:
+                ax.text(date, height+0.02, height, fontsize=18,
+                        fontweight='bold', horizontalalignment='center')
 
         ax.bar(x, y, edgecolor='k', width=0.3, linewidth=1.5)
 
@@ -520,7 +523,7 @@ class Sleep(object):
         sleep_logs.index = sleep_logs.index.strftime("%Y-%m-%d")
         total_min = sleep_logs.loc[sleep_series["dateOfSleep"]]["duration"]
         if isnan(total_min):
-            duration = 'NaN'
+            duration = 'nan'
         else:
             hours = int(total_min/60)
             minutes = int(round((total_min/60 - hours)*60, 2))
