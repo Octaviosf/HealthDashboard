@@ -555,7 +555,8 @@ class Sleep(object):
         ax.set_theta_zero_location('N')
         ax.set_theta_direction(-1)
         ax.set_xticks(np.linspace(0, 2 * pi, 24, endpoint=False))
-        ax.set_xticklabels(range(0, 24), fontsize=13.5)
+        ax.set_xticklabels(range(0, 24), fontsize=14)
+        ax.tick_params(axis='x', which='major', pad=1)
 
         ax.set_rlabel_position(0)
         ax.set_rgrids([2, 3, 4], labels=["", "", "", ""], color='k',
@@ -627,11 +628,9 @@ for plt in polar_hypnograms:
                     "done" when I get up from bed
        DONE h. create efficiency_plot()
        DONE i. create stages_plot()
-            j. create radial (hypnogram) bar plot for each day, with clock y-axis, and plotting bedtime, stages, out-of-bedtime
-                -- plot each stage on own bar (inner bar is deep and outer is awake)
-            k. plot efficiency using line graph 
-            h. create fig, capturing plots, using sleep_logs_dataframe
-            etc ...
+       DONE j. create radial (hypnogram) bar plot for each day, with clock y-axis, and plotting bedtime, stages, out-of-bedtime
+       DONE k. create fig, capturing plots, using sleep_logs_dataframe
+            l. create masks to display lifetime medians of sleep efficiency
 """
 
 # TODO Dev Future
