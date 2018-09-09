@@ -318,55 +318,6 @@ class Sleep(object):
         sleep_series["sleep"].reverse()
         return sleep_series
 
-    def plot_efficiency(self, grid_shape, position, rowspan, colspan):
-        """
-        plot sleep efficiency
-
-        :param grid_shape: grid shape
-        :param position: position within grid
-        :param rowspan: grid rows spanned by plot
-        :return:
-        """
-
-        # global plot format
-        plt.rc("xtick", labelsize=18)
-        plt.rc("ytick", labelsize=18)
-
-        # initialize parameter values
-        x = self.sleep_logs.index.tolist()[-15:]
-        y = np.nan_to_num(self.sleep_logs['efficiency'].values[-15:])
-        xmin = self.sleep_logs.index.tolist()[-14] - timedelta(days=1)
-        xmax = self.sleep_logs.index.tolist()[-2] + timedelta(days=1)
-        labelpad = 25
-        labelfontsize = 20
-        dateformat = "%a-%b-%d"
-
-        # set parameters
-        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
-        ax.grid()
-        ax.set_title('Sleep Efficiency', fontsize=30, pad=15)
-        ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
-        ax.set_xticks(x)
-        #ax.set_xlim(xmin, xmax)
-        ax.set_ylim(np.nanmin(np.asarray(y)), 1.0)
-        #ax.set_yticks(np.arange(0, 1.1, 0.1))
-        ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-
-        # annotate bars
-        for date, height in zip(x, y):
-            if height == 0.0:
-                ax.text(date, height+0.02, 'nan', fontsize=18, horizontalalignment='center')
-            else:
-                ax.text(date, height+0.02, height, fontsize=18,
-                        fontweight='bold', horizontalalignment='center')
-
-        ax.bar(x, y, edgecolor='k', width=0.3, linewidth=1.5)
-
-        #self.sleep_fig.add_axes(ax)
-
-        #plt.tight_layout()
-        #return sleep_fig
-
     def plot_stages_percent(self, grid_shape, position, rowspan, colspan):
 
         # initialize graph params
@@ -484,6 +435,56 @@ class Sleep(object):
         #self.sleep_fig.add_axes(ax)
 
         #return fig
+
+    def plot_efficiency(self, grid_shape, position, rowspan, colspan):
+        """
+        plot sleep efficiency
+
+        :param grid_shape: grid shape
+        :param position: position within grid
+        :param rowspan: grid rows spanned by plot
+        :return:
+        """
+
+        # global plot format
+        plt.rc("xtick", labelsize=18)
+        plt.rc("ytick", labelsize=18)
+
+        # initialize parameter values
+        x = self.sleep_logs.index.tolist()[-15:]
+        y = np.nan_to_num(self.sleep_logs['efficiency'].values[-15:])
+        xmin = self.sleep_logs.index.tolist()[-14] - timedelta(days=1)
+        xmax = self.sleep_logs.index.tolist()[-2] + timedelta(days=1)
+        labelpad = 15
+        labelfontsize = 20
+        dateformat = "%a-%b-%d"
+
+        # set parameters
+        ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
+        #plt.subplots_adjust(top=0.7, bottom=0, left=0)
+        ax.grid()
+        ax.set_title('Sleep Efficiency', fontsize=30, pad=15)
+        ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
+        ax.set_xticks(x)
+        #ax.set_xlim(xmin, xmax)
+        ax.set_ylim(np.nanmin(np.asarray(y)), 1.0)
+        #ax.set_yticks(np.arange(0, 1.1, 0.1))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
+
+        # annotate bars
+        for date, height in zip(x, y):
+            if height == 0.0:
+                ax.text(date, height+0.02, 'nan', fontsize=18, horizontalalignment='center')
+            else:
+                ax.text(date, height+0.02, height, fontsize=18,
+                        fontweight='bold', horizontalalignment='center')
+
+        ax.bar(x, y, edgecolor='k', width=0.3, linewidth=1.5)
+
+        #self.sleep_fig.add_axes(ax)
+
+        #plt.tight_layout()
+        #return sleep_fig
 
     def plot_polar_hypnograms(self, shape):
         """
