@@ -474,12 +474,13 @@ class Sleep(object):
         # annotate bars
         for date, height in zip(x, y):
             if height == 0.0:
-                ax.text(date, height+0.02, 'nan', fontsize=18, horizontalalignment='center')
+                ax.text(date, height+0.02, 'nan', fontsize=18, horizontalalignment='center',
+                        fontweight='bold')
             else:
                 ax.text(date, height+0.02, height, fontsize=18,
                         fontweight='bold', horizontalalignment='center')
 
-        ax.bar(x, y, width=0.3, linewidth=1.5)
+        ax.bar(x, y, width=0.3)
 
         #self.sleep_fig.add_axes(ax)
 
@@ -562,7 +563,7 @@ class Sleep(object):
         ax.set_rgrids([2, 3, 4], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
         ax.set_title(label=title, pad=-180, fontsize=18)
-        ax.set_xlabel(xlabel=duration, labelpad=-95, fontsize=16)
+        ax.set_xlabel(xlabel=duration, labelpad=-95, fontsize=16, fontweight='bold')
         #plt.tight_layout()
 
         # plt.legend(loc='upper right')
