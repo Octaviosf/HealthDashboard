@@ -209,33 +209,17 @@ class SmartMirror(tk.Tk):
 
         self.frames = {}
 
-        for F in (MainMenu, BodyComposition, SleepMetrics):
+        for F in (BodyComposition, SleepMetrics):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(MainMenu)
+        self.show_frame(SleepMetrics)
 
     def show_frame(self, cont):
 
         frame = self.frames[cont]
         frame.tkraise()
-
-
-class MainMenu(tk.Frame):
-
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Smart Mirror", font=("Verdana", 12))
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="Body Composition",
-                             command=lambda: controller.show_frame(BodyComposition))
-        button1.pack()
-
-        button2 = ttk.Button(self, text="Sleep",
-                             command=lambda: controller.show_frame(SleepMetrics))
-        button2.pack()
 
 
 class BodyComposition(tk.Frame):
@@ -245,13 +229,9 @@ class BodyComposition(tk.Frame):
         label = tk.Label(self, text="Body Composition", font=("Verdana", 12))
         label.pack(pady=10, padx=10)
 
-        button1 = ttk.Button(self, text="Main Menu",
-                             command=lambda: controller.show_frame(MainMenu))
-        button1.pack()
-
-        button2 = ttk.Button(self, text="Sleep",
+        button1 = ttk.Button(self, text="Sleep",
                              command=lambda: controller.show_frame(SleepMetrics))
-        button2.pack()
+        button1.pack()
 
         spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
         range_ = 'Sheet1'
@@ -272,13 +252,9 @@ class SleepMetrics(tk.Frame):
         label = tk.Label(self, text="Sleep", font=("verdana", 12))
         label.pack(pady=10, padx=10)
 
-        button1 = ttk.Button(self, text="Main Menu",
-                             command=lambda: controller.show_frame(MainMenu))
-        button1.pack()
-
-        button2 = ttk.Button(self, text="Body Composition",
+        button1 = ttk.Button(self, text="Body Composition",
                              command=lambda: controller.show_frame(BodyComposition))
-        button2.pack()
+        button1.pack()
 
         # sleep plots
         tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
