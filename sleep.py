@@ -563,7 +563,12 @@ class Sleep(object):
         ax.set_rgrids([2, 3, 4], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
         ax.set_title(label=title, pad=-180, fontsize=18)
-        ax.set_xlabel(xlabel=duration, labelpad=-95, fontsize=16, fontweight='heavy')
+        if duration == 'nan':
+            ax.text(0, 0, duration, fontsize=15, fontweight='normal',
+                    verticalalignment='top', horizontalalignment='center')
+        else:
+            ax.text(0, 0, duration, fontsize=15, fontweight='heavy',
+                    verticalalignment='top', horizontalalignment='center')
         #plt.tight_layout()
 
         # plt.legend(loc='upper right')
