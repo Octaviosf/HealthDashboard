@@ -338,7 +338,7 @@ class Sleep(object):
         medians_color = 'k'
         annotate_height = 0.5
         annotate_fontsize = 18
-        annotate_fontweight = 'bold'
+        annotate_fontweight = 'heavy'
         annotate_align = 'center'
         annotate_color = 'w'
 
@@ -397,7 +397,7 @@ class Sleep(object):
         for x_pos, awake_p, rem_p, light_p, deep_p in zip(x, awake_perc, rem_perc, light_perc, deep_perc):
             if awake_p == 0 and rem_p == 0 and light_p == 0 and deep_p == 0:
                 ax.text(x_pos, annotate_height, 'nan', fontsize=annotate_fontsize,
-                        fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+                        fontweight='normal', horizontalalignment=annotate_align, color=annotate_color)
             else:
                 ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
                         fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
@@ -475,10 +475,10 @@ class Sleep(object):
         for date, height in zip(x, y):
             if height == 0.0:
                 ax.text(date, height+0.02, 'nan', fontsize=18, horizontalalignment='center',
-                        fontweight='bold')
+                        fontweight='normal')
             else:
                 ax.text(date, height+0.02, height, fontsize=18,
-                        fontweight='bold', horizontalalignment='center')
+                        fontweight='heavy', horizontalalignment='center')
 
         ax.bar(x, y, width=0.3)
 
@@ -563,7 +563,7 @@ class Sleep(object):
         ax.set_rgrids([2, 3, 4], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
         ax.set_title(label=title, pad=-180, fontsize=18)
-        ax.set_xlabel(xlabel=duration, labelpad=-95, fontsize=16, fontweight='bold')
+        ax.set_xlabel(xlabel=duration, labelpad=-95, fontsize=16, fontweight='heavy')
         #plt.tight_layout()
 
         # plt.legend(loc='upper right')
