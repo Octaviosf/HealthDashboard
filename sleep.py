@@ -385,7 +385,7 @@ class Sleep(object):
         dateformat = '%a-%b-%d'
         alpha = 0.3
         medians_color = 'k'
-        annotate_height = 1
+        annotate_height = 0.5
         annotate_fontsize = 18
         annotate_fontweight = 'bold'
         annotate_align = 'center'
@@ -444,14 +444,18 @@ class Sleep(object):
 
         # annotate each stage with percentage
         for x_pos, awake_p, rem_p, light_p, deep_p in zip(x, awake_perc, rem_perc, light_perc, deep_perc):
-            ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
-                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-            ax.text(x_pos-0.1, annotate_height, int(round(rem_p, 0)), fontsize=annotate_fontsize,
-                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-            ax.text(x_pos+0.1, annotate_height, int(round(light_p, 0)), fontsize=annotate_fontsize,
-                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-            ax.text(x_pos+0.3, annotate_height, int(round(deep_p, 0)), fontsize=annotate_fontsize,
-                    fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+            if awake_p == 0 and rem_p == 0 and light_p == 0 and deep_p == 0:
+                ax.text(x_pos, annotate_height, 'nan', fontsize=annotate_fontsize,
+                        fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+            else:
+                ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
+                        fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+                ax.text(x_pos-0.1, annotate_height, int(round(rem_p, 0)), fontsize=annotate_fontsize,
+                        fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+                ax.text(x_pos+0.1, annotate_height, int(round(light_p, 0)), fontsize=annotate_fontsize,
+                        fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
+                ax.text(x_pos+0.3, annotate_height, int(round(deep_p, 0)), fontsize=annotate_fontsize,
+                        fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
 
         # plot stages with masks
         ax.bar((x-0.3)[mask_awake_median], awake_median_array[mask_awake_median], alpha=alpha,
