@@ -209,7 +209,7 @@ class SmartMirror(tk.Tk):
 
         self.frames = {}
 
-        for F in (BodyComposition, SleepMetrics):
+        for F in (SleepMetrics, BodyComposition):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -220,29 +220,6 @@ class SmartMirror(tk.Tk):
 
         frame = self.frames[cont]
         frame.tkraise()
-
-
-class BodyComposition(tk.Frame):
-
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = tk.Label(self, text="Body Composition", font=("Verdana", 12))
-        label.pack(pady=10, padx=10)
-
-        button1 = ttk.Button(self, text="Sleep",
-                             command=lambda: controller.show_frame(SleepMetrics))
-        button1.pack()
-
-        spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
-        range_ = 'Sheet1'
-        sheet_obj = access_sheet(spreadsheet_id, range_)
-        df = sheet_to_df(sheet_obj)
-        body_fig = bodycomp_plots(df)
-
-        # embed plot into frame
-        canvas = FigureCanvasTkAgg(body_fig, self)
-        canvas.draw()
-        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
 class SleepMetrics(tk.Frame):
@@ -280,6 +257,29 @@ class SleepMetrics(tk.Frame):
 
         # embed plot into SmartMirror gui
         canvas = FigureCanvasTkAgg(sleep.sleep_fig, self)
+        canvas.draw()
+        canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+
+class BodyComposition(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        label = tk.Label(self, text="Body Composition", font=("Verdana", 12))
+        label.pack(pady=10, padx=10)
+
+        button1 = ttk.Button(self, text="Sleep",
+                             command=lambda: controller.show_frame(SleepMetrics))
+        button1.pack()
+
+        spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
+        range_ = 'Sheet1'
+        sheet_obj = access_sheet(spreadsheet_id, range_)
+        df = sheet_to_df(sheet_obj)
+        body_fig = bodycomp_plots(df)
+
+        # embed plot into frame
+        canvas = FigureCanvasTkAgg(body_fig, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
