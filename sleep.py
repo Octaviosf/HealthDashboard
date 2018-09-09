@@ -7,7 +7,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.dates import date2num
-#plt.rcParams.update({'figure.autolayout': True})
 import numpy as np
 import numpy.ma as ma
 from numpy import pi
@@ -391,7 +390,6 @@ class Sleep(object):
         ax.set_xticks(xticks)
         ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-        #plt.tight_layout()
 
         # annotate each stage with percentage
         for x_pos, awake_p, rem_p, light_p, deep_p in zip(x, awake_perc, rem_perc, light_perc, deep_perc):
@@ -432,10 +430,6 @@ class Sleep(object):
 
         plt.legend(prop={'size': 15}, loc='upper right')
 
-        #self.sleep_fig.add_axes(ax)
-
-        #return fig
-
     def plot_efficiency(self, grid_shape, position, rowspan, colspan):
         """
         plot sleep efficiency
@@ -453,22 +447,17 @@ class Sleep(object):
         # initialize parameter values
         x = self.sleep_logs.index.tolist()[-15:]
         y = np.nan_to_num(self.sleep_logs['efficiency'].values[-15:])
-        xmin = self.sleep_logs.index.tolist()[-14] - timedelta(days=1)
-        xmax = self.sleep_logs.index.tolist()[-2] + timedelta(days=1)
         labelpad = 10
         labelfontsize = 20
         dateformat = "%a-%b-%d"
 
         # set parameters
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
-        #plt.subplots_adjust(top=0.7, bottom=0, left=0)
         ax.grid(axis='y')
         ax.set_title('Sleep Efficiency', fontsize=30, pad=15)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         ax.set_xticks(x)
-        #ax.set_xlim(xmin, xmax)
         ax.set_ylim(np.nanmin(np.asarray(y)), 1.0)
-        #ax.set_yticks(np.arange(0, 1.1, 0.1))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
         # annotate bars
@@ -481,11 +470,6 @@ class Sleep(object):
                         fontweight='heavy', horizontalalignment='center')
 
         ax.bar(x, y, width=0.3)
-
-        #self.sleep_fig.add_axes(ax)
-
-        #plt.tight_layout()
-        #return sleep_fig
 
     def plot_polar_hypnograms(self, shape):
         """
@@ -546,12 +530,10 @@ class Sleep(object):
         ax = plt.subplot2grid(shape, position, polar=True, fig=self.sleep_fig)
         ax.barh(0, width=0)
         ax.barh(1, width=0)
-        #ax.barh(2, width=0)
         ax.barh(2, left=start_times['wake'], width=epoch_durations['wake'], color='m', label='Awake', height=bar_height)
         ax.barh(4, left=start_times['rem'], width=epoch_durations['rem'], color='c', label='REM', height=bar_height)
         ax.barh(3, left=start_times['light'], width=epoch_durations['light'], color='C0', label='Light', height=bar_height)
         ax.barh(4, left=start_times['deep'], width=epoch_durations['deep'], color='b', label='Deep', height=bar_height)
-        # ax.barh(2, left=median_start, width=median_duration, color='k', alpha=0.3, label='Median', height=bar_height)
 
         ax.set_theta_zero_location('N')
         ax.set_theta_direction(-1)
@@ -569,51 +551,8 @@ class Sleep(object):
         else:
             ax.text(0, 0, duration, fontsize=15, fontweight='heavy',
                     verticalalignment='top', horizontalalignment='center')
-        #plt.tight_layout()
-
-        # plt.legend(loc='upper right')
 
         ax.grid(False)
-
-        #self.sleep_fig.add_axes(ax)
-
-        #return sleep_fig
-
-"""
-# assignments
-tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
-sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
-sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
-
-# fig parameters
-grid_shape = (4, 8)
-eff_plt_pos = (2, 0)
-stages_plt_pos = (0, 0)
-
-# capture sleep data
-sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
-#print(sleep.sleep_series["sleep"][0])
-
-"""
-"""
-    with pd.option_context("display.max_rows", 11, "display.max_columns", 10):
-        print(sleep.sleep_logs)
-"""
-"""
-
-# set fig shape and show
-plt.figure(figsize=(30,20))
-stages_plot = sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=8)
-efficiency_plot = sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=8)
-polar_hypnograms = sleep.plot_polar_hypnograms(grid_shape)
-print('posx and posy error:')
-stages_plot.show()
-print('end of error')
-efficiency_plot.show()
-for plt in polar_hypnograms:
-    plt.show()
-"""
-
 
 
 # TODO Dev
