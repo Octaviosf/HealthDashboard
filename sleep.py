@@ -637,6 +637,7 @@ for plt in polar_hypnograms:
        DONE j. create radial (hypnogram) bar plot for each day, with clock y-axis, and plotting bedtime, stages, out-of-bedtime
        DONE k. create fig, capturing plots, using sleep_logs_dataframe
             l. create masks to display lifetime medians of sleep efficiency
+            m. center hypnograms by adjusting ax.set_title(label='') and instead using ax.text()
 """
 
 # TODO Dev Future
