@@ -479,7 +479,7 @@ class Sleep(object):
                 ax.text(date, height+0.02, height, fontsize=18,
                         fontweight='bold', horizontalalignment='center')
 
-        ax.bar(x, y, edgecolor='k', width=0.3, linewidth=1.5)
+        ax.bar(x, y, width=0.3, linewidth=1.5)
 
         #self.sleep_fig.add_axes(ax)
 
@@ -496,7 +496,6 @@ class Sleep(object):
             self.polar_hypnogram(self.sleep_series["sleep"][series_index], shape, (3, col_index))
 
         plt.figtext(0.51, 0.185, "Hypnograms", fontsize=30, horizontalalignment='center')
-
 
     def polar_hypnogram(self, sleep_series, shape, position):
         """
