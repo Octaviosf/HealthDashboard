@@ -344,7 +344,7 @@ class Sleep(object):
         # set parameters
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
-        ax.set_title('Sleep Efficiency', fontsize=30, pad=25)
+        ax.set_title('Sleep Efficiency', fontsize=30, pad=15)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         ax.set_xticks(x)
         #ax.set_xlim(xmin, xmax)
@@ -431,7 +431,7 @@ class Sleep(object):
         # set graph params
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
-        ax.set_title('Sleep Stage Percentages', fontsize=31, pad=30)
+        ax.set_title('Sleep Stage Percentages', fontsize=31, pad=15)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
         plt.setp(ax.xaxis.get_majorticklabels(), rotation = 0, ha='center', rotation_mode='anchor')
         ax.set_xticks(xticks)
@@ -483,47 +483,15 @@ class Sleep(object):
 
     def plot_polar_hypnograms(self, shape):
         """
-        # TODO self.sleep_series is initialized from local sleep_series.json and/or from Fitbit response
-
         :param shape:
         :return:
         """
 
-        #today = dt.strptime(self.today, "%Y-%m-%d")
-        #days = [today - timedelta(days=d) for d in range(0, 7)].reverse()
+        for series_index, col_index in zip(range(-15, 0), range(0, 15)):
+            self.polar_hypnogram(self.sleep_series["sleep"][series_index], shape, (3, col_index))
 
-        """
-        for index in range(-8, -2):
-            initial_day = dt.strptime(self.sleep_series["sleep"][index]["dateOfSleep"], "%Y-%m-%d")
-            next_day = dt.strptime(self.sleep_series["sleep"][index+1]["dateOfSleep"], "%Y-%m-%d")
+        plt.figtext(0.51, 0.185, "Hypnograms", fontsize=30, horizontalalignment='center')
 
-            num_blank_plots = next_day - initial_day + 1
-            blank_plots = plot_blank_hypnogram(num_blank_plots)
-        """
-        self.polar_hypnogram(self.sleep_series["sleep"][-15], shape, (3, 0))
-        self.polar_hypnogram(self.sleep_series["sleep"][-14], shape, (3, 1))
-        self.polar_hypnogram(self.sleep_series["sleep"][-13], shape, (3, 2))
-        self.polar_hypnogram(self.sleep_series["sleep"][-12], shape, (3, 3))
-        self.polar_hypnogram(self.sleep_series["sleep"][-11], shape, (3, 4))
-        self.polar_hypnogram(self.sleep_series["sleep"][-10], shape, (3, 5))
-        self.polar_hypnogram(self.sleep_series["sleep"][-9], shape, (3, 6))
-        self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (3, 7))
-        self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3, 8))
-        self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3, 9))
-        self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (3, 10))
-        self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (3, 11))
-        self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (3, 12))
-        self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (3, 13))
-        self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (3, 14))
-
-        #plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
-        #sleep_figs = [sleep_fig0, sleep_fig1, sleep_fig2, sleep_fig3, sleep_fig4, sleep_fig5,
-        #              sleep_fig6, sleep_fig7]
-        #plt.tight_layout()
-
-        plt.figtext(0.51, 0.24, "Hypnograms", fontsize=30, horizontalalignment='center')
-
-        #return sleep_figs
 
     def polar_hypnogram(self, sleep_series, shape, position):
         """
@@ -583,13 +551,13 @@ class Sleep(object):
         ax.set_theta_zero_location('N')
         ax.set_theta_direction(-1)
         ax.set_xticks(np.linspace(0, 2 * pi, 24, endpoint=False))
-        ax.set_xticklabels(range(0, 24))
+        ax.set_xticklabels(range(0, 24), fontsize=13.5)
 
         ax.set_rlabel_position(0)
         ax.set_rgrids([2, 3, 4], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
-        ax.set_title(label=title, pad=-265, fontsize=18)
-        ax.set_xlabel(xlabel=duration, labelpad=-138.5, fontsize=18)
+        ax.set_title(label=title, pad=-180, fontsize=18)
+        ax.set_xlabel(xlabel=duration, labelpad=-95, fontsize=16)
         #plt.tight_layout()
 
         # plt.legend(loc='upper right')
