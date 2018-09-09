@@ -95,6 +95,8 @@ def bodycomp_plots(df):
     y_w_max = float(df[['water_%']].max()+lim_pads)
     y_B_min = float(df[['BMI']].min()-lim_pads)
     y_B_max = float(df[['BMI']].max()+lim_pads)
+    labelrotation = 270
+    twinpad = 30
     labelpad = 10
     titlepad = 20
     labelfontsize = 20
@@ -117,15 +119,15 @@ def bodycomp_plots(df):
     # Muscle Mass plot
     ax1 = plt.subplot2grid((5, 2), (1, 0), colspan=colspan)
     ax1.grid()
-    ax1.set_title('Muscle Mass and Percentage', fontsize=30, pad=titlepad)
+    ax1.set_title('Muscle Composition', fontsize=30, pad=titlepad)
     ax1.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_ylim(y_m_min, y_m_max)
     ax1.tick_params(axis='x', rotation=rotation)
-    lin1 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Mass', linewidth=linewidth)
+    lin1 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Mass (lb)', linewidth=linewidth)
 
     # Muscle % plot
     ax2 = ax1.twinx()
-    ax2.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
+    ax2.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=twinpad, rotation=labelrotation)
     ax2.set_xlim(xmin, xmax)
     ax2.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     lin2 = ax2.plot(x, df[['muscle_%']], '--mo', label='Percentage', linewidth=linewidth)
@@ -138,15 +140,15 @@ def bodycomp_plots(df):
     # Fat Mass plot
     ax3 = plt.subplot2grid((5, 2), (2, 0), colspan=colspan)
     ax3.grid()
-    ax3.set_title('Fat Mass and Percentage', fontsize=30, pad=titlepad)
+    ax3.set_title('Fat Composition', fontsize=30, pad=titlepad)
     ax3.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_ylim(y_f_min, y_f_max)
     ax3.tick_params(axis='x', rotation=rotation)
-    lin3 = ax3.plot(x, df[['fat_lb']], '--ko', alpha=1.0, label='Mass', linewidth=linewidth)
+    lin3 = ax3.plot(x, df[['fat_lb']], '--ko', alpha=1.0, label='Mass (lb)', linewidth=linewidth)
 
     # Fat % plot
     ax4 = ax3.twinx()
-    ax4.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
+    ax4.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=twinpad, rotation=labelrotation)
     ax4.set_xlim(xmin, xmax)
     ax4.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     lin4 = ax4.plot(x, df[['fat_%']], '--co', alpha=1.0, label='Percentage', linewidth=linewidth)
@@ -159,16 +161,16 @@ def bodycomp_plots(df):
     # Bone Mass plot
     ax5 = plt.subplot2grid((5, 2), (3, 0), colspan=colspan)
     ax5.grid()
-    ax5.set_title('Bone Mass and Percentage', fontsize=30, pad=titlepad)
+    ax5.set_title('Bone Composition', fontsize=30, pad=titlepad)
     ax5.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax5.set_ylim(y_b_min, y_b_max)
-    lin5 = ax5.plot(x, df[['bone_lb']], '-ko', label='Mass', linewidth=linewidth)
+    lin5 = ax5.plot(x, df[['bone_lb']], '--ko', label='Mass (lb)', linewidth=linewidth)
 
     ax6 = ax5.twinx()
-    ax6.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
+    ax6.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=twinpad, rotation=labelrotation)
     ax6.set_xlim(xmin, xmax)
     ax6.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    lin6 = ax6.plot(x, df[['bone_%']], '-co', alpha=1.0, label='Percentage', linewidth=linewidth)
+    lin6 = ax6.plot(x, df[['bone_%']], '--o', alpha=1.0, label='Percentage', linewidth=linewidth)
 
     # Bone Mass / Percentage legend
     lns5 = lin5+lin6
@@ -183,17 +185,17 @@ def bodycomp_plots(df):
     ax7.set_xlim(xmin, xmax)
     ax7.set_ylim(y_w_min, y_w_max)
     ax7.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    ax7.plot(x, df[['water_%']], '-bo', label='Percentage', linewidth=linewidth)
+    ax7.plot(x, df[['water_%']], '--bo', label='Percentage', linewidth=linewidth)
 
     # BMI plot
     ax8 = plt.subplot2grid((5, 2), (4, 1), colspan=1)
     ax8.grid()
-    ax8.set_title('BMI', fontsize=30, pad=titlepad)
+    ax8.set_title('Body Mass Index', fontsize=30, pad=titlepad)
     ax8.set_ylabel('BMI', fontsize=labelfontsize, labelpad=labelpad)
     ax8.set_xlim(xmin, xmax)
     ax8.set_ylim(y_B_min, y_B_max)
     ax8.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
-    ax8.plot(x, df[['BMI']], '-ko', label='BMI', linewidth=linewidth)
+    ax8.plot(x, df[['BMI']], '--ko', label='BMI', linewidth=linewidth)
 
     plt.tight_layout()
 
