@@ -344,7 +344,7 @@ class Sleep(object):
         # set parameters
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
-        ax.set_title('Sleep Efficiency', fontsize=30, pad=30)
+        ax.set_title('Sleep Efficiency', fontsize=30, pad=25)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         ax.set_xticks(x)
         #ax.set_xlim(xmin, xmax)
@@ -431,7 +431,7 @@ class Sleep(object):
         # set graph params
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
-        ax.set_title('Percentages of Sleep Stages', fontsize=30, pad=30)
+        ax.set_title('Sleep Stage Percentages', fontsize=31, pad=30)
         ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
         plt.setp(ax.xaxis.get_majorticklabels(), rotation = 0, ha='center', rotation_mode='anchor')
         ax.set_xticks(xticks)
@@ -521,7 +521,7 @@ class Sleep(object):
         #              sleep_fig6, sleep_fig7]
         #plt.tight_layout()
 
-        plt.figtext(0.525, 0.28, "Polar Hypnograms", fontsize=30, horizontalalignment='center')
+        plt.figtext(0.51, 0.24, "Hypnograms", fontsize=30, horizontalalignment='center')
 
         #return sleep_figs
 
