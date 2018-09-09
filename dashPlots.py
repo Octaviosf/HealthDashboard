@@ -3,11 +3,11 @@ from tkinter import ttk
 import pandas as pd
 import datetime as dt
 import matplotlib
+matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 import matplotlib.pyplot as plt
 from IoTHealth.sleep import Sleep
 plt.rcParams.update({'figure.autolayout': True})
-matplotlib.use("TkAgg")
 
 def access_sheet(spreadsheet_id, range_):
     """
