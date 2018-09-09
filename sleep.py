@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from matplotlib.dates import date2num
+#plt.rcParams.update({'figure.autolayout': True})
 import numpy as np
 import numpy.ma as ma
 from numpy import pi
@@ -532,15 +533,21 @@ class Sleep(object):
             num_blank_plots = next_day - initial_day + 1
             blank_plots = plot_blank_hypnogram(num_blank_plots)
         """
-
-        self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (3, 0))
-        self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3, 1))
-        self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3, 2))
-        self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (3, 3))
-        self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (3, 4))
-        self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (3, 5))
-        self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (3, 6))
-        self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (3, 7))
+        self.polar_hypnogram(self.sleep_series["sleep"][-15], shape, (3, 0))
+        self.polar_hypnogram(self.sleep_series["sleep"][-14], shape, (3, 1))
+        self.polar_hypnogram(self.sleep_series["sleep"][-13], shape, (3, 2))
+        self.polar_hypnogram(self.sleep_series["sleep"][-12], shape, (3, 3))
+        self.polar_hypnogram(self.sleep_series["sleep"][-11], shape, (3, 4))
+        self.polar_hypnogram(self.sleep_series["sleep"][-10], shape, (3, 5))
+        self.polar_hypnogram(self.sleep_series["sleep"][-9], shape, (3, 6))
+        self.polar_hypnogram(self.sleep_series["sleep"][-8], shape, (3, 7))
+        self.polar_hypnogram(self.sleep_series["sleep"][-7], shape, (3, 8))
+        self.polar_hypnogram(self.sleep_series["sleep"][-6], shape, (3, 9))
+        self.polar_hypnogram(self.sleep_series["sleep"][-5], shape, (3, 10))
+        self.polar_hypnogram(self.sleep_series["sleep"][-4], shape, (3, 11))
+        self.polar_hypnogram(self.sleep_series["sleep"][-3], shape, (3, 12))
+        self.polar_hypnogram(self.sleep_series["sleep"][-2], shape, (3, 13))
+        self.polar_hypnogram(self.sleep_series["sleep"][-1], shape, (3, 14))
 
         #plots = [plt0, plt1, plt2, plt3, plt4, plt5, plt6, plt7]
         #sleep_figs = [sleep_fig0, sleep_fig1, sleep_fig2, sleep_fig3, sleep_fig4, sleep_fig5,

@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 import datetime as dt
 from IoTHealth.sleep import Sleep
 import matplotlib.pyplot as plt
+plt.rcParams.update({'figure.autolayout': True})
 import pandas as pd
 
 def access_sheet(spreadsheet_id, range_):
@@ -285,7 +286,7 @@ class SleepMetrics(tk.Frame):
         sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
 
         # fig parameters
-        grid_shape = (4, 8)
+        grid_shape = (4, 15)
         eff_plt_pos = (2, 0)
         stages_plt_pos = (0, 0)
 
@@ -294,10 +295,10 @@ class SleepMetrics(tk.Frame):
 
         # set fig shape and show
         #plt.figure(figsize=(30, 20))
-        sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=8)
-        sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=8)
-        sleep.plot_polar_hypnograms(grid_shape)
+        sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=15)
+        sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=15)
         plt.tight_layout()
+        sleep.plot_polar_hypnograms(grid_shape)
 
         #sleep.sleep_fig().show()
 
