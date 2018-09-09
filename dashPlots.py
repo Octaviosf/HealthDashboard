@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from IoTHealth.sleep import Sleep
 plt.rcParams.update({'figure.autolayout': True})
 
+
 def access_sheet(spreadsheet_id, range_):
     """
     :param spreadsheet_id: spreadsheet id found between d/ and /edit in google sheets url
@@ -166,6 +167,7 @@ def bodycomp_plots(df):
     ax5.set_ylim(y_b_min, y_b_max)
     lin5 = ax5.plot(x, df[['bone_lb']], '--ko', label='Mass (lb)', linewidth=linewidth)
 
+    # Bone % plot
     ax6 = ax5.twinx()
     ax6.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=twinpad, rotation=labelrotation)
     ax6.set_xlim(xmin, xmax)
@@ -293,37 +295,6 @@ class BodyComposition(tk.Frame):
 app = SmartMirror()
 app.mainloop()
 
-"""
-spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
-range_ = 'Sheet1'
-sheet_obj = access_sheet(spreadsheet_id, range_)
-df = sheet_to_df(sheet_obj)
-bodycomp_plots(df)
-
-# sleep plots
-
-tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
-sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
-sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
-
-# fig parameters
-grid_shape = (8, 16)
-eff_plt_pos = (4, 8)
-stages_plt_pos = (0, 8)
-
-# capture sleep data
-sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
-
-# set fig shape and show
-#plt.figure(figsize=(30, 20))
-sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=4, colspan=8)
-sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=2, colspan=8)
-sleep.plot_polar_hypnograms(grid_shape)
-
-plt.tight_layout()
-plt.show()
-"""
-
 # TODO Dev
 """
     DONE 1. Create buttons for body comp and sleep data
@@ -336,14 +307,13 @@ plt.show()
     Future TODO
     
     1. Create Body() class with attributes:
-            a. write body.txt file if nonexistent
-            b. update body.txt
+            a. write body.csv file if nonexistent
+            b. update body.csv
             etc ...
             
     2. Create IotHealth() class with attributes:
-            a. write all .txt files if nonexistent
-            b. update all .txt files
+            a. write all .csv files if nonexistent
+            b. update all .csv files
             etc ...
 
 """
-
