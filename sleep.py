@@ -384,7 +384,7 @@ class Sleep(object):
 
         # set graph params
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
-        ax.grid()
+        ax.grid(axis='y')
         ax.set_title('Sleep Stage Percentages', fontsize=30, pad=15)
         ax.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
         plt.setp(ax.xaxis.get_majorticklabels(), rotation = 0, ha='center', rotation_mode='anchor')
@@ -462,7 +462,7 @@ class Sleep(object):
         # set parameters
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         #plt.subplots_adjust(top=0.7, bottom=0, left=0)
-        ax.grid()
+        ax.grid(axis='y')
         ax.set_title('Sleep Efficiency', fontsize=30, pad=15)
         ax.set_ylabel('Efficiency', fontsize=labelfontsize, labelpad=labelpad)
         ax.set_xticks(x)
