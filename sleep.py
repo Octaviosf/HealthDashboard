@@ -385,7 +385,7 @@ class Sleep(object):
         # set graph params
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
-        ax.set_title('Sleep Stage Percentages', fontsize=31, pad=15)
+        ax.set_title('Sleep Stage Percentages', fontsize=30, pad=15)
         ax.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
         plt.setp(ax.xaxis.get_majorticklabels(), rotation = 0, ha='center', rotation_mode='anchor')
         ax.set_xticks(xticks)
