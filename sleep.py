@@ -443,16 +443,13 @@ class Sleep(object):
         #plt.tight_layout()
 
         # annotate each stage with percentage
-        for x_pos, awake_p in zip(x, awake_perc):
+        for x_pos, awake_p, rem_p, light_p, deep_p in zip(x, awake_perc, rem_perc, light_perc, deep_perc):
             ax.text(x_pos-0.3, annotate_height, int(round(awake_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-        for x_pos, rem_p in zip(x, rem_perc):
             ax.text(x_pos-0.1, annotate_height, int(round(rem_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-        for x_pos, light_p in zip(x, light_perc):
             ax.text(x_pos+0.1, annotate_height, int(round(light_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
-        for x_pos, deep_p in zip(x, deep_perc):
             ax.text(x_pos+0.3, annotate_height, int(round(deep_p, 0)), fontsize=annotate_fontsize,
                     fontweight=annotate_fontweight, horizontalalignment=annotate_align, color=annotate_color)
 
