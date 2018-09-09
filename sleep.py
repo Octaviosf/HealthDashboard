@@ -315,39 +315,6 @@ class Sleep(object):
                 dates.remove(date)
                 index += 2
 
-        """
-        for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
-            series = copy.deepcopy(series_template)
-            print("'date' == 'raw_log['dateOfSleep']:", date + ' == ' + raw_log["dateOfSleep"])
-            if date == raw_log["dateOfSleep"]:
-                series["dateOfSleep"] = raw_log["dateOfSleep"]
-                for epoch in raw_log["levels"]["data"]:
-                    series["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
-                    series["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
-                for epoch in raw_log["levels"]["shortData"]:
-                    series["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
-                    series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
-                sleep_series["sleep"].append(series)
-            else:
-                series["dateOfSleep"] = date
-                for stage in stages:
-                    series["data"][stage]["start_times"].append(0)
-                    series["data"][stage]["epoch_durations"].append(0)
-                series["shortData"]["wake"]["start_times"].append(0)
-                series["shortData"]["wake"]["epoch_durations"].append(0)
-                sleep_series["sleep"].append(series)
-
-                series_next = copy.deepcopy(series_template)
-                series_next["dateOfSleep"] = raw_log["dateOfSleep"]
-                for epoch in raw_log["levels"]["data"]:
-                    series_next["data"][epoch["level"]]["start_times"].append(epoch["dateTime"])
-                    series_next["data"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
-                for epoch in raw_log["levels"]["shortData"]:
-                    series_next["shortData"][epoch["level"]]["start_times"].append(epoch["dateTime"])
-                    series_next["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
-                sleep_series["sleep"].append(series_next)
-        """
-
         sleep_series["sleep"].reverse()
         return sleep_series
 
