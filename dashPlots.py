@@ -346,10 +346,10 @@ plt.show()
 # TODO Dev
 """
     DONE 1. Create buttons for body comp and sleep data
-         2. Use self.sleep_fig.axes.append(ax) or self.sleep_fig.add_axes(ax) to
-            add axes and their subplot2grid positions to global sleep_fig variable, then
-            pass sleep_fig to tk canvas
-         3. Display all available data in plots
+    DONE 2. Add all axes to self.sleep_fig
+    DONE 3. Display last 15 days of sleep data
+         4. Clean up sleep graph text params
+         5. Clean up body comp graph params
     --
     
     Future TODO
