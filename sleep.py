@@ -331,7 +331,7 @@ class Sleep(object):
         median_array_shape = (1, len(x))
         xticks = [xmin + timedelta(days=d) for d in range(0, numdays.days+1)]
         bar_width = 0.2
-        labelpad = 25
+        labelpad = 12.5
         labelfontsize = 20
         dateformat = '%a-%b-%d'
         alpha = 0.3
@@ -386,7 +386,7 @@ class Sleep(object):
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid()
         ax.set_title('Sleep Stage Percentages', fontsize=31, pad=15)
-        ax.set_ylabel('Percentage %', fontsize=labelfontsize, labelpad=labelpad)
+        ax.set_ylabel('Percentage', fontsize=labelfontsize, labelpad=labelpad)
         plt.setp(ax.xaxis.get_majorticklabels(), rotation = 0, ha='center', rotation_mode='anchor')
         ax.set_xticks(xticks)
         ax.set_yticks(np.arange(0, 110, 5))
@@ -455,7 +455,7 @@ class Sleep(object):
         y = np.nan_to_num(self.sleep_logs['efficiency'].values[-15:])
         xmin = self.sleep_logs.index.tolist()[-14] - timedelta(days=1)
         xmax = self.sleep_logs.index.tolist()[-2] + timedelta(days=1)
-        labelpad = 15
+        labelpad = 10
         labelfontsize = 20
         dateformat = "%a-%b-%d"
 
