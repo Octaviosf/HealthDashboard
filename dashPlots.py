@@ -300,8 +300,8 @@ app.mainloop()
     DONE 1. Create buttons for body comp and sleep data
     DONE 2. Add all axes to self.sleep_fig
     DONE 3. Display last 15 days of sleep data
-         4. Clean up sleep graph text params
-         5. Clean up body comp graph params
+    DONE 4. Clean up sleep graph text params
+    DONE 5. Clean up body comp graph params
     --
     
     Future TODO
