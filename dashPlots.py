@@ -23,10 +23,10 @@ def access_sheet(spreadsheet_id, range_):
 
     # create service instance
     SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
-    store = oauth_file.Storage('token.json') # accesses token.json (initialized with quickstart.py)
+    store = oauth_file.Storage('google_sheet_token.json') # accesses token.json (initialized with quickstart.py)
     creds = store.get()
     if not creds or creds.invalid:
-        flow = client.flow_from_clientsecrets('credentials.json', SCOPES)
+        flow = client.flow_from_clientsecrets('google_sheet_credentials.json', SCOPES)
         creds = tools.run_flow(flow, store)
     service = discovery.build('sheets', 'v4',http=creds.authorize(Http()))
 
@@ -302,6 +302,8 @@ app.mainloop()
     DONE 3. Display last 15 days of sleep data
     DONE 4. Clean up sleep graph text params
     DONE 5. Clean up body comp graph params
+         6. create GoogleSheets() class for google sheets requests
+         7. create body.py to define Body() class and use OOP approach
     --
     
     Future TODO
