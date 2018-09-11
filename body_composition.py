@@ -6,18 +6,19 @@ import matplotlib.pyplot as plt
 
 class BodyComposition(object):
 
-    def __init__(self, spreadsheet_id, sheet_range):
+    def __init__(self, spreadsheet_id, sheet_range, labels, index, index_type):
 
         self.sheet = GoogleSheet(spreadsheet_id, sheet_range)
-        self.df = self.sheet.sheet2df()
+        self.df = self.sheet.sheet2df(labels, index, index_type)
 
         # down-sample data by day
         # convert values to numeric or nan
-        df = df.apply(pd.to_numeric, errors='coerce')
+        self.df = self.df.apply(pd.to_numeric, errors='coerce')
 
         # capture all columns except index column and convert
-        cols = df.columns.difference([index_label])
-        df[cols] = df[cols].astype(float)
+        cols = self.df.columns.difference([index])
+        self.df[cols] = self.df[cols].astype(float)
+
 
 
 # TODO Future Dev
