@@ -9,17 +9,30 @@ class BodyComposition(object):
     def __init__(self, spreadsheet_id, sheet_range, labels, index, index_type):
 
         self.sheet = GoogleSheet(spreadsheet_id, sheet_range)
-        self.df = self.sheet.sheet2df(labels, index, index_type)
+        df = self.sheet.sheet2df(labels, index, index_type)
 
-        # down-sample data by day
-        # convert values to numeric or nan
-        self.df = self.df.apply(pd.to_numeric, errors='coerce')
+        # format df
+        df = df.apply(pd.to_numeric, errors='coerce')
+        cols = df.columns.difference([index])
+        df[cols] = df[cols].astype(float)
 
-        # capture all columns except index column and convert
-        cols = self.df.columns.difference([index])
-        self.df[cols] = self.df[cols].astype(float)
+        # down sample data using mean
+        df = df.resample('d').mean().dropna(how='all')
+        df[cols] = df[cols].round(decimals=2)
+
+        self.df = df
 
 
+spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
+sheet_range = 'Sheet1'
+col_labels = ['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
+              'muscle_lb', 'BMI', 'fat_lb', 'bone_%', 'muscle_%']
+index = 'date_time'
+index_type = 'datetime64[ns]'
+
+body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
+
+print(body.df)
 
 # TODO Future Dev
 """
