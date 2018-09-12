@@ -44,6 +44,7 @@ class GoogleSheet(object):
 
         # create and format df
         df = pd.DataFrame.from_records(data=data, columns=labels)
+        df = df[col_labels]
         df[index_label] = df[index_label].astype(index_type)
         df = df.set_index(index_label)
 
