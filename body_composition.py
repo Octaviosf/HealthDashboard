@@ -36,12 +36,12 @@ class BodyComposition(object):
         self.legend_size = 20
         self.legend_loc = 'upper right'
 
-    def plot_single(self, y_axis, grid_shape, plot_position,
+    def plot_single(self, y_index, grid_shape, plot_position,
                     column_span, figure, title, y_label, line_style):
 
         # initialize y-axis limits
-        y_min = float(self.df[[y_axis]].min()-1)
-        y_max = float(self.df[[y_axis]].max()+1)
+        y_min = float(self.df[[y_index]].min()-1)
+        y_max = float(self.df[[y_index]].max()+1)
 
         # setup plot
         ax = plt.subplot2grid(grid_shape, plot_position, colspan=column_span, fig=figure)
@@ -51,14 +51,14 @@ class BodyComposition(object):
         ax.set_xlim(self.x_min, self.x_max)
         ax.set_ylim(y_min, y_max)
         ax.xaxis.set_major_formatter(mdates.DateFormatter(self.date_format))
-        ax.plot(self.df.index, self.df[[y_axis]], line_style, label=title, linewidth=self.line_width)
+        ax.plot(self.df.index, self.df[[y_index]], line_style, label=y_label, linewidth=self.line_width)
 
-    def plot_twin(self, y_axis_mass, y_axis_percent, grid_shape, plot_position,
+    def plot_twin(self, index_mass, index_percent, grid_shape, plot_position,
                   column_span, figure, title, line_style_mass, line_style_percent):
 
         # initialize y-axis limits
-        y_min = float(self.df[[y_axis_mass]].min()-0.25)
-        y_max = float(self.df[[y_axis_mass]].max()+0.25)
+        y_min = float(self.df[[index_mass]].min()-0.25)
+        y_max = float(self.df[[index_mass]].max()+0.25)
 
         # setup mass plot
         ax_mass = plt.subplot2grid(grid_shape, plot_position, colspan=column_span, fig=figure)
@@ -66,7 +66,7 @@ class BodyComposition(object):
         ax_mass.set_title(title, fontsize=self.title_font_size, pad=self.title_pad)
         ax_mass.set_ylabel('Mass (lb)', fontsize=self.label_font_size, labelpad=self.label_font_size)
         ax_mass.set_ylim(y_min, y_max)
-        line_mass = ax_mass.plot(self.df.index, self.df[[y_axis_mass]], line_style_mass,
+        line_mass = ax_mass.plot(self.df.index, self.df[[index_mass]], line_style_mass,
                                  label='Mass (lb)', linewidth=self.line_width)
 
         # setup percentage plot
@@ -75,7 +75,7 @@ class BodyComposition(object):
                               labelpad=self.twin_label_pad, rotation=self.twin_label_rotation)
         ax_percent.set_xlim(self.x_min, self.x_max)
         ax_percent.xaxis.set_major_formatter(mdates.DateFormatter(self.date_format))
-        line_percent = ax_percent.plot(self.df.index, self.df[[y_axis_percent]], line_style_percent,
+        line_percent = ax_percent.plot(self.df.index, self.df[[index_percent]], line_style_percent,
                                        label='Percentage', linewidth=self.line_width)
 
         # setup legend
@@ -85,46 +85,72 @@ class BodyComposition(object):
 
     def plot_total_mass(self, grid_shape, plot_position, column_span, figure):
 
-        y_axis = 'weight_lb'
+        # initialize args
+        y_index = 'weight_lb'
         title = 'Total Mass'
         y_label = 'Mass (lb)'
         line_style = '--ko'
 
-        self.plot_single(y_axis, grid_shape, plot_position,
+        self.plot_single(y_index, grid_shape, plot_position,
                          column_span, figure, title, y_label, line_style)
 
     def plot_muscle(self, grid_shape, plot_position, column_span, figure):
 
-        y_axis_mass = 'muscle_lb'
-        y_axis_percent = 'muscle_%'
+        # initialize args
+        index_mass = 'muscle_lb'
+        index_percent = 'muscle_%'
         title = 'Muscle Composition'
         line_style_mass = '--ko'
         line_style_percent = '--mo'
 
-        self.plot_twin(y_axis_mass, y_axis_percent, grid_shape, plot_position,
+        self.plot_twin(index_mass, index_percent, grid_shape, plot_position,
                        column_span, figure, title, line_style_mass, line_style_percent)
 
     def plot_fat(self, grid_shape, plot_position, column_span, figure):
 
-        y_axis_mass = 'fat_lb'
-        y_axis_percent = 'fat_%'
+        # initialize args
+        index_mass = 'fat_lb'
+        index_percent = 'fat_%'
         title = 'Fat Composition'
         line_style_mass = '--ko'
         line_style_percent = '--co'
 
-        self.plot_twin(y_axis_mass, y_axis_percent, grid_shape, plot_position,
+        self.plot_twin(index_mass, index_percent, grid_shape, plot_position,
                        column_span, figure, title, line_style_mass, line_style_percent)
 
     def plot_bone(self, grid_shape, plot_position, column_span, figure):
 
-        y_axis_mass = 'bone_lb'
-        y_axis_percent = 'bone_%'
+        # initialize args
+        index_mass = 'bone_lb'
+        index_percent = 'bone_%'
         title = 'Bone Composition'
         line_style_mass = '--ko'
         line_style_percent = '--o'
 
-        self.plot_twin(y_axis_mass, y_axis_percent, grid_shape, plot_position,
+        self.plot_twin(index_mass, index_percent, grid_shape, plot_position,
                        column_span, figure, title, line_style_mass, line_style_percent)
+
+    def plot_water_percent(self, grid_shape, plot_position, column_span, figure):
+
+        # initialize args
+        y_index = 'water_%'
+        title = 'Water Percentage'
+        y_label = 'Percentage'
+        line_style = '--bo'
+
+        self.plot_single(y_index, grid_shape, plot_position,
+                         column_span, figure, title, y_label, line_style)
+
+    def plot_bmi(self, grid_shape, plot_position, column_span, figure):
+
+        # initialize args
+        y_index = 'BMI'
+        title = 'Body Mass Index'
+        y_label = 'BMI'
+        line_style = '--ko'
+
+        self.plot_single(y_index, grid_shape, plot_position,
+                         column_span, figure, title, y_label, line_style)
 
 
 spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
@@ -141,6 +167,8 @@ body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body
 body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
 body.plot_fat(grid, plot_position=(2, 0), column_span=2, figure=body.body_fig)
 body.plot_bone(grid, plot_position=(3, 0), column_span=2, figure=body.body_fig)
+body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.body_fig)
+body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
 
 plt.show()
 
