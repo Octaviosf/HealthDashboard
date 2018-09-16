@@ -115,6 +115,17 @@ class BodyComposition(object):
         self.plot_twin(y_axis_mass, y_axis_percent, grid_shape, plot_position,
                        column_span, figure, title, line_style_mass, line_style_percent)
 
+    def plot_bone(self, grid_shape, plot_position, column_span, figure):
+
+        y_axis_mass = 'bone_lb'
+        y_axis_percent = 'bone_%'
+        title = 'Bone Composition'
+        line_style_mass = '--ko'
+        line_style_percent = '--o'
+
+        self.plot_twin(y_axis_mass, y_axis_percent, grid_shape, plot_position,
+                       column_span, figure, title, line_style_mass, line_style_percent)
+
 
 spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
 sheet_range = 'Sheet1'
@@ -129,6 +140,7 @@ body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_typ
 body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body_fig)
 body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
 body.plot_fat(grid, plot_position=(2, 0), column_span=2, figure=body.body_fig)
+body.plot_bone(grid, plot_position=(3, 0), column_span=2, figure=body.body_fig)
 
 plt.show()
 
