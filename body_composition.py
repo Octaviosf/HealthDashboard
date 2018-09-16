@@ -91,10 +91,10 @@ index = 'date_time'
 index_type = 'datetime64[ns]'
 
 grid = (5, 2)
-position = (0, 0)
 
 body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
-body.plot_total_mass(grid, position, column_span=2, figure=body.body_fig)
+body.plot_total_mass(grid, (0, 0), column_span=2, figure=body.body_fig)
+body.plot_muscle(grid, (1, 0), column_span=2, figure=body.body_fig)
 
 plt.show()
 
