@@ -103,8 +103,8 @@ class BodyComposition(object):
                               labelpad=self.twin_label_pad, rotation=self.twin_label_rotation)
         ax_percent.set_xlim(self.x_min, self.x_max)
         ax_percent.xaxis.set_major_formatter(mdates.DateFormatter(self.date_format))
-        line_percent = ax_percent.plt(self.df.index, self.df[['fat_%']], '--co',
-                                      label='Percentage', linewidth=self.line_width)
+        line_percent = ax_percent.plot(self.df.index, self.df[['fat_%']], '--co',
+                                       label='Percentage', linewidth=self.line_width)
 
         # setup legend
         lines = line_mass + line_percent
