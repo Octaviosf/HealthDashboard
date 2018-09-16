@@ -94,7 +94,7 @@ class BodyComposition(object):
         ax_mass.set_title('Fat Composition', fontsize=self.title_font_size, pad=self.title_pad)
         ax_mass.set_ylabel('Mass (lb)', fontsize=self.label_font_size, labelpad=self.label_pad)
         ax_mass.set_ylim(y_min, y_max)
-        line_mass = ax_mass.plt(self.df.index, self.df[['fat_lb']], '--ko',
+        line_mass = ax_mass.plot(self.df.index, self.df[['fat_lb']], '--ko',
                                 label='Mass (lb)', linewidth=self.line_width)
 
         # setup percentage plot
