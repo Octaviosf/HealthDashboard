@@ -66,7 +66,6 @@ class BodyComposition(object):
         labels = [line.get_label() for line in lines]
         ax_percent.legend(lines, labels, prop={'size': self.legend_size}, loc=self.legend_loc)
 
-
     def plot_total_mass(self, grid_shape, plot_position, column_span, figure):
 
         # initialize parameters
