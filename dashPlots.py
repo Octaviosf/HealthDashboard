@@ -122,7 +122,6 @@ def bodycomp_plots(df):
     ax1.set_title('Muscle Composition', fontsize=30, pad=titlepad)
     ax1.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax1.set_ylim(y_m_min, y_m_max)
-    ax1.tick_params(axis='x', rotation=rotation)
     lin1 = ax1.plot(x, df[['muscle_lb']], '--ko', label='Mass (lb)', linewidth=linewidth)
 
     # Muscle % plot
@@ -143,7 +142,6 @@ def bodycomp_plots(df):
     ax3.set_title('Fat Composition', fontsize=30, pad=titlepad)
     ax3.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax3.set_ylim(y_f_min, y_f_max)
-    ax3.tick_params(axis='x', rotation=rotation)
     lin3 = ax3.plot(x, df[['fat_lb']], '--ko', alpha=1.0, label='Mass (lb)', linewidth=linewidth)
 
     # Fat % plot
