@@ -43,7 +43,7 @@ class BodyComposition(object):
         y_max = float(self.df[['weight_lb']].max()+1)
 
         # setup plot
-        ax_mass = plt.subplot2grid(grid_shape, plot_position, column_span, figure)
+        ax_mass = plt.subplot2grid(grid_shape, plot_position, colspan=column_span, fig=figure)
         ax_mass.grid()
         ax_mass.set_title('Total Mass', fontsize=self.title_font_size, pad=self.title_pad)
         ax_mass.set_ylabel('Mass (lb)', fontsize=self.label_font_size, labelpad=self.label_pad)
@@ -60,7 +60,7 @@ class BodyComposition(object):
         y_max = float(self.df[['muscle_lb']].max()+0.25)
 
         # setup mass plot
-        ax_mass = plt.subplot2grid(grid_shape, plot_position, column_span, figure)
+        ax_mass = plt.subplot2grid(grid_shape, plot_position, colspan=column_span, fig=figure)
         ax_mass.grid()
         ax_mass.set_title('Muscle Composition', fontsize=self.title_font_size, pad=self.title_pad)
         ax_mass.set_ylabel('Mass (lb)', fontsize=self.label_font_size, labelpad=self.label_pad)
@@ -82,6 +82,8 @@ class BodyComposition(object):
         labels = [line.get_label() for line in lines]
         ax_percent.legend(lines, labels, prop={'size': self.legend_size}, loc=self.legend_loc)
 
+    def plot_fat(self, grid_shape, plot_position, column_span, figure):
+
 
 spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
 sheet_range = 'Sheet1'
@@ -93,8 +95,8 @@ index_type = 'datetime64[ns]'
 grid = (5, 2)
 
 body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
-body.plot_total_mass(grid, (0, 0), column_span=2, figure=body.body_fig)
-body.plot_muscle(grid, (1, 0), column_span=2, figure=body.body_fig)
+body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body_fig)
+body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
 
 plt.show()
 
