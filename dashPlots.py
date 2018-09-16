@@ -113,7 +113,6 @@ def bodycomp_plots(df):
     ax0.set_ylabel('Mass (lb)', fontsize=labelfontsize, labelpad=labelpad)
     ax0.set_xlim(xmin, xmax)
     ax0.set_ylim(y_t_min, y_t_max)
-    ax0.tick_params(axis='x', rotation=rotation)
     ax0.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
     ax0.plot(x, df[['weight_lb']], '--ko', label='Total Mass', linewidth=linewidth)
 
