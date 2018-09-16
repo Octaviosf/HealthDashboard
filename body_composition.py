@@ -36,8 +36,25 @@ class BodyComposition(object):
         self.legend_size = 20
         self.legend_loc = 'upper right'
 
-    def plot_composition(self, y_axis_mass, y_axis_percent, grid_shape, plot_position,
-                         column_span, figure, title, line_style_mass, line_style_percent):
+    def plot_single(self, y_axis, grid_shape, plot_position,
+                    column_span, figure, title, y_label, line_style):
+
+        # initialize y-axis limits
+        y_min = float(self.df[[y_axis]].min()-1)
+        y_max = float(self.df[[y_axis]].max()+1)
+
+        # setup plot
+        ax = plt.subplot2grid(grid_shape, plot_position, colspan=column_span, fig=figure)
+        ax.grid()
+        ax.set_title(title, fontsize=self.title_font_size, pad=self.title_pad)
+        ax.set_ylabel(y_label, fontsize=self.label_font_size, labelpad=self.label_pad)
+        ax.set_xlim(self.x_min, self.x_max)
+        ax.set_ylim(y_min, y_max)
+        ax.xaxis.set_major_formatter(mdates.DateFormatter(self.date_format))
+        ax.plot(self.df.index, self.df[[y_axis]], line_style, label=title, linewidth=self.line_width)
+
+    def plot_twin(self, y_axis_mass, y_axis_percent, grid_shape, plot_position,
+                  column_span, figure, title, line_style_mass, line_style_percent):
 
         # initialize y-axis limits
         y_min = float(self.df[[y_axis_mass]].min()-0.25)
@@ -68,20 +85,13 @@ class BodyComposition(object):
 
     def plot_total_mass(self, grid_shape, plot_position, column_span, figure):
 
-        # initialize parameters
-        y_min = float(self.df[['weight_lb']].min()-1)
-        y_max = float(self.df[['weight_lb']].max()+1)
+        y_axis = 'weight_lb'
+        title = 'Total Mass'
+        y_label = 'Mass (lb)'
+        line_style = '--ko'
 
-        # setup plot
-        ax_mass = plt.subplot2grid(grid_shape, plot_position, colspan=column_span, fig=figure)
-        ax_mass.grid()
-        ax_mass.set_title('Total Mass', fontsize=self.title_font_size, pad=self.title_pad)
-        ax_mass.set_ylabel('Mass (lb)', fontsize=self.label_font_size, labelpad=self.label_pad)
-        ax_mass.xaxis.set_major_formatter(mdates.DateFormatter(self.date_format))
-        ax_mass.set_xlim(self.x_min, self.x_max)
-        ax_mass.set_ylim(y_min, y_max)
-        ax_mass.plot(self.df.index, self.df[['weight_lb']], '--ko',
-                     label='Total Mass', linewidth=self.line_width)
+        self.plot_single(y_axis, grid_shape, plot_position,
+                         column_span, figure, title, y_label, line_style)
 
     def plot_muscle(self, grid_shape, plot_position, column_span, figure):
 
@@ -91,36 +101,8 @@ class BodyComposition(object):
         line_style_mass = '--ko'
         line_style_percent = '--mo'
 
-        self.plot_composition(y_axis_mass, y_axis_percent, grid_shape, plot_position,
-                              column_span, figure, title, line_style_mass, line_style_percent)
-        """
-        # initialize parameters
-        y_min = float(self.df[['muscle_lb']].min()-0.25)
-        y_max = float(self.df[['muscle_lb']].max()+0.25)
-
-        # setup mass plot
-        ax_mass = plt.subplot2grid(grid_shape, plot_position, colspan=column_span, fig=figure)
-        ax_mass.grid()
-        ax_mass.set_title('Muscle Composition', fontsize=self.title_font_size, pad=self.title_pad)
-        ax_mass.set_ylabel('Mass (lb)', fontsize=self.label_font_size, labelpad=self.label_pad)
-        ax_mass.set_ylim(y_min, y_max)
-        line_mass = ax_mass.plot(self.df.index, self.df[['muscle_lb']], '--ko',
-                                 label='Mass (lb)', linewidth=self.line_width)
-
-        # setup percentage plot
-        ax_percent = ax_mass.twinx()
-        ax_percent.set_ylabel('Percentage', fontsize=self.label_font_size,
-                              labelpad=self.twin_label_pad, rotation=self.twin_label_rotation)
-        ax_percent.set_xlim(self.x_min, self.x_max)
-        ax_percent.xaxis.set_major_formatter(mdates.DateFormatter(self.date_format))
-        line_percent = ax_percent.plot(self.df.index, self.df[['muscle_%']], '--mo',
-                                       label='Percentage', linewidth=self.line_width)
-
-        # setup legend
-        lines = line_mass + line_percent
-        labels = [line.get_label() for line in lines]
-        ax_percent.legend(lines, labels, prop={'size': self.legend_size}, loc=self.legend_loc)
-        """
+        self.plot_twin(y_axis_mass, y_axis_percent, grid_shape, plot_position,
+                       column_span, figure, title, line_style_mass, line_style_percent)
 
     def plot_fat(self, grid_shape, plot_position, column_span, figure):
 
@@ -130,8 +112,8 @@ class BodyComposition(object):
         line_style_mass = '--ko'
         line_style_percent = '--co'
 
-        self.plot_composition(y_axis_mass, y_axis_percent, grid_shape, plot_position,
-                              column_span, figure, title, line_style_mass, line_style_percent)
+        self.plot_twin(y_axis_mass, y_axis_percent, grid_shape, plot_position,
+                       column_span, figure, title, line_style_mass, line_style_percent)
 
 
 spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
