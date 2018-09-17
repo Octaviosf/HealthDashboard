@@ -225,7 +225,7 @@ class BodyComposition(object):
 
 
 # EXAMPLE using BodyComposition()
-
+"""
 # initialize parameters
 spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
 sheet_range = 'Sheet1'
@@ -246,6 +246,7 @@ body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.b
 body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
 
 plt.show()
+"""
 
 # TODO Future Dev
 """
