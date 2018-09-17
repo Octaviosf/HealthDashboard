@@ -552,6 +552,32 @@ class Sleep(object):
             ax.text(0, 0, duration, fontsize=15, fontweight='heavy',
                     verticalalignment='top', horizontalalignment='center')
 
+
+# EXAMPLE using Sleep()
+"""
+# sleep plots
+tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
+sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
+sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
+
+# fig parameters
+grid_shape = (4, 15)
+eff_plt_pos = (2, 0)
+stages_plt_pos = (0, 0)
+
+# capture sleep data
+sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
+
+# set fig shape and show
+sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=15)
+sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=15)
+plt.tight_layout()
+sleep.plot_polar_hypnograms(grid_shape)
+
+plt.show()
+
+"""
+
 # TODO Dev
 
 """
