@@ -554,7 +554,6 @@ class Sleep(object):
 
 
 # EXAMPLE using Sleep()
-"""
 # sleep plots
 tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
 sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
@@ -564,6 +563,7 @@ sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
 grid_shape = (4, 15)
 eff_plt_pos = (2, 0)
 stages_plt_pos = (0, 0)
+plt.rcParams.update({'figure.autolayout': True})
 
 # capture sleep data
 sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
@@ -576,7 +576,6 @@ sleep.plot_polar_hypnograms(grid_shape)
 
 plt.show()
 
-"""
 
 # TODO Dev
 
