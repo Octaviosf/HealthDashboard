@@ -6,8 +6,19 @@ import matplotlib.pyplot as plt
 
 
 class BodyComposition(object):
+    """
+    Interact with body composition dataFrame
+    """
 
     def __init__(self, spreadsheet_id, sheet_range, labels, index, index_type):
+        """
+        :param spreadsheet_id: string of id located after '/d/' in
+                               url 'https://docs.google.com/spreadsheets/d/'
+        :param sheet_range: string specifying Google sheet range in A1 notation
+        :param labels: list of strings of dataFrame labels
+        :param index: string of dataFrame index
+        :param index_type: string of dataFrame index type
+        """
 
         # format df
         self.sheet = GoogleSheet(spreadsheet_id, sheet_range)
@@ -38,6 +49,16 @@ class BodyComposition(object):
 
     def plot_single(self, y_index, grid_shape, plot_position,
                     column_span, figure, title, y_label, line_style):
+        """
+        :param y_index: string of dataFrame y-axis index
+        :param grid_shape: tuple of (row, column) form
+        :param plot_position: tuple of (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        :param title: string of title
+        :param y_label: string of y-axis label
+        :param line_style: string of line style
+        """
 
         # initialize y-axis limits
         y_min = float(self.df[[y_index]].min()-1)
@@ -55,6 +76,18 @@ class BodyComposition(object):
 
     def plot_twin(self, index_mass, index_percent, grid_shape, plot_position,
                   column_span, figure, title, line_style_mass, line_style_percent):
+
+        """
+        :param index_mass: string of dataFrame index for mass data
+        :param index_percent: string of dataFrame index for percent data
+        :param grid_shape: tuple of (row, column) form
+        :param plot_position: tuple of (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        :param title: string of title
+        :param line_style_mass: string of line style for mass plot
+        :param line_style_percent: string of line style for percentage plot
+        """
 
         # initialize y-axis limits
         y_min = float(self.df[[index_mass]].min()-0.25)
@@ -84,6 +117,12 @@ class BodyComposition(object):
         ax_percent.legend(lines, labels, prop={'size': self.legend_size}, loc=self.legend_loc)
 
     def plot_total_mass(self, grid_shape, plot_position, column_span, figure):
+        """
+        :param grid_shape: tuple in (row, column) form
+        :param plot_position: tuple in (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        """
 
         # initialize args
         y_index = 'weight_lb'
@@ -95,6 +134,12 @@ class BodyComposition(object):
                          column_span, figure, title, y_label, line_style)
 
     def plot_muscle(self, grid_shape, plot_position, column_span, figure):
+        """
+        :param grid_shape: tuple in (row, column) form
+        :param plot_position: tuple in (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        """
 
         # initialize args
         index_mass = 'muscle_lb'
@@ -107,6 +152,12 @@ class BodyComposition(object):
                        column_span, figure, title, line_style_mass, line_style_percent)
 
     def plot_fat(self, grid_shape, plot_position, column_span, figure):
+        """
+        :param grid_shape: tuple in (row, column) form
+        :param plot_position: tuple in (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        """
 
         # initialize args
         index_mass = 'fat_lb'
@@ -119,6 +170,12 @@ class BodyComposition(object):
                        column_span, figure, title, line_style_mass, line_style_percent)
 
     def plot_bone(self, grid_shape, plot_position, column_span, figure):
+        """
+        :param grid_shape: tuple in (row, column) form
+        :param plot_position: tuple in (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        """
 
         # initialize args
         index_mass = 'bone_lb'
@@ -131,6 +188,12 @@ class BodyComposition(object):
                        column_span, figure, title, line_style_mass, line_style_percent)
 
     def plot_water_percent(self, grid_shape, plot_position, column_span, figure):
+        """
+        :param grid_shape: tuple in (row, column) form
+        :param plot_position: tuple in (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        """
 
         # initialize args
         y_index = 'water_%'
@@ -142,6 +205,12 @@ class BodyComposition(object):
                          column_span, figure, title, y_label, line_style)
 
     def plot_bmi(self, grid_shape, plot_position, column_span, figure):
+        """
+        :param grid_shape: tuple in (row, column) form
+        :param plot_position: tuple in (row, column) form
+        :param column_span: integer of column span
+        :param figure: figure object
+        """
 
         # initialize args
         y_index = 'BMI'
@@ -171,9 +240,6 @@ body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.b
 body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
 
 plt.show()
-
-
-
 
 
 # TODO Future Dev
