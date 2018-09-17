@@ -5,18 +5,17 @@ import os
 
 class Fitbit(object):
     """
-    Interact with Fitbit API:
+    interact with Fitbit API:
         -request and refresh tokens
         -request data
     """
     def __init__(self, tokens_filepath):
         """
         initialize data for Fitbit API requests
-
         :param tokens_filepath: absolute file path from /home to /fitbit_tokens.txt
         """
 
-        # assignments
+        # initialize data attributes
         self.client_id = '22CXZR'
         self.client_secret = 'e2f4370b9bce7138faad9093accfd245'
         self.token_url = 'https://API.fitbit.com/oauth2/token'
@@ -80,7 +79,6 @@ class Fitbit(object):
     def refresh_tokens(self):
         """
         refresh tokens
-
         :return: tuple capturing access and refresh tokens, respectively
         """
 
@@ -113,9 +111,8 @@ class Fitbit(object):
     def data_request(self, url):
         """
         request data from Fitbit API
-
         :param url: url request for data - formatted according to API
-        :return: response from data request
+        :return: json response from data request
         """
 
         # create headers for data request
@@ -141,9 +138,8 @@ class Fitbit(object):
     def sleep_logs_range(self, date_range):
         """
         request sleep-logs from Fitbit API for date range
-
         :param date_range: tuple of start and end date strings, respectively (YYYY-mm-dd format)
-        :return: response from sleep-logs request
+        :return: json response from sleep-logs request
         """
 
         # url formatted according to Fitbit API docs
