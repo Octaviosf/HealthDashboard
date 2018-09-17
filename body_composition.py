@@ -30,7 +30,7 @@ class BodyComposition(object):
         df[cols] = df[cols].round(decimals=2)
         self.df = df
 
-        # initialize plot parameters
+        # initialize plot attributes
         self.body_fig = plt.figure(dpi=100)
         plt.rc('xtick', labelsize=18)
         plt.rc('ytick', labelsize=18)
