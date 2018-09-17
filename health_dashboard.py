@@ -14,7 +14,6 @@ class HealthDashboard(tk.Tk):
     """
     create HealthDashboard gui using inherited TK attributes
     """
-
     def __init__(self, *args, **kwargs):
         """
         setup gui parameters
@@ -52,7 +51,6 @@ class SleepMetrics(tk.Frame):
     """
     create frame displaying sleep metrics for last 15 days
     """
-
     def __init__(self, parent, controller):
         """
         initialize frame parameters
