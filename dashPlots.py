@@ -13,36 +13,56 @@ plt.rcParams.update({'figure.autolayout': True})
 
 
 class HealthDashboard(tk.Tk):
+    """
+    create HealthDashboard gui using inherited TK attributes
+    """
 
     def __init__(self, *args, **kwargs):
+        """
+        setup gui parameters
+        """
 
+        # setup gui parameters
         tk.Tk.__init__(self, *args, **kwargs)
-
         self.attributes("-fullscreen", True)
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
-
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
         self.frames = {}
 
+        # append frames to frames dictionary
         for F in (SleepMetrics, BodyMetrics):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
+        # show startup frame
         self.show_frame(SleepMetrics)
 
     def show_frame(self, cont):
+        """
+        raises container to front
+        :param cont: container to be raised
+        """
 
         frame = self.frames[cont]
         frame.tkraise()
 
 
 class SleepMetrics(tk.Frame):
+    """
+    create frame displaying sleep metrics for last 15 days
+    """
 
     def __init__(self, parent, controller):
+        """
+        initialize frame parameters
+        :param parent: parent
+        :param controller: controller
+        """
+
+        # setup container parameters
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Sleep", font=("verdana", 12))
         label.pack(pady=10, padx=10)
@@ -51,12 +71,10 @@ class SleepMetrics(tk.Frame):
                              command=lambda: controller.show_frame(BodyMetrics))
         button1.pack()
 
-        # sleep plots
+        # initialize Sleep object parameters
         tokens_fp = '/home/sosa/Documents/IoTHealth/fitbit_tokens.txt'
         sleep_logs_fp = '/home/sosa/Documents/IoTHealth/sleep.csv'
         sleep_series_fp = '/home/sosa/Documents/IoTHealth/sleep_series.json'
-
-        # fig parameters
         grid_shape = (4, 15)
         eff_plt_pos = (2, 0)
         stages_plt_pos = (0, 0)
@@ -77,17 +95,25 @@ class SleepMetrics(tk.Frame):
 
 
 class BodyMetrics(tk.Frame):
-
+    """
+    create frame displaying available body composition data
+    """
     def __init__(self, parent, controller):
+        """
+        initialize frame parameters
+        :param parent: parent
+        :param controller: controller
+        """
+
+        # setup container parameters
         tk.Frame.__init__(self, parent)
         label = tk.Label(self, text="Body Composition", font=("Verdana", 12))
         label.pack(pady=10, padx=10)
-
         button1 = ttk.Button(self, text="Sleep",
                              command=lambda: controller.show_frame(SleepMetrics))
         button1.pack()
 
-        # initialize parameters
+        # initialize BodyComposition object parameters
         spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
         sheet_range = 'Sheet1'
         col_labels = ['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
@@ -105,7 +131,7 @@ class BodyMetrics(tk.Frame):
         body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.body_fig)
         body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
 
-        # embed plot into frame
+        # embed plot into HealthDashboard gui
         canvas = FigureCanvasTkAgg(body.body_fig, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
