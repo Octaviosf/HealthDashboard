@@ -20,11 +20,13 @@ def time2radian(time_list):
     :param time_list: list of date_times or seconds strings
     :return: list of radians
     """
+
+    # initialize parameters
     minutes_per_day = 24*60
     seconds_per_day = 24*60*60
-
     radians = []
 
+    # calculate and append radians for seconds, minutes, and hours
     for time in time_list:
         if isinstance(time, (str,)):
             time = dt.strptime(time[:10] + ' ' + time[11:], "%Y-%m-%d %H:%M:%S.%f")
@@ -43,19 +45,15 @@ def time2radian(time_list):
 
 class Sleep(object):
     """
-    Interact with sleep logs:
-        - request sleep logs
-        - update sleep logs
-        - create sleep.csv
-        - capture explicit data from raw sleep logs
+    Interact with sleep logs
     """
     def __init__(self, sleep_file_path, sleep_series_file_path, tokens_file_path):
         """
         create and/or update sleep.csv
         capture sleep_logs using instance variable
 
-        :param sleep_file_path: absolute file-path to sleep.csv
-        :param tokens_file_path: absolute file-path to fitbit_tokens.txt
+        :param sleep_file_path: string of absolute file-path to sleep.csv
+        :param tokens_file_path: string of absolute file-path to fitbit_tokens.txt
         """
 
         # assignments
@@ -80,7 +78,6 @@ class Sleep(object):
     def update_local_logs(self):
         """
         update sleep.csv and sleep_logs
-
         :return: up-to-date sleep_logs
         """
 
@@ -111,12 +108,15 @@ class Sleep(object):
 
                 # update sleep.csv
                 sleep_logs.to_csv(path_or_buf=self.sleep_file_path, mode='w')
-
         sleep_logs.index = pd.to_datetime(sleep_logs.index)
 
         return sleep_logs
 
     def update_local_series(self):
+        """
+        update sleep_series.json and sleep_series
+        :return: up-to-date sleep_series
+        """
 
         # read sleep_series.json and capture data
         with open(self.sleep_series_file_path) as series_file:
@@ -154,7 +154,6 @@ class Sleep(object):
     def initialize_csv(self):
         """
         initialize sleep.csv with up-to-date sleep logs
-
         :return sleep_logs: up-to-date sleep logs
         """
 
@@ -174,7 +173,7 @@ class Sleep(object):
     def initialize_json(self):
         """
         initialize sleep_series.json with up-to-date time series
-        :return sleep_series:  up-to-date sleep series
+        :return sleep_series: up-to-date sleep_series
         """
 
         # request all sleep series from Fitbit
@@ -192,23 +191,20 @@ class Sleep(object):
     def capture_log_data(self, sleep_raw_logs, date_range):
         """
         capture explicit data from raw sleep logs
-
-        :param sleep_raw_logs: raw sleep data from Fitbit request
-        :return sleep_logs: explicit sleep data captured from raw logs
+        :param sleep_raw_logs: json object of raw sleep data from Fitbit request
+        :return sleep_logs: dataFrame of explicit sleep data captured from raw logs
         """
 
-        # assignments
+        # initialize parameters
         dict_labels = ["dateOfSleep", "minutesAfterWakeup",
                        "minutesToFallAsleep", "startTime"]
         stages_labels = ["deep", "light", "rem", "wake"]
         sleep_logs = []
         frames = []
-
         start_date = dt.strptime(date_range[0], "%Y-%m-%d")
         end_date = dt.strptime(date_range[1], "%Y-%m-%d")
         num_days = end_date - start_date
         index = 0
-
         dates = [(end_date - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
 
         # create dictionary list to capture explicit data
@@ -227,6 +223,7 @@ class Sleep(object):
             sleep_log["duration"] = [duration_total]
             sleep_logs.append(sleep_log)
 
+        # append missing data to sleep logs
         for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
             if date == raw_log["dateOfSleep"]:
                 index += 1
@@ -260,20 +257,18 @@ class Sleep(object):
     def capture_series_data(self, sleep_raw_logs, date_range):
         """
         capture series data from raw sleep logs
-
-        :param sleep_raw_logs: raw sleep data from Fitbit request
-        :param date_range: tuple of a start and end date, respectively
-        :return sleep_series: sleep series data captured from raw logs
+        :param sleep_raw_logs: json object of raw sleep data from Fitbit request
+        :param date_range: tuple of (start_date, end_date) form
+        :return sleep_series: dataFrame of sleep series data captured from raw logs
         """
 
+        # initialize parameters
         start_date = dt.strptime(date_range[0], "%Y-%m-%d")
         end_date = dt.strptime(date_range[1], "%Y-%m-%d")
         num_days = end_date - start_date
         stages = ['deep', 'light', 'rem', 'wake']
         index = 0
-
         dates = [(end_date - timedelta(days=d)).strftime("%Y-%m-%d") for d in range(0, num_days.days + 1)]
-
         sleep_series = {"sleep": []}
         series_template = {"dateOfSleep": None,
                            "data": {"deep": {"start_times": [],
@@ -287,6 +282,7 @@ class Sleep(object):
                            "shortData": {"wake": {"start_times": [],
                                                   "epoch_durations": []}}}
 
+        # create json format dictionary to capture sleep series data
         for raw_log in sleep_raw_logs["sleep"]:
             series = copy.deepcopy(series_template)
             series["dateOfSleep"] = raw_log["dateOfSleep"]
@@ -298,6 +294,7 @@ class Sleep(object):
                 series["shortData"][epoch["level"]]["epoch_durations"].append(epoch["seconds"])
             sleep_series["sleep"].append(series)
 
+        # append missing data to series
         for raw_log, date in zip(sleep_raw_logs["sleep"], dates):
             if date == raw_log["dateOfSleep"]:
                 index += 1
@@ -318,6 +315,13 @@ class Sleep(object):
         return sleep_series
 
     def plot_stages_percent(self, grid_shape, position, rowspan, colspan):
+        """
+        plot percentages of four sleep stages for each of last 15 days using grouped bar graph
+        :param grid_shape: tuple of (row, column) form
+        :param position: tuple of (row, column) form
+        :param rowspan: integer of row span
+        :param colspan: integer of column span
+        """
 
         # initialize graph params
         plt.rc('xtick', labelsize=18)
@@ -356,22 +360,25 @@ class Sleep(object):
         light_perc = np.nan_to_num(light_perc)
         deep_perc = np.nan_to_num(deep_perc)
 
+        # store percentage values of each sleep stage in array
         awake_perc_lifetime = np.around(self.sleep_logs['wake'].values / durations_lifetime, 3) * 100
         rem_perc_lifetime = np.around(self.sleep_logs['rem'].values / durations_lifetime, 3) * 100
         light_perc_lifetime = np.around(self.sleep_logs['light'].values / durations_lifetime, 3) * 100
         deep_perc_lifetime = np.around(self.sleep_logs['deep'].values / durations_lifetime, 3) * 100
 
+        # compute lifetime medians for each sleep stage
         awake_median = float(np.around(np.nanmedian(awake_perc_lifetime), 3))
         rem_median = float(np.around(np.nanmedian(rem_perc_lifetime), 3))
         light_median = float(np.around(np.nanmedian(light_perc_lifetime), 3))
         deep_median = float(np.around(np.nanmedian(deep_perc_lifetime), 3))
 
+        # create repeating array of medians for each sleep stage
         awake_median_array = np.full(median_array_shape, awake_median)[0]
         rem_median_array = np.full(median_array_shape, rem_median)[0]
         light_median_array = np.full(median_array_shape, light_median)[0]
         deep_median_array = np.full(median_array_shape, deep_median)[0]
 
-        # initialize masks
+        # initialize masks for medians and percentage values
         mask_awake_perc = ma.where(awake_perc>=awake_median_array)
         mask_awake_median = ma.where(awake_median_array>=awake_perc)
         mask_rem_perc = ma.where(rem_perc>=rem_median_array)
@@ -381,7 +388,7 @@ class Sleep(object):
         mask_deep_perc = ma.where(deep_perc>=deep_median_array)
         mask_deep_median = ma.where(deep_median_array>=deep_perc)
 
-        # set graph params
+        # setup plot
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid(axis='y')
         ax.set_title('Sleep Stage Percentages', fontsize=30, pad=15)
@@ -391,7 +398,7 @@ class Sleep(object):
         ax.set_yticks(np.arange(0, 110, 5))
         ax.xaxis.set_major_formatter(mdates.DateFormatter(dateformat))
 
-        # annotate each stage with percentage
+        # annotate bars
         for x_pos, awake_p, rem_p, light_p, deep_p in zip(x, awake_perc, rem_perc, light_perc, deep_perc):
             if awake_p == 0 and rem_p == 0 and light_p == 0 and deep_p == 0:
                 ax.text(x_pos, annotate_height, 'nan', fontsize=annotate_fontsize,
@@ -432,26 +439,24 @@ class Sleep(object):
 
     def plot_efficiency(self, grid_shape, position, rowspan, colspan):
         """
-        plot sleep efficiency
-
-        :param grid_shape: grid shape
-        :param position: position within grid
-        :param rowspan: grid rows spanned by plot
-        :return:
+        plot sleep efficiency for last 15 days using bar graph
+        :param grid_shape: tuple of (row, column) form
+        :param position: tuple of (row, column) form
+        :param rowspan: integer of row span
         """
 
         # global plot format
         plt.rc("xtick", labelsize=18)
         plt.rc("ytick", labelsize=18)
 
-        # initialize parameter values
+        # initialize parameters
         x = self.sleep_logs.index.tolist()[-15:]
         y = np.nan_to_num(self.sleep_logs['efficiency'].values[-15:])
         labelpad = 10
         labelfontsize = 20
         dateformat = "%a-%b-%d"
 
-        # set parameters
+        # setup plot
         ax = plt.subplot2grid(grid_shape, position, rowspan=rowspan, colspan=colspan, fig=self.sleep_fig)
         ax.grid(axis='y')
         ax.set_title('Sleep Efficiency', fontsize=30, pad=15)
@@ -471,34 +476,28 @@ class Sleep(object):
 
         ax.bar(x, y, width=0.3)
 
-    def plot_polar_hypnograms(self, shape):
+    def plot_polar_hypnograms(self, grid_shape):
         """
-        :param shape:
-        :return:
+        plot 15 polar hypnograms horizontally
+        :param grid_shape: tuple of form (rows, columns)
         """
 
+        # plot hypnograms horizontally
         for series_index, col_index in zip(range(-15, 0), range(0, 15)):
-            self.polar_hypnogram(self.sleep_series["sleep"][series_index], shape, (3, col_index))
+            self.polar_hypnogram(self.sleep_series["sleep"][series_index], grid_shape, (3, col_index))
 
+        # set title
         plt.figtext(0.51, 0.185, "Hypnograms", fontsize=30, horizontalalignment='center')
 
-    def polar_hypnogram(self, sleep_series, shape, position):
+    def polar_hypnogram(self, sleep_series, grid_shape, position):
         """
-        :param sleep_series: dictionary storing 'data' and 'shortData' for specific day ['dateOFSleep']
-        :param shape:
-        :param position:
-        :param rowspan:
-        :return:
-
-        j. create radial (hypnogram) bar plot for each day, with clock y-axis, and plotting bedtime, stages, out-of-bedtime
-            -- plot each stage on own bar
-                - inner bar is deep
-                - outer is median duration (with regards to day-of-week) (perhaps superimpose with "awake")
-
-        * "shortData" stores moments of "wake" of duration 3 min or less
-        *
+        plot single hypnogram
+        :param sleep_series: dictionary in json form storing sleep time series
+        :param grid_shape: tuple of (rows, columns) form
+        :param position: tuple of (row, column) form
         """
 
+        # initialize parameters
         stages = ['deep', 'light', 'rem', 'wake']
         start_times = {}
         epoch_durations = {}
@@ -517,43 +516,39 @@ class Sleep(object):
 
         title = date_str
 
+        # convert dateTimes to radians
         for stage in stages:
             start_times[stage] = time2radian(sleep_series['data'][stage]['start_times'])
             epoch_durations[stage] = time2radian(sleep_series['data'][stage]['epoch_durations'])
+        start_times["wake"] = start_times["wake"] + time2radian(sleep_series["shortData"]["wake"]["start_times"])
+        epoch_durations["wake"] = epoch_durations["wake"] + time2radian(sleep_series["shortData"]["wake"]["epoch_durations"])
 
-        start_times["wake"] = start_times["wake"] + \
-                              time2radian(sleep_series["shortData"]["wake"]["start_times"])
-
-        epoch_durations["wake"] = epoch_durations["wake"] + \
-                                  time2radian(sleep_series["shortData"]["wake"]["epoch_durations"])
-
-        ax = plt.subplot2grid(shape, position, polar=True, fig=self.sleep_fig)
+        # setup plot
+        ax = plt.subplot2grid(grid_shape, position, polar=True, fig=self.sleep_fig)
         ax.barh(0, width=0)
         ax.barh(1, width=0)
         ax.barh(2, left=start_times['wake'], width=epoch_durations['wake'], color='m', label='Awake', height=bar_height)
         ax.barh(4, left=start_times['rem'], width=epoch_durations['rem'], color='c', label='REM', height=bar_height)
         ax.barh(3, left=start_times['light'], width=epoch_durations['light'], color='C0', label='Light', height=bar_height)
         ax.barh(4, left=start_times['deep'], width=epoch_durations['deep'], color='b', label='Deep', height=bar_height)
-
         ax.set_theta_zero_location('N')
         ax.set_theta_direction(-1)
         ax.set_xticks(np.linspace(0, 2 * pi, 24, endpoint=False))
         ax.set_xticklabels(range(0, 24), fontsize=14)
         ax.tick_params(axis='x', which='major', pad=1)
-
         ax.set_rlabel_position(0)
         ax.set_rgrids([2, 3, 4], labels=["", "", "", ""], color='k',
                       fontsize=12, fontweight='bold', verticalalignment='center')
         ax.set_title(label=title, pad=-180, fontsize=18)
+        ax.grid(False)
+
+        # annotate plot
         if duration == 'nan':
             ax.text(0, 0, duration, fontsize=15, fontweight='normal',
                     verticalalignment='top', horizontalalignment='center')
         else:
             ax.text(0, 0, duration, fontsize=15, fontweight='heavy',
                     verticalalignment='top', horizontalalignment='center')
-
-        ax.grid(False)
-
 
 # TODO Dev
 
