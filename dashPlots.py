@@ -8,7 +8,6 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 import matplotlib.pyplot as plt
 from IoTHealth.sleep import Sleep
 from IoTHealth.body_composition import BodyComposition
-from IoTHealth.google_sheet import GoogleSheet
 
 plt.rcParams.update({'figure.autolayout': True})
 
@@ -28,7 +27,7 @@ class SmartMirror(tk.Tk):
 
         self.frames = {}
 
-        for F in (SleepMetrics, BodyComposition):
+        for F in (SleepMetrics, BodyMetrics):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -49,7 +48,7 @@ class SleepMetrics(tk.Frame):
         label.pack(pady=10, padx=10)
 
         button1 = ttk.Button(self, text="Body Composition",
-                             command=lambda: controller.show_frame(BodyComposition))
+                             command=lambda: controller.show_frame(BodyMetrics))
         button1.pack()
 
         # sleep plots
@@ -65,7 +64,7 @@ class SleepMetrics(tk.Frame):
         # capture sleep data
         sleep = Sleep(sleep_logs_fp, sleep_series_fp, tokens_fp)
 
-        # set fig shape and show
+        # plot data to class figure
         sleep.plot_stages_percent(grid_shape, stages_plt_pos, rowspan=2, colspan=15)
         sleep.plot_efficiency(grid_shape, eff_plt_pos, rowspan=1, colspan=15)
         plt.tight_layout()
@@ -77,7 +76,7 @@ class SleepMetrics(tk.Frame):
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 
-class BodyComposition(tk.Frame):
+class BodyMetrics(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -88,14 +87,26 @@ class BodyComposition(tk.Frame):
                              command=lambda: controller.show_frame(SleepMetrics))
         button1.pack()
 
+        # initialize parameters
         spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
-        range_ = 'Sheet1'
-        sheet_obj = access_sheet(spreadsheet_id, range_)
-        df = sheet_to_df(sheet_obj)
-        body_fig = bodycomp_plots(df)
+        sheet_range = 'Sheet1'
+        col_labels = ['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
+                      'muscle_lb', 'BMI', 'fat_lb', 'bone_%', 'muscle_%']
+        index = 'date_time'
+        index_type = 'datetime64[ns]'
+        grid = (5, 2)
+
+        # plot data to class figure
+        body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
+        body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body_fig)
+        body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
+        body.plot_fat(grid, plot_position=(2, 0), column_span=2, figure=body.body_fig)
+        body.plot_bone(grid, plot_position=(3, 0), column_span=2, figure=body.body_fig)
+        body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.body_fig)
+        body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
 
         # embed plot into frame
-        canvas = FigureCanvasTkAgg(body_fig, self)
+        canvas = FigureCanvasTkAgg(body.body_fig, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
