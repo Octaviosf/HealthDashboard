@@ -222,25 +222,27 @@ class BodyComposition(object):
                          column_span, figure, title, y_label, line_style)
 
 
-spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
-sheet_range = 'Sheet1'
-col_labels = ['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
-              'muscle_lb', 'BMI', 'fat_lb', 'bone_%', 'muscle_%']
-index = 'date_time'
-index_type = 'datetime64[ns]'
+# EXAMPLE using BodyComposition()
+"""
+    spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
+    sheet_range = 'Sheet1'
+    col_labels = ['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
+                  'muscle_lb', 'BMI', 'fat_lb', 'bone_%', 'muscle_%']
+    index = 'date_time'
+    index_type = 'datetime64[ns]'
 
-grid = (5, 2)
+    grid = (5, 2)
 
-body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
-body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body_fig)
-body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
-body.plot_fat(grid, plot_position=(2, 0), column_span=2, figure=body.body_fig)
-body.plot_bone(grid, plot_position=(3, 0), column_span=2, figure=body.body_fig)
-body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.body_fig)
-body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
+    body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
+    body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body_fig)
+    body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
+    body.plot_fat(grid, plot_position=(2, 0), column_span=2, figure=body.body_fig)
+    body.plot_bone(grid, plot_position=(3, 0), column_span=2, figure=body.body_fig)
+    body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.body_fig)
+    body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
 
-plt.show()
-
+    plt.show()
+"""
 
 # TODO Future Dev
 """
