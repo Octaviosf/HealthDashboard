@@ -12,6 +12,7 @@ class BodyComposition(object):
 
     def __init__(self, spreadsheet_id, sheet_range, labels, index, index_type):
         """
+        format dataFrame and initialize plot attributes
         :param spreadsheet_id: string of id located after '/d/' in
                                url 'https://docs.google.com/spreadsheets/d/'
         :param sheet_range: string specifying Google sheet range in A1 notation
@@ -52,6 +53,7 @@ class BodyComposition(object):
     def plot_single(self, y_index, grid_shape, plot_position,
                     column_span, figure, title, y_label, line_style):
         """
+        plot axis object using general body composition parameters
         :param y_index: string of dataFrame y-axis index
         :param grid_shape: tuple of (row, column) form
         :param plot_position: tuple of (row, column) form
@@ -80,6 +82,7 @@ class BodyComposition(object):
                   column_span, figure, title, line_style_mass, line_style_percent):
 
         """
+        plot axes objects, sharing x-axis, using general body composition parameters
         :param index_mass: string of dataFrame index for mass data
         :param index_percent: string of dataFrame index for percent data
         :param grid_shape: tuple of (row, column) form
@@ -120,6 +123,7 @@ class BodyComposition(object):
 
     def plot_total_mass(self, grid_shape, plot_position, column_span, figure):
         """
+        plot total mass
         :param grid_shape: tuple in (row, column) form
         :param plot_position: tuple in (row, column) form
         :param column_span: integer of column span
@@ -137,6 +141,7 @@ class BodyComposition(object):
 
     def plot_muscle(self, grid_shape, plot_position, column_span, figure):
         """
+        plot muscle mass and percentage
         :param grid_shape: tuple in (row, column) form
         :param plot_position: tuple in (row, column) form
         :param column_span: integer of column span
@@ -155,6 +160,7 @@ class BodyComposition(object):
 
     def plot_fat(self, grid_shape, plot_position, column_span, figure):
         """
+        plot fat mass and percentage
         :param grid_shape: tuple in (row, column) form
         :param plot_position: tuple in (row, column) form
         :param column_span: integer of column span
@@ -173,6 +179,7 @@ class BodyComposition(object):
 
     def plot_bone(self, grid_shape, plot_position, column_span, figure):
         """
+        plot bone mass and percentage
         :param grid_shape: tuple in (row, column) form
         :param plot_position: tuple in (row, column) form
         :param column_span: integer of column span
@@ -191,6 +198,7 @@ class BodyComposition(object):
 
     def plot_water_percent(self, grid_shape, plot_position, column_span, figure):
         """
+        plot water percentage
         :param grid_shape: tuple in (row, column) form
         :param plot_position: tuple in (row, column) form
         :param column_span: integer of column span
@@ -208,6 +216,7 @@ class BodyComposition(object):
 
     def plot_bmi(self, grid_shape, plot_position, column_span, figure):
         """
+        plot BMI
         :param grid_shape: tuple in (row, column) form
         :param plot_position: tuple in (row, column) form
         :param column_span: integer of column span
