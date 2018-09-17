@@ -7,6 +7,9 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 import matplotlib.pyplot as plt
 from IoTHealth.sleep import Sleep
+from IoTHealth.body_composition import BodyComposition
+from IoTHealth.google_sheet import GoogleSheet
+
 plt.rcParams.update({'figure.autolayout': True})
 
 
