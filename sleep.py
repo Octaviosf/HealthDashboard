@@ -17,6 +17,7 @@ from math import isnan
 
 def time2radian(time_list):
     """
+    convert datetimes to radians
     :param time_list: list of date_times or seconds strings
     :return: list of radians
     """
@@ -45,7 +46,7 @@ def time2radian(time_list):
 
 class Sleep(object):
     """
-    Interact with sleep logs
+    interact with sleep logs
     """
     def __init__(self, sleep_file_path, sleep_series_file_path, tokens_file_path):
         """
@@ -192,6 +193,7 @@ class Sleep(object):
         """
         capture explicit data from raw sleep logs
         :param sleep_raw_logs: json object of raw sleep data from Fitbit request
+        :param date_range: tuple of (start_date, end_date) form
         :return sleep_logs: dataFrame of explicit sleep data captured from raw logs
         """
 
@@ -443,6 +445,7 @@ class Sleep(object):
         :param grid_shape: tuple of (row, column) form
         :param position: tuple of (row, column) form
         :param rowspan: integer of row span
+        :param colspan: integer of column span
         """
 
         # global plot format
