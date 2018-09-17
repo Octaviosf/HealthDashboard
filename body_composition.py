@@ -32,6 +32,8 @@ class BodyComposition(object):
 
         # initialize plot parameters
         self.body_fig = plt.figure(dpi=100)
+        plt.rc('xtick', labelsize=18)
+        plt.rc('ytick', labelsize=18)
         self.title_pad = 20
         self.title_font_size = 30
         self.label_font_size = 20
@@ -223,26 +225,27 @@ class BodyComposition(object):
 
 
 # EXAMPLE using BodyComposition()
-"""
-    spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
-    sheet_range = 'Sheet1'
-    col_labels = ['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
-                  'muscle_lb', 'BMI', 'fat_lb', 'bone_%', 'muscle_%']
-    index = 'date_time'
-    index_type = 'datetime64[ns]'
 
-    grid = (5, 2)
+# initialize parameters
+spreadsheet_id = '136gvJHeQOirtmTendXnpb19Pa96Tit7Hkt8RR3N2pEI'
+sheet_range = 'Sheet1'
+col_labels = ['date_time', 'weight_lb', 'fat_%', 'water_%', 'bone_lb',
+              'muscle_lb', 'BMI', 'fat_lb', 'bone_%', 'muscle_%']
+index = 'date_time'
+index_type = 'datetime64[ns]'
+grid = (5, 2)
+plt.rcParams.update({'figure.autolayout': True})
 
-    body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
-    body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body_fig)
-    body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
-    body.plot_fat(grid, plot_position=(2, 0), column_span=2, figure=body.body_fig)
-    body.plot_bone(grid, plot_position=(3, 0), column_span=2, figure=body.body_fig)
-    body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.body_fig)
-    body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
+# plot data
+body = BodyComposition(spreadsheet_id, sheet_range, col_labels, index, index_type)
+body.plot_total_mass(grid, plot_position=(0, 0), column_span=2, figure=body.body_fig)
+body.plot_muscle(grid, plot_position=(1, 0), column_span=2, figure=body.body_fig)
+body.plot_fat(grid, plot_position=(2, 0), column_span=2, figure=body.body_fig)
+body.plot_bone(grid, plot_position=(3, 0), column_span=2, figure=body.body_fig)
+body.plot_water_percent(grid, plot_position=(4, 0), column_span=1, figure=body.body_fig)
+body.plot_bmi(grid, plot_position=(4, 1), column_span=1, figure=body.body_fig)
 
-    plt.show()
-"""
+plt.show()
 
 # TODO Future Dev
 """
