@@ -52,17 +52,20 @@ class Sleep(object):
         """
         create and/or update sleep.csv
         capture sleep_logs using instance variable
-
         :param sleep_file_path: string of absolute file-path to sleep.csv
         :param tokens_file_path: string of absolute file-path to fitbit_tokens.txt
         """
 
-        # assignments
+        # initialize data attributes
         self.sleep_file_path = sleep_file_path
         self.sleep_series_file_path = sleep_series_file_path
         self.tokens_file_path = tokens_file_path
         self.today = dt.today().strftime("%Y-%m-%d")
-        self.sleep_fig = plt.figure(figsize=(17, 16), dpi=100)
+
+        # initialize plot attributes
+        self.sleep_fig = plt.figure(dpi=100)
+        plt.rc("xtick", labelsize=18)
+        plt.rc("ytick", labelsize=18)
 
         # capture up-to-date sleep logs
         if os.path.isfile(self.sleep_file_path) and os.access(self.sleep_file_path, os.R_OK):
@@ -447,10 +450,6 @@ class Sleep(object):
         :param rowspan: integer of row span
         :param colspan: integer of column span
         """
-
-        # global plot format
-        plt.rc("xtick", labelsize=18)
-        plt.rc("ytick", labelsize=18)
 
         # initialize parameters
         x = self.sleep_logs.index.tolist()[-15:]
