@@ -12,7 +12,7 @@ from IoTHealth.body_composition import BodyComposition
 plt.rcParams.update({'figure.autolayout': True})
 
 
-class SmartMirror(tk.Tk):
+class HealthDashboard(tk.Tk):
 
     def __init__(self, *args, **kwargs):
 
@@ -70,7 +70,7 @@ class SleepMetrics(tk.Frame):
         plt.tight_layout()
         sleep.plot_polar_hypnograms(grid_shape)
 
-        # embed plot into SmartMirror gui
+        # embed plot into HealthDashboard gui
         canvas = FigureCanvasTkAgg(sleep.sleep_fig, self)
         canvas.draw()
         canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=True)
@@ -112,7 +112,7 @@ class BodyMetrics(tk.Frame):
 
 
 # draw gui
-app = SmartMirror()
+app = HealthDashboard()
 app.mainloop()
 
 # TODO Dev
