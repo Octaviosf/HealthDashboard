@@ -6,6 +6,11 @@ import pandas as pd
 
 class GoogleSheet(object):
     def __init__(self, spreadsheet_id, sheet_range):
+        """
+        request spreadsheet object using Google Sheet API
+        :param spreadsheet_id: string of id located after '/d/' in url 'https://docs.google.com/spreadsheets/d/'
+        :param sheet_range: string specifying Google sheet range in A1 notation
+        """
 
         # init params
         self.spreadsheet_id = spreadsheet_id
@@ -36,6 +41,13 @@ class GoogleSheet(object):
         self.sheet_obj = self.request.execute()
 
     def sheet2df(self, col_labels, index_label, index_type=str):
+        """
+        create and format dataFrame using sheet object
+        :param col_labels: list of strings of labels used to create dataFrame
+        :param index_label: string of dataFrame index
+        :param index_type: string of dataFrame index type
+        :return: dataFrame formatted for general purposes
+        """
 
         # capture values from sheet_obj
         rows = self.sheet_obj['values']
@@ -49,4 +61,3 @@ class GoogleSheet(object):
         df = df.set_index(index_label)
 
         return df
-
